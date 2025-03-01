@@ -38,7 +38,7 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Last name is required'],
     trim: true,
   },
-  address: addressSchema,
+  address: [addressSchema],
   emailData: {
     emailAddress: {
       type: String,
