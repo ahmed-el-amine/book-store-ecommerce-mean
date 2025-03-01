@@ -54,6 +54,7 @@
     "express": "^5.0.1",
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^7.5.0",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.11.0",
     "rxjs": "~7.8.0",
     "winston": "^3.17.0",

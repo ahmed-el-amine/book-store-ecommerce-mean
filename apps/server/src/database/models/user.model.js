@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
-const addressSchema = new Schema({
+const addressSchema = new mongoose.Schema({
   street: { type: String, required: true },
   city: { type: String, required: true },
   state: { type: String, required: true },
@@ -26,7 +28,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Password is required'],
     minlength: [8, 'Password must be at least 8 characters'],
-    select: false,
   },
   firstName: {
     type: String,
@@ -55,12 +56,25 @@ const userSchema = new mongoose.Schema({
     verificationToken: String,
   },
   phone: String,
-  roles: {
+  role: {
     type: String,
     enum: ['user', 'admin'],
     default: 'user',
   },
 });
+
+userSchema.methods.comparePassword = async function (password) {
+  const isMatch = await bcrypt.compare(password, this.password);
+  return isMatch;
+};
+
+userSchema.methods.createAuthToken = function () {
+  const token = jwt.sign({ id: this._id }, process.env.JWT_SEC_KEY, {
+    expiresIn: process.env.JWT_EXPIRATION,
+  });
+
+  return token;
+};
 
 async function hashPassword(next) {
   if (this.isModified('password')) {
@@ -68,6 +82,7 @@ async function hashPassword(next) {
   }
   next();
 }
+userSchema.pre('save', hashPassword);
 
 async function hashPasswordForQuery(next) {
   const update = this.getUpdate();
@@ -76,9 +91,6 @@ async function hashPasswordForQuery(next) {
   }
   next();
 }
-
-userSchema.pre('save', hashPassword);
-
 userSchema.pre('updateOne', hashPasswordForQuery);
 userSchema.pre('findOneAndUpdate', hashPasswordForQuery);
 userSchema.pre('updateMany', hashPasswordForQuery);
@@ -87,10 +99,10 @@ userSchema.set('toJSON', {
   transform: (doc, ret) => {
     return {
       username: ret.username,
-      firstname: ret.firstname,
-      lastname: ret.lastname,
+      firstName: ret.firstName,
+      lastName: ret.lastName,
       email: ret.emailData.emailAddress,
-      roles: ret.roles,
+      role: ret.role,
     };
   },
 });
