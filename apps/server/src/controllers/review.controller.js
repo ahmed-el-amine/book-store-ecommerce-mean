@@ -1,14 +1,14 @@
 import Review from '../database/models/reviews.model.js'
-import AppError from '../middleware/errorHandler/index.js';
+import AppError from '../utils/customError.js';
 
 
 export const getByBookId = async (id, next) => {
     const reviews = await Review
-        .find({ bookId: id })
+        .find({ bookIdid: id })
         .exec();
     if (!reviews) {
         const err = new AppError('Review not found');
-        next(err)
+        return next(err)
     }
     return reviews;
 
@@ -28,9 +28,9 @@ export const deleteReview = async (req, res, next) => {
 
     if (!deletedReview) {
         const err = new AppError('Review not found');
-        next(err)
+        return next(err)
     }
-    else if (deletedReview.userId.toString() !== req.user.userId) {
+    if (deletedReview.userId.toString() !== req.user.userId) {
         return res.status(403).json({ message: 'You are not authorized to delete this review' });
     }
     await deletedReview.delete();
@@ -41,10 +41,10 @@ export const updateReview = async (req, res, next) => {
 
     if (!review) {
         const err = new AppError('Review not found');
-        next(err)
+        return next(err)
     }
-    else if (review.userId.toString() !== req.user.userId) {
-        return res.status(403).json({ message: 'You are not authorized to delete this review' });
+    if (review.userId.toString() !== req.user.userId) {
+        return res.status(403).json({ message: 'You are not authorized to update this review' });
     }
     const updatedReview = await Review.findByIdAndUpdate(
         req.params.id,
