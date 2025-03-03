@@ -53,6 +53,7 @@ const userSchema = new mongoose.Schema({
       type: Boolean,
       default: false,
     },
+
     verificationToken: String,
   },
   phone: String,
@@ -61,6 +62,7 @@ const userSchema = new mongoose.Schema({
     enum: ['user', 'admin'],
     default: 'user',
   },
+  passwordChangedAt: Date
 });
 
 userSchema.methods.comparePassword = async function (password) {
@@ -76,6 +78,15 @@ userSchema.methods.createAuthToken = function () {
   return token;
 };
 
+userSchema.methods.hasPasswordChangedAfterToken = function (tokenTimestamp) {
+
+  if (!this.passwordChangedAt) {
+    return false;
+  }
+  const newPassTimestamp = Math.floor(this.passwordChangedAt.getTime() / 1000)
+  console.log(tokenTimestamp, newPassTimestamp)
+  return tokenTimestamp < newPassTimestamp;
+}
 async function hashPassword(next) {
   if (this.isModified('password')) {
     this.password = await bcrypt.hash(this.password, 10);
@@ -91,9 +102,12 @@ async function hashPasswordForQuery(next) {
   }
   next();
 }
+
+
 userSchema.pre('updateOne', hashPasswordForQuery);
 userSchema.pre('findOneAndUpdate', hashPasswordForQuery);
 userSchema.pre('updateMany', hashPasswordForQuery);
+
 
 userSchema.set('toJSON', {
   transform: (doc, ret) => {
