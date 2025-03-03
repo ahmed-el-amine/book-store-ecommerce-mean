@@ -51,16 +51,16 @@ export default (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || 'error';
 
-  // const logMessage = `${err.statusCode} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`;
+  const logMessage = `${err.statusCode} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`;
 
-  // if (err.statusCode >= 500) {
-  //   logger.error(logMessage);
-  //   logger.error(err.stack);
-  // } else if (err.statusCode >= 400) {
-  //   logger.warn(logMessage);
-  // } else {
-  //   logger.info(logMessage);
-  // }
+  if (err.statusCode >= 500) {
+    logger.error(logMessage);
+    logger.error(err.stack);
+  } else if (err.statusCode >= 400) {
+    logger.warn(logMessage);
+  } else {
+    logger.info(logMessage);
+  }
 
   if (process.env.NODE_ENV === 'developement') {
     sentErroDev(err, res);
