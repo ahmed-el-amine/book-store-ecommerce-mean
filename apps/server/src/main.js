@@ -8,6 +8,7 @@ import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import cors from 'cors';
 import routesHandler from './routes/index.js';
+import errorHandler from './middleware/errorHandler.js';
 
 // Placed first to caught any uncaught exception in the program
 process.on('uncaughtException', (err) => {
@@ -26,6 +27,8 @@ app.use(cookieParser());
 app.use(express.json({ limit: '20mb' }));
 
 app.use('/api/v1', routesHandler);
+
+app.use(errorHandler);
 
 const server = app.listen(port, host, () => {
   logger.info(`[ ready ] http://${host}:${port}`);
