@@ -62,6 +62,7 @@ const userSchema = new mongoose.Schema(
       enum: ['user', 'admin'],
       default: 'user',
     },
+    passwordChangedAt: Date
 
   },
   {
@@ -89,7 +90,6 @@ userSchema.methods.hasPasswordChangedAfterToken = function (tokenTimestamp) {
     return false;
   }
   const newPassTimestamp = Math.floor(this.passwordChangedAt.getTime() / 1000)
-  console.log(tokenTimestamp, newPassTimestamp)
   return tokenTimestamp < newPassTimestamp;
 }
 async function hashPassword(next) {
@@ -104,6 +104,7 @@ async function hashPasswordForQuery(next) {
   const update = this.getUpdate();
   if (update && update.password) {
     update.password = await bcrypt.hash(update.password, 10);
+    update.passwordChangedAt = new Date();
   }
   next();
 }
