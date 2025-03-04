@@ -62,11 +62,14 @@ const userSchema = new mongoose.Schema(
       enum: ['user', 'admin'],
       default: 'user',
     },
+    passwordChangedAt: Date
+
   },
   {
     timestamps: true,
   }
 );
+
 
 userSchema.methods.comparePassword = async function (password) {
   const isMatch = await bcrypt.compare(password, this.password);
@@ -74,13 +77,21 @@ userSchema.methods.comparePassword = async function (password) {
 };
 
 userSchema.methods.createAuthToken = function () {
-  const token = jwt.sign({ id: this._id , role:this.role }, process.env.JWT_SEC_KEY, {
+  const token = jwt.sign({ id: this._id, role: this.role }, process.env.JWT_SEC_KEY, {
     expiresIn: process.env.JWT_EXPIRATION,
   });
 
   return token;
 };
 
+userSchema.methods.hasPasswordChangedAfterToken = function (tokenTimestamp) {
+
+  if (!this.passwordChangedAt) {
+    return false;
+  }
+  const newPassTimestamp = Math.floor(this.passwordChangedAt.getTime() / 1000)
+  return tokenTimestamp < newPassTimestamp;
+}
 async function hashPassword(next) {
   if (this.isModified('password')) {
     this.password = await bcrypt.hash(this.password, 10);
@@ -93,12 +104,16 @@ async function hashPasswordForQuery(next) {
   const update = this.getUpdate();
   if (update && update.password) {
     update.password = await bcrypt.hash(update.password, 10);
+    update.passwordChangedAt = new Date();
   }
   next();
 }
+
+
 userSchema.pre('updateOne', hashPasswordForQuery);
 userSchema.pre('findOneAndUpdate', hashPasswordForQuery);
 userSchema.pre('updateMany', hashPasswordForQuery);
+
 
 userSchema.set('toJSON', {
   transform: (doc, ret) => {
