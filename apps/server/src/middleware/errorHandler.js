@@ -1,5 +1,5 @@
 import logger from '../lib/winston/index.js';
-import AppError from '../middleware/errorHandler/index.js';
+import AppError from '../utils/customError.js';
 
 const handleCastErrDB = (err) => {
   const message = `Invalid ${err.path}: ${err.value}`;
