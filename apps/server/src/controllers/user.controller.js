@@ -25,6 +25,8 @@ export const create = async (req, res) => {
     });
   }
 
+  const role = req.isAdminCreation ? 'admin' : 'user';
+
   // create user
   const user = await User.create({
     username: req.body.username,
@@ -36,9 +38,10 @@ export const create = async (req, res) => {
       emailAddress: req.body.email,
     },
     phone: req.body.phone,
+    role:role
   });
 
-  res.status(201).json({ message: 'User created successfully', user });
+  res.status(201).json({ message: `${role.charAt(0).toUpperCase()+role.slice(1)} created successfully`, user });
 };
 
 export const login = async (req, res) => {

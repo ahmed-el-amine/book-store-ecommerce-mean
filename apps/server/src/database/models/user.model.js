@@ -74,7 +74,7 @@ userSchema.methods.comparePassword = async function (password) {
 };
 
 userSchema.methods.createAuthToken = function () {
-  const token = jwt.sign({ id: this._id }, process.env.JWT_SEC_KEY, {
+  const token = jwt.sign({ id: this._id , role:this.role }, process.env.JWT_SEC_KEY, {
     expiresIn: process.env.JWT_EXPIRATION,
   });
 

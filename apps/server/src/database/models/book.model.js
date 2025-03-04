@@ -1,5 +1,4 @@
 import  mongoose  from 'mongoose'
-import { timestamp } from 'rxjs';
 
 const BookModel = new mongoose.Schema({
   title:{
@@ -7,7 +6,8 @@ const BookModel = new mongoose.Schema({
     minLength:[5,'Book title must be 5 character at least'],
     required:true,
     unique:true,
-  },isbn13:{
+  },
+  isbn13:{
     type:String,
     required:true,
     validate:{
@@ -73,6 +73,8 @@ const BookModel = new mongoose.Schema({
   }
 
 },{timestamps:true});
+
+//check for the id of the authors before save the book to the db
 
 const Books = mongoose.model('Books',BookModel);
 
