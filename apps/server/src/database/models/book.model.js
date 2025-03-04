@@ -81,7 +81,7 @@ const BookModel = new mongoose.Schema({
 BookModel.pre('save',async function(next){
  for(const authorId of this.authors){
   const exists = await authorModel.findById(authorId).exec();
-  if(!exists) throw new AppError(`Author with ID ${authorId} not found,please insert author first`,404);
+  if(!exists) throw new AppError(404,`Author with ID ${authorId} not found,please insert author first`);
  }
  next();
 });

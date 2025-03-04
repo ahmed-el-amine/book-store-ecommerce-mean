@@ -31,22 +31,6 @@ export const deleteReview = async (req, res, next) => {
 export const updateReview = async (req, res, next) => {
   const review = await Review.findById(req.params.id).exec();
 
-<<<<<<< HEAD
-    if (!review) {
-        const err = new AppError('Review not found');
-        return next(err)
-    }
-    if (review.userId.toString() !== req.user.userId) {
-        return res.status(403).json({ message: 'You are not authorized to update this review' });
-    }
-    const updatedReview = await Review.findByIdAndUpdate(
-        req.params.id,
-        req.body,
-        { new: true }
-    );
-    return updatedReview;
-}
-=======
   if (!review) {
     throw new AppError(httpStatus.NOT_FOUND, 'Review not found');
   }
@@ -56,4 +40,3 @@ export const updateReview = async (req, res, next) => {
   const updatedReview = await Review.findByIdAndUpdate(req.params.id, req.body, { new: true });
   return updatedReview;
 };
->>>>>>> 1b9d3a5f19662adfd7f90fcc40dca65c129e509a
