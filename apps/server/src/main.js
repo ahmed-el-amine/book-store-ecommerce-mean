@@ -8,6 +8,14 @@ import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import cors from 'cors';
 import routesHandler from './routes/index.js';
+import errorHandler from './middleware/errorHandler.js';
+
+// Placed first to caught any uncaught exception in the program
+process.on('uncaughtException', (err) => {
+  logger.error('UNCAUGHT EXCEPTION! Shutting down...');
+  logger.error(err.name, err.message);
+  process.exit(1);
+});
 
 const host = process.env.HOST ?? 'localhost';
 const port = process.env.PORT ? Number(process.env.PORT) : 3000;
@@ -20,12 +28,19 @@ app.use(express.json({ limit: '20mb' }));
 
 app.use('/api/v1', routesHandler);
 
-connectToDB()
-  .then(() => {
-    app.listen(port, host, () => {
-      logger.info(`[ ready ] http://${host}:${port}`);
-    });
-  })
-  .catch((e) => {
-    logger.error(`could not connect to database ${e}`);
+app.use(errorHandler);
+
+const server = app.listen(port, host, () => {
+  logger.info(`[ ready ] http://${host}:${port}`);
+});
+
+connectToDB();
+
+// Placed at the bottom to handle any promise rejection in our app
+process.on('unhandledRejection', (err) => {
+  logger.error('UNHANDLED REJECTION! Shutting down...');
+  logger.error(err.name, err.message);
+  server.close(() => {
+    process.exit(1);
   });
+});
