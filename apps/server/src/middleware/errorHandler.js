@@ -62,14 +62,13 @@ export default (err, req, res, next) => {
     logger.info(logMessage);
   }
 
-  if (process.env.NODE_ENV === 'developement') {
+  if (process.env.NODE_ENV === 'development') {
     sentErroDev(err, res);
   } else if (process.env.NODE_ENV === 'production') {
     let error = { ...err };
     if (error.name === 'CastError') error = handleCastErrDB(error);
     if (error.code === 11000) error = handleDuplicateFieldsDB(error);
-    if (error.name === 'ValidationError')
-      error = handleValidationErrorDB(error);
+    if (error.name === 'ValidationError') error = handleValidationErrorDB(error);
 
     sentErroProd(error, res);
   }
