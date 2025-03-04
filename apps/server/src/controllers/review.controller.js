@@ -1,5 +1,5 @@
 import Review from '../database/models/reviews.model.js'
-import AppError from '../middleware/errorHandler/index.js';
+import AppError from '../utils/customError.js';
 
 
 export const getById = async (id, next) => {

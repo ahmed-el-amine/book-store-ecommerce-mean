@@ -1,5 +1,5 @@
 import BookModel from '../database/models/book.model.js';
-//import AppError from '../middleware/errorHandler/index.js';
+import AppError from '../utils/customError.js';
 
 const getBooks = async ()=>{
    const books = await BookModel.find().exec();
@@ -27,14 +27,14 @@ const addBook = async (data)=>{
 
 const updateBook = async(data,id)=>{
   const book = await BookModel.findById(id);
-  if(!book) throw new Error(`Book with ID ${id} not found please try again!`);
+  if(!book) throw new AppError(`Book with ID ${id} not found please try again!`,404);
   const updatedBook = BookModel.findByIdAndUpdate(id,data,{runValidators:true});
   return updatedBook;
 }
 
 const deleteBook = async(id)=>{
   const book = await BookModel.findById(id);
-  if(!book) throw new Error(`Book with ID ${id} not found please try again!`);
+  if(!book) throw new AppError(`Book with ID ${id} not found please try again!`,404);
   const deletedBook = BookModel.findByIdAndDelete(id);
   return deletedBook;
 }
