@@ -19,7 +19,9 @@ const orderItemSchema = new mongoose.Schema({
     price: {
         type: Number,
         required: [true, 'Price is required'],
-        min: [0, 'Price cannot be negative']
+        min: [0, 'Price cannot be negative'],
+        set: value => Math.round(value * 100),
+        get: value => (value / 100).toFixed(2)
     },
     coverImage: {
         type: String
@@ -29,21 +31,14 @@ const orderItemSchema = new mongoose.Schema({
 const orderSchema = new mongoose.Schema({
     orderNumber: {
         type: String,
-        required: true,
         unique: true,
     },
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: [true, 'User ID is required'],
         index: true
     },
     items: [orderItemSchema],
-    totalPrice: {
-        type: Number,
-        required: [true, 'Please provide total price'],
-        min: [0, 'Total price cannot be negative']
-    },
     status: {
         type: String,
         enum: ['Processing', 'Shipped', 'Delivered', 'Cancelled', 'Refunded'],
@@ -87,7 +82,8 @@ const orderSchema = new mongoose.Schema({
         type: Number,
         default: 0,
         min: 0
-    }
+    },
+
 }, {
     timestamps: true
 });
@@ -96,7 +92,11 @@ orderSchema.index({ createdAt: -1 });
 orderSchema.index({ userId: 1, status: 1 });
 
 orderSchema.virtual('subtotal').get(function () {
-    return this.totalPrice + this.discountApplied - this.taxAmount;
+    return this.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+});
+
+orderSchema.virtual('totalPrice').get(function () {
+    return this.subtotal - this.discountApplied + this.taxAmount;
 });
 
 orderSchema.set('toJSON', {
@@ -109,34 +109,28 @@ orderSchema.set('toJSON', {
 });
 
 orderSchema.pre('save', async function (next) {
-    if (!this.isNew) return next();
 
-    const MAX_ATTEMPTS = 10;
-    let attempts = 0;
-    let isUnique = false;
-    while (!isUnique && attempts < MAX_ATTEMPTS) {
-        const randomNumber = Math.floor(Math.random() * 900000) + 100000;
-        this.orderNumber = `ORD-${randomNumber}`;
-        const existingOrder = await this.constructor.exists({ orderNumber: this.orderNumber });
-        if (!existingOrder) {
-            isUnique = true;
-        }
-        attempts++;
-    }
-    if (!isUnique) {
-        return next(new Error('Failed to generate a unique order number after multiple attempts'));
-    }
+    const timestamp = Date.now().toString().slice(-6);
+    const random = Math.floor(Math.random() * 9000 + 1000);
+    this.orderNumber = `ORD-${timestamp}-${random}`;
+
+
     next();
 });
 
 
 orderSchema.pre('save', function (next) {
-    if (this.status === 'Shipped' || this.status === 'Delivered') {
-        this.paymentStatus = 'Paid';
+    if (this.isModified('status')) {
+        if (this.paymentMethod === 'Cash on Delivery') {
+            this.paymentStatus = this.status === 'Delivered' ? 'Paid' : 'Pending';
+        } else {
+            if (['Shipped', 'Delivered'].includes(this.status)) {
+                this.paymentStatus = 'Paid';
+            }
+        }
     }
     next();
 });
-
 
 
 const Order = mongoose.model('Order', orderSchema);

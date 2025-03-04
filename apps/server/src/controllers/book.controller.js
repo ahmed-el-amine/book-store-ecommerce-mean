@@ -6,6 +6,12 @@ const getBooks = async ()=>{
    return books;
 };
 
+const getBook = async(id)=>{
+  const book  = await BookModel.findById(id).exec();
+  if(!book) throw new AppError('Book not found try again',404);
+  return book;
+}
+
 
 const addBook = async (data)=>{
     const {title,isbn13,description,price,rating,publish_date,stock,coverImage,dimensions,weight,authors,categories} = data;
@@ -26,16 +32,16 @@ const addBook = async (data)=>{
 }
 
 const updateBook = async(data,id)=>{
-  const book = await BookModel.findById(id);
+  const book = await BookModel.findById(id).exec();
   if(!book) throw new AppError(`Book with ID ${id} not found please try again!`,404);
   const updatedBook = BookModel.findByIdAndUpdate(id,data,{runValidators:true});
   return updatedBook;
 }
 
 const deleteBook = async(id)=>{
-  const book = await BookModel.findById(id);
+  const book = await BookModel.findById(id).exec();
   if(!book) throw new AppError(`Book with ID ${id} not found please try again!`,404);
-  const deletedBook = BookModel.findByIdAndDelete(id);
+  const deletedBook = BookModel.findByIdAndDelete(id).exec();
   return deletedBook;
 }
 
@@ -43,6 +49,7 @@ const deleteBook = async(id)=>{
 
 export{
   getBooks,
+  getBook,
   addBook,
   updateBook,
   deleteBook
