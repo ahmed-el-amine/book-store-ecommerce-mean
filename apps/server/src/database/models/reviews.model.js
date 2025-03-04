@@ -22,7 +22,7 @@ const reviewSchema = new mongoose.Schema({
         type: String,
         required: true,
         minLength: [30, 'comment must be at least 30 charachters'],
-        maxLength: [300, 'comment cannot exceed 300 characters'],
+        maxLength: [500, 'comment cannot exceed 300 characters'],
         trim: true,
         validate: {
             validator: function (value) {
@@ -36,6 +36,7 @@ const reviewSchema = new mongoose.Schema({
         default: Date.now
     },
 });
+
 
 reviewSchema.set('toJSON', {
     transform: (doc, ret) => {
