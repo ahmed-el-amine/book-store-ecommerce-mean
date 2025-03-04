@@ -62,7 +62,6 @@ export default (err, req, res, next) => {
   } else {
     logger.info(logMessage);
   }
-
   if (process.env.NODE_ENV === 'development') {
     sentErroDev(err, res);
   } else if (process.env.NODE_ENV === 'production') {

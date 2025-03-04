@@ -1,4 +1,6 @@
 import  mongoose  from 'mongoose'
+import authorModel from '../models/author.model.js';
+import AppError from '../../utils/customError';
 
 const BookModel = new mongoose.Schema({
   title:{
@@ -75,6 +77,14 @@ const BookModel = new mongoose.Schema({
 },{timestamps:true});
 
 //check for the id of the authors before save the book to the db
+
+BookModel.pre('save',async function(next){
+ for(const authorId of this.authors){
+  const exists = await authorModel.findById(authorId).exec();
+  if(!exists) throw new AppError(404,`Author with ID ${authorId} not found,please insert author first`);
+ }
+ next();
+});
 
 const Books = mongoose.model('Books',BookModel);
 

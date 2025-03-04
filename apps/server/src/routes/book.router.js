@@ -1,5 +1,5 @@
 import express from 'express';
-import {authorizeAdmin} from '../middleware/security/authorization.js';
+import  authorization  from '../middleware/useAuth.middleware.js';
 import {bookController} from '../controllers/index.js';
 import useZod from '../middleware/useZod.js';
 import { bookSchema,patchBookSchema } from '../lib/zod/book.zod.js';
@@ -8,38 +8,25 @@ import { bookSchema,patchBookSchema } from '../lib/zod/book.zod.js';
 const router = express.Router();
 
 router
-.get('/', authorizeAdmin,async (req,res,next)=>{
-  try{
+.get('/', authorization(['user','admin']),async (req,res)=>{
     const books = await bookController.getBooks();
     res.json(books);
-  }catch(error){
-    next(error);
-  }
-
 })
-.post('/add',authorizeAdmin,useZod(bookSchema),async (req,res,next)=>{
-  try{
+.get('/:id',authorization(['user','admin']),async(req,res)=>{
+  const book = await bookController.getBook(req.params.id);
+  res.json(book);
+})
+.post('/add',authorization(['admin']),useZod(bookSchema),async (req,res)=>{
     const book = await bookController.addBook(req.body);
     res.status(201).json(book);
-  }catch(error){
-    res.status(400).json({message:`Invalid data please insert data again, ${error.message}`});
-  }
 })
-.patch('/:id',authorizeAdmin,useZod(patchBookSchema),async(req,res,next)=>{
-  try{
+.patch('/:id',authorization(['admin']),useZod(patchBookSchema),async(req,res)=>{
     const updatedBook = await bookController.updateBook(req.body,req.params.id);
     res.status(200).json(updatedBook);
-  }catch(error){
-   res.status(400).json({message:`Invalid data please insert data again, ${error.message}`});
-  }
 })
-.delete('/:id',authorizeAdmin,async(req,res,next)=>{
-  try{
+.delete('/:id',authorization(['admin']),async(req,res)=>{
      await bookController.deleteBook(req.params.id);
-    res.status(204).end();
-  }catch(error){
-    res.status(500).json({message:`Can't delete book some thing wrong happened, ${error.message}`});
-  }
+     res.status(204).end();
 })
 
 export default router;
