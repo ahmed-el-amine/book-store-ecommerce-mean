@@ -1,10 +1,9 @@
 import mongoose from 'mongoose';
 
 const reviewSchema = new mongoose.Schema({
-    userId: {
+    reviewOwnerData: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: [true, 'you must insert user id'],
     },
     bookId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -45,7 +44,7 @@ reviewSchema.set('toJSON', {
             rating: ret.rating,
             comment: ret.comment,
             createdAt: ret.createdAt,
-            userId: ret.userId,
+            reviewOwnerData: ret.reviewOwnerData,
             bookId: ret.bookId,
         };
     },

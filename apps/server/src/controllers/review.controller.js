@@ -5,7 +5,7 @@ import Books from '../database/models/book.model.js';
 
 export const getByBookId = async (id) => {
     const reviews = await Review.find({ bookId: id })
-        .populate('userId')
+        .populate('reviewOwnerData')
         .exec();
     if (!reviews) {
         throw new AppError(httpStatus.NOT_FOUND, 'Review not found');
@@ -17,21 +17,18 @@ export const create = async (req) => {
 
     const { comment, rating, bookId } = req.body;
     const userId = req.user.id;
-    console.log(userId)
-    console.log(req.user)
-
-
     const book = await Books.findById(bookId).exec();
     if (!book) {
         throw new AppError(httpStatus.NOT_FOUND, 'Book not found');
     }
     const review = await Review.create({
-        userId: userId,
+        reviewOwnerData: userId,
         bookId: bookId,
         comment: comment,
         rating: rating
     });
-    return review;
+    const reviewData = await Review.findById(review._id).populate('reviewOwnerData').exec();
+    return reviewData;
 };
 
 export const deleteReview = async (req, res) => {
@@ -40,11 +37,11 @@ export const deleteReview = async (req, res) => {
     if (!deletedReview) {
         throw new AppError(httpStatus.NOT_FOUND, 'Review not found');
     }
-    if (deletedReview.userId.toString() !== req.user.id) {
+    if (deletedReview.reviewOwnerData.toString() !== req.user.id) {
         return res.status(403).json({ message: 'You are not authorized to delete this review' });
     }
 
-   await  Review.findByIdAndDelete(req.params.id);
+    await Review.findByIdAndDelete(req.params.id);
     return deletedReview;
 };
 export const updateReview = async (req, res) => {
@@ -53,10 +50,11 @@ export const updateReview = async (req, res) => {
     if (!review) {
         throw new AppError(httpStatus.NOT_FOUND, 'Review not found');
     }
-    if (review.userId.toString() !== req.user.id) {
+    if (review.reviewOwnerData.toString() !== req.user.id) {
         return res.status(403).json({ message: 'You are not authorized to update this review' });
     }
-    const { userId, bookId, ...updatedData } = req.body;
-    const updatedReview = await Review.findByIdAndUpdate(req.params.id, updatedData, { new: true });
+    const { reviewOwnerData, bookId, ...updatedData } = req.body;
+    const updatedReview = await Review.findByIdAndUpdate(req.params.id, updatedData, { new: true }).populate('reviewOwnerData')
+        .exec();;
     return updatedReview;
 };

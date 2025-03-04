@@ -5,7 +5,6 @@ const ObjectIdSchema = z.string().regex(/^[0-9a-fA-F]{24}$/, {
 });
 
 export const reviewSchema = z.object({
-    userId: ObjectIdSchema,
     bookId: ObjectIdSchema,
     rating: z.number().min(1, { message: "Rating must be between 1 and 5" }).max(5, { message: "Rating must be between 1 and 5" }),
     comment: z.string()
