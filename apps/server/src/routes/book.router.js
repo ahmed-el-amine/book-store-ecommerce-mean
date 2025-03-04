@@ -1,5 +1,4 @@
 import express from 'express';
-import {authorizeAdmin} from '../middleware/security/authorization.js';
 import  authorization  from '../middleware/useAuth.middleware.js';
 import {bookController} from '../controllers/index.js';
 import useZod from '../middleware/useZod.js';
