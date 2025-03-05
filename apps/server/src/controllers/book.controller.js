@@ -7,12 +7,12 @@ const getBooks = async (req) => {
   if (categories) {
     filter.categories = categories;
   }
-  const books = await BookModel.find(filter).exec();
+  const books = await BookModel.find(filter).populate('authors').exec();
   return books;
 };
 
 const getBook = async (id) => {
-  const book = await BookModel.findById(id).exec();
+  const book = await BookModel.findById(id).populate('authors').exec();
   if (!book) throw new AppError(404, 'Book not found try again');
   return book;
 }
