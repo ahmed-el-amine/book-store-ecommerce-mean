@@ -21,15 +21,7 @@ router.get('/csrf-token', csrfProtection, (req, res) => {
 
 //Add csrf in production
 
-router.post(
-  '/signup',
-  useZod(createUserSchema),
-  async (req, res, next) => {
-    req.isAdminCreation = false;
-    next();
-  },
-  create
-);
+router.post('/signup', useZod(createUserSchema), create);
 
 router.post('/login', useZod(loginUserSchema), login);
 

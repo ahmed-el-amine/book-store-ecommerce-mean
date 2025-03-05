@@ -1,12 +1,12 @@
+import { isValidObjectId } from 'mongoose';
 import User from '../database/models/user.model.js';
+import AppError from '../utils/customError.js';
+import httpStatus from 'http-status';
 
 export const create = async (req, res) => {
   // check if there is a user with the same username and email
   const users = await User.find({
-    $or: [
-      { username: req.body.username },
-      { 'emailData.emailAddress': req.body.email },
-    ],
+    $or: [{ username: req.body.username }, { 'emailData.emailAddress': req.body.email }],
   });
 
   if (users.length > 0) {
@@ -38,19 +38,19 @@ export const create = async (req, res) => {
       emailAddress: req.body.email,
     },
     phone: req.body.phone,
-    role:role
+    role: role,
   });
 
-  res.status(201).json({ message: `${role.charAt(0).toUpperCase()+role.slice(1)} created successfully`, user });
+  res.status(201).json({
+    message: `${role.charAt(0).toUpperCase() + role.slice(1)} created successfully`,
+    user,
+  });
 };
 
 export const login = async (req, res) => {
   // check if there is user has username or email equal to req.body.username
   const user = await User.findOne({
-    $or: [
-      { username: req.body.username },
-      { 'emailData.emailAddress': req.body.username },
-    ],
+    $or: [{ username: req.body.username }, { 'emailData.emailAddress': req.body.username }],
   });
 
   if (!user) {
@@ -80,7 +80,93 @@ export const login = async (req, res) => {
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 
-  res
-    .status(200)
-    .json({ message: 'User logged in successfully', data: { user, token } });
+  res.status(200).json({ message: `Welcome back mr/ms ${user.firstName}`, data: { user, token } });
+};
+
+export const getAllUsers = async (req, res) => {
+  const users = await User.find();
+  res.status(200).json({ users });
+};
+
+export const update = async (req, res) => {
+  const updatedData = req.body;
+
+  if (updatedData.password) req.user.password = updatedData.password;
+  if (updatedData.firstName) req.user.firstName = updatedData.firstName;
+  if (updatedData.lastName) req.user.lastName = updatedData.lastName;
+  if (updatedData.email) {
+    // check if new email exist
+    const isEmailExist = await User.findOne({ 'emailData.emailAddress': updatedData.email });
+    if (isEmailExist) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'updated email is alrady exist please select another email');
+    }
+    req.user.emailData.emailAddress = updatedData.email;
+  }
+  if (updatedData.phone) req.user.phone = updatedData.phone;
+
+  await req.user.save();
+
+  res.json({ message: 'data updated successfully', user: req.user });
+};
+
+export const getAllAddresses = (req, res) => {
+  return res.json({
+    user: req.user,
+    address: req.user.address,
+  });
+};
+
+export const addAddress = async (req, res) => {
+  req.user.address.push(req.body);
+  await req.user.save();
+
+  return res.status(httpStatus.CREATED).json({
+    user: req.user,
+    address: req.user.address,
+  });
+};
+
+export const deleteAddress = async (req, res) => {
+  const id = req.params.id;
+
+  if (!isValidObjectId(id)) throw new AppError(httpStatus.BAD_REQUEST, 'please provide a valid id');
+
+  const address = req.user.address.find((x) => x._id.toString() == id);
+
+  if (!address) throw new AppError(httpStatus.BAD_REQUEST, 'No address found for this id');
+
+  req.user.address = req.user.address.filter((x) => x._id.toString() != id);
+
+  await req.user.save();
+
+  return res.json({
+    message: 'Address deleted successfully',
+    user: req.user,
+    deleted: address,
+    address: req.user.address,
+  });
+};
+
+export const updateAddress = async (req, res) => {
+  const id = req.params.id;
+  const updatedData = req.body;
+
+  if (!isValidObjectId(id)) throw new AppError(httpStatus.BAD_REQUEST, 'please provide a valid id');
+
+  const addressToUpdate = req.user.address.find((x) => x._id.toString() == id);
+
+  if (!addressToUpdate) throw new AppError(httpStatus.BAD_REQUEST, 'No address found for this id');
+
+  Object.keys(updatedData).map((key) => {
+    addressToUpdate[key] = updatedData[key];
+  });
+
+  await req.user.save();
+
+  return res.json({
+    message: 'Address updated successfully',
+    user: req.user,
+    updated: addressToUpdate,
+    address: req.user.address,
+  });
 };
