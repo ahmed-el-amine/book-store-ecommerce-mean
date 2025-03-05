@@ -1,29 +1,37 @@
 import express from 'express';
 import useZod from '../middleware/useZod.js';
-import { createReviewSchema } from '../lib/zod/review.zod.js';
+import { reviewSchema,patchReviewSchema } from '../lib/zod/review.zod.js';
 import { getByBookId, create, deleteReview, updateReview } from '../controllers/review.controller.js';
+import useAuth from '../middleware/useAuth.middleware.js';
+import { userRoles } from '../database/models/user.model.js';
+
 
 const router = express.Router();
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', useAuth([userRoles.admin, userRoles.user]),async (req, res) => {
     const reviewList = await getByBookId(req.params.id);
     res.json({ reviewList: reviewList }, 200)
 
 })
 
-router.post('/', useZod(createReviewSchema), async (req, res) => {
-    const review = await create(req.body);
+router.post('/', useAuth([userRoles.admin, userRoles.user]), useZod(reviewSchema),async (req, res) => {
+    const review = await create(req,res);
     res.json({ message: 'Employee created successfully', review }, 201);
 })
 
-router.patch('/:id', useZod(createReviewSchema), async (req, res, next) => {
+router.patch('/:id', useAuth([userRoles.admin, userRoles.user]), useZod(patchReviewSchema), async (req, res, next) => {
     const updatedReview = await updateReview(req, res, next);
     res.json({ updatedReview: updatedReview }, 200)
 })
 
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', useAuth([userRoles.admin, userRoles.user]),async (req, res, next) => {
     const deletedReview = await deleteReview(req, res, next);
     return res.status(200).json({ message: 'Review deleted successfully', deletedReview });
+})
+
+router.get('/', useAuth([userRoles.admin, userRoles.user]), async (req, res) => {
+    const id = req.user.id;
+    res.send({id})
 })
 
 export default router;

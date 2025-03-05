@@ -1,10 +1,9 @@
 import mongoose from 'mongoose';
 
 const reviewSchema = new mongoose.Schema({
-    userId: {
+    reviewOwnerData: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: [true, 'you must insert user id'],
     },
     bookId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -22,7 +21,7 @@ const reviewSchema = new mongoose.Schema({
         type: String,
         required: true,
         minLength: [30, 'comment must be at least 30 charachters'],
-        maxLength: [300, 'comment cannot exceed 300 characters'],
+        maxLength: [500, 'comment cannot exceed 300 characters'],
         trim: true,
         validate: {
             validator: function (value) {
@@ -37,6 +36,7 @@ const reviewSchema = new mongoose.Schema({
     },
 });
 
+
 reviewSchema.set('toJSON', {
     transform: (doc, ret) => {
         return {
@@ -44,7 +44,7 @@ reviewSchema.set('toJSON', {
             rating: ret.rating,
             comment: ret.comment,
             createdAt: ret.createdAt,
-            userId: ret.userId,
+            reviewOwnerData: ret.reviewOwnerData,
             bookId: ret.bookId,
         };
     },
