@@ -117,7 +117,19 @@ export const getAllAddresses = (req, res) => {
 };
 
 export const addAddress = async (req, res) => {
+  // check if new address is the primarry address
+  if (req.body.isDefault) {
+    // if new address is the primarry address then set all other addresses to false
+    req.user.address.forEach((address) => (address.isDefault = false));
+  }
+
   req.user.address.push(req.body);
+
+  // check if address is just one then force it to be default
+  if (req.user.address.length == 1) {
+    req.user.address[0].isDefault = true;
+  }
+
   await req.user.save();
 
   return res.status(httpStatus.CREATED).json({
@@ -136,6 +148,11 @@ export const deleteAddress = async (req, res) => {
   if (!address) throw new AppError(httpStatus.BAD_REQUEST, 'No address found for this id');
 
   req.user.address = req.user.address.filter((x) => x._id.toString() != id);
+
+  // if deleted address is the defualt then set another address to defualt
+  if (address.isDefault && req.user.address.length > 0) {
+    req.user.address[0].isDefault = true;
+  }
 
   await req.user.save();
 
@@ -157,6 +174,12 @@ export const updateAddress = async (req, res) => {
 
   if (!addressToUpdate) throw new AppError(httpStatus.BAD_REQUEST, 'No address found for this id');
 
+  // if updated address is the defualt then set all other addresses to false
+  if (updatedData.isDefault) {
+    req.user.address.forEach((address) => (address.isDefault = false));
+  }
+
+  // update the address
   Object.keys(updatedData).map((key) => {
     addressToUpdate[key] = updatedData[key];
   });
