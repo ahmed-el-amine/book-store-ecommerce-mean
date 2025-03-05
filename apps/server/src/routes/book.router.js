@@ -12,7 +12,7 @@ router
         const books = await bookController.getBooks(req);
         res.json(books);
     })
-    .get('/:id', authorization(['user', 'admin']), async (req, res) => {
+    .get('/:id',  async (req, res) => {
         const book = await bookController.getBook(req.params.id);
         res.json(book);
     })

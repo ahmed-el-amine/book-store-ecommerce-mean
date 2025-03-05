@@ -11,6 +11,8 @@ import { AddReviewSectionComponent } from './add-review-section/add-review-secti
   styleUrl: './book-details.component.css',
 })
 export class BookDetailsComponent {
-  @Input() id: string | undefined ;
+  @Input() id: string | undefined;
+  
+
 
 }
