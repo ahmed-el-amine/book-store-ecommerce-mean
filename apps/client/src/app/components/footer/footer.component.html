@@ -1,0 +1,44 @@
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section about">
+        <h3>About BookStore</h3>
+        <p>Your one-stop destination for all your reading needs. We offer a wide selection of books across various genres.</p>
+      </div>
+
+      <div class="footer-section links">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a routerLink="/">Home</a></li>
+          <li><a routerLink="/books">Books</a></li>
+          <li><a routerLink="/cart">Cart</a></li>
+          <li><a routerLink="/profile">My Account</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section contact">
+        <h3>Contact Us</h3>
+        <p><span class="material-icons">email</span> contact&#64;bookstore.com</p>
+        <p><span class="material-icons">phone</span> +1 (555) 123-4567</p>
+        <p><span class="material-icons">location</span> 123 Book Street, Reading City</p>
+      </div>
+
+      <div class="footer-section newsletter">
+        <h3>Newsletter</h3>
+        <p>Subscribe to our newsletter for the latest updates and offers.</p>
+        <form>
+          <input type="email" placeholder="Enter your email" />
+          <button type="submit">Subscribe</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; {{ currentYear }} BookStore. All rights reserved.</p>
+      <div class="footer-bottom-links">
+        <a routerLink="/privacy">Privacy Policy</a>
+        <a routerLink="/terms">Terms of Service</a>
+      </div>
+    </div>
+  </div>
+</footer>
