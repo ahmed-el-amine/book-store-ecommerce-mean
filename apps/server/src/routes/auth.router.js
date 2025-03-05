@@ -3,6 +3,7 @@ import useZod from '../middleware/useZod';
 import { createUserSchema, loginUserSchema } from '../lib/zod/user.zod';
 import { create, login } from '../controllers/user.controller';
 import csurf from 'csurf';
+import authorization from '../middleware/useAuth.middleware.js';
 
 const router = express.Router();
 
@@ -35,6 +36,7 @@ router.post('/login', useZod(loginUserSchema), login);
 router.post(
   '/addAdmin',
   useZod(createUserSchema),
+  authorization(['superAdmin']),
   async (req, res, next) => {
     req.isAdminCreation = true;
     next();

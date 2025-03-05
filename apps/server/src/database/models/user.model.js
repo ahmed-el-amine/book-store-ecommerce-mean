@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 export const userRoles = Object.freeze({
   user: 'user',
   admin: 'admin',
+  superAdmin:'superAdmin'
 });
 
 export const addressSchema = new mongoose.Schema({
@@ -61,7 +62,7 @@ const userSchema = new mongoose.Schema(
     phone: String,
     role: {
       type: String,
-      enum: [userRoles.user, userRoles.admin],
+      enum: [userRoles.user, userRoles.admin,userRoles.superAdmin],
       default: userRoles.user,
     },
     passwordChangedAt: Date,
