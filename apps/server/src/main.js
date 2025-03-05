@@ -9,6 +9,7 @@ import compression from 'compression';
 import cors from 'cors';
 import routesHandler from './routes/index.js';
 import errorHandler from './middleware/errorHandler.js';
+import seedSuperAdmin from './database/seeders/seedSuperAdmin';
 
 // Placed first to caught any uncaught exception in the program
 process.on('uncaughtException', (err) => {
@@ -29,6 +30,21 @@ app.use(express.json({ limit: '20mb' }));
 app.use('/api/v1', routesHandler);
 
 app.use(errorHandler);
+
+(async function(){
+  if(process.env.CREATE_SUPER_ADMIN==='true'){
+    try{
+    await seedSuperAdmin(
+     process.env.SUPERADMIN_EMAIL,
+     process.env.SUPERADMIN_USERNAME,
+     process.env.SUPERADMIN_PASSWORD
+    );
+    }catch(error){
+     logger.error('Failed to create super Admin please try again',error);
+    }
+   }
+})();
+
 
 const server = app.listen(port, host, () => {
   logger.info(`[ ready ] http://${host}:${port}`);
