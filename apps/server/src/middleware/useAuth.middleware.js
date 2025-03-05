@@ -29,9 +29,12 @@ const useAuth =
         throw new AppError(httpStatus.UNAUTHORIZED, 'User has recently changed password, Pleas login again');
       }
 
-      const isRoleValid = allowedRoles.find((x) => user.role == x);
+      // skip this if super admin
+      if (userRoles.superAdmin != user.role) {
+        const isRoleValid = allowedRoles.find((x) => user.role == x);
 
-      if (!isRoleValid) throw new AppError(httpStatus.FORBIDDEN, `Forbidden, you don't have access to this resource`);
+        if (!isRoleValid) throw new AppError(httpStatus.FORBIDDEN, `Forbidden, you don't have access to this resource`);
+      }
 
       req.user = user;
       next();
