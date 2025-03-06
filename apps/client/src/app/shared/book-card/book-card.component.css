@@ -1,0 +1,100 @@
+
+.card-container {
+ 
+  overflow: hidden;
+  border: 1px solid #ddd; 
+}
+
+.card-image img {
+  transition: transform 0.5s ease;
+}
+
+.card-container:hover .card-image img {
+  transform: scale(1.05);
+}
+
+.badges {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 2;
+}
+
+.quick-actions {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 2;
+}
+
+.card-container:hover .quick-actions {
+  opacity: 1;
+}
+
+.action-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  background-color: rgba(40, 40, 40, 0.8); 
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+  z-index: 2;
+  -webkit-transition: transform 0.3s ease;
+  -moz-transition: transform 0.3s ease;
+  -ms-transition: transform 0.3s ease;
+  -o-transition: transform 0.3s ease;
+}
+
+.card-container:hover .action-bar {
+  transform: translateY(0);
+}
+
+.card {
+  width: 200px;
+}
+
+img {
+  border-radius: 12px;
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  -ms-border-radius: 12px;
+  -o-border-radius: 12px;
+}
+
+
+.card-title {
+  font-size: 1.2rem; 
+  color: rgba(34, 34, 34, 1); 
+  margin-bottom: 0.5rem;
+}
+
+.card-text {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.action-bar.clickable {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #fff;
+}
+
+.action-bar.clickable:hover {
+  background-color: rgba(40, 40, 40, 1);
+}
