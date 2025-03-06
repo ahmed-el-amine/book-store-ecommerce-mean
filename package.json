@@ -62,6 +62,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.11.0",
     "ngx-stars": "^1.6.5",
+    "ngx-toastr": "^19.0.0",
     "rxjs": "~7.8.0",
     "winston": "^3.17.0",
     "zod": "^3.24.2",

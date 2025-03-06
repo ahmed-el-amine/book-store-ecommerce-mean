@@ -27,9 +27,9 @@
         ],
         "styles": [
           "node_modules/bootstrap/dist/css/bootstrap.min.css",
+          "node_modules/ngx-toastr/toastr.css",
           "apps/client/src/styles.css"
-        ],
-        "scripts": []
+        ]
       },
       "configurations": {
         "production": {

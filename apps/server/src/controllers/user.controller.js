@@ -12,14 +12,14 @@ export const create = async (req, res) => {
   if (users.length > 0) {
     // check if username exist
     if (users.find((user) => user.username === req.body.username)) {
-      return res.status(400).json({
+      return res.status(httpStatus.BAD_REQUEST).json({
         error: true,
         message: 'Username already exists',
       });
     }
 
     // if no username then will be email
-    return res.status(400).json({
+    return res.status(httpStatus.BAD_REQUEST).json({
       error: true,
       message: 'email already exists',
     });
@@ -54,7 +54,7 @@ export const login = async (req, res) => {
   });
 
   if (!user) {
-    return res.status(404).json({
+    return res.status(httpStatus.BAD_REQUEST).json({
       error: true,
       message: 'Username or password is incorrect',
     });
@@ -63,7 +63,7 @@ export const login = async (req, res) => {
   // if there is an user then compare password
   const isMatch = await user.comparePassword(req.body.password);
   if (!isMatch) {
-    return res.status(404).json({
+    return res.status(httpStatus.BAD_REQUEST).json({
       error: true,
       message: 'Username or password is incorrect',
     });
@@ -80,12 +80,12 @@ export const login = async (req, res) => {
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 
-  res.status(200).json({ message: `Welcome back mr/ms ${user.firstName}`, data: { user, token } });
+  res.status(httpStatus.OK).json({ message: `Welcome back mr/ms ${user.firstName}`, data: { user, token } });
 };
 
 export const getAllUsers = async (req, res) => {
   const users = await User.find();
-  res.status(200).json({ users });
+  res.status(httpStatus.OK).json({ users });
 };
 
 export const update = async (req, res) => {

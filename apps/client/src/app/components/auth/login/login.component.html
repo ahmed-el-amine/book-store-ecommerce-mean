@@ -1,0 +1,27 @@
+<div class="login-container">
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+    <h2>Welcome Back</h2>
+
+    <div class="form-group">
+      <label for="username">Username or Email</label>
+      <input id="username" type="text" formControlName="username" [class.is-invalid]="hasError('username')" placeholder="Enter username or email" />
+      @if (hasError('username')) {
+      <div class="error-message">
+        {{ getErrorMessage('username') }}
+      </div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input id="password" type="password" formControlName="password" [class.is-invalid]="hasError('password')" placeholder="••••••••" />
+      @if (hasError('password')) {
+      <div class="error-message">
+        {{ getErrorMessage('password') }}
+      </div>
+      }
+    </div>
+
+    <button type="submit" [disabled]="loginForm.invalid">Log In</button>
+  </form>
+</div>

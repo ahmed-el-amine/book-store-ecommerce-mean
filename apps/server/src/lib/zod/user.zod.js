@@ -11,6 +11,8 @@ const addressSchema = z
   })
   .strip();
 
+const phoneRegex = new RegExp(/^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/);
+
 const baseUser = z
   .object({
     username: z
@@ -23,11 +25,11 @@ const baseUser = z
     lastName: z.string(),
     address: z.array(addressSchema).optional(),
     email: z.string().email('Please provide a valid email address'),
-    phone: z.string().optional(),
+    phone: z.string().regex(phoneRegex, 'Invalid Number!').or(z.literal('')).optional(),
   })
   .strip();
 
-export const createUserSchema = baseUser;
+export const createUserSchema = baseUser.omit({ address: true }).strip();
 
 export const updateUserSchema = baseUser
   .omit({ username: true, address: true })
