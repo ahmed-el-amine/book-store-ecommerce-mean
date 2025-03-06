@@ -10,6 +10,7 @@ import cors from 'cors';
 import routesHandler from './routes/index.js';
 import errorHandler from './middleware/errorHandler.js';
 import seedSuperAdmin from './database/seeders/seedSuperAdmin';
+import limiter from './middleware/rateLimiter.middleware.js';
 
 // Placed first to caught any uncaught exception in the program
 process.on('uncaughtException', (err) => {
@@ -27,6 +28,7 @@ app.use(compression());
 app.use(cookieParser());
 app.use(express.json({ limit: '20mb' }));
 
+app.use(limiter);
 app.use('/api/v1', routesHandler);
 
 app.use(errorHandler);
