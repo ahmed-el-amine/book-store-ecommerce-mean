@@ -1,21 +1,47 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/api/v1/auth';
+  private baseURL = 'http://localhost:3000/api/v1';
+  private apiUrl = this.baseURL + '/auth';
   private headers = new HttpHeaders().set('Content-Type', 'application/json');
 
-  constructor(private http: HttpClient) {}
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
+  private currentUserSubject = new BehaviorSubject<any>(null);
 
-  login(credentials: { username: string; password: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, credentials, {
-      headers: this.headers,
-      withCredentials: true,
+  isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
+  currentUser$ = this.currentUserSubject.asObservable();
+
+  constructor(private http: HttpClient) {
+    // Check initial auth state
+    this.getCurrentUser().subscribe({
+      next: (user) => {
+        this.isAuthenticatedSubject.next(true);
+        this.currentUserSubject.next(user);
+      },
+      error: () => {
+        this.isAuthenticatedSubject.next(false);
+        this.currentUserSubject.next(null);
+      },
     });
+  }
+  login(credentials: { username: string; password: string }): Observable<any> {
+    return this.http
+      .post(`${this.apiUrl}/login`, credentials, {
+        headers: this.headers,
+        withCredentials: true,
+      })
+      .pipe(
+        tap((response) => {
+          this.isAuthenticatedSubject.next(true);
+          this.currentUserSubject.next((response as any)?.data?.user);
+        })
+      );
   }
 
   signup(userData: any): Observable<any> {
@@ -26,27 +52,40 @@ export class AuthService {
   }
 
   logout(): Observable<any> {
-    return this.http.post(
-      `${this.apiUrl}/logout`,
-      {},
-      {
-        headers: this.headers,
-        withCredentials: true,
-      }
-    );
+    return this.http
+      .post(
+        `${this.apiUrl}/logout`,
+        {},
+        {
+          headers: this.headers,
+          withCredentials: true,
+        }
+      )
+      .pipe(
+        tap(() => {
+          this.isAuthenticatedSubject.next(false);
+          this.currentUserSubject.next(null);
+        })
+      );
   }
 
   getCurrentUser(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/users/me`, {
-      headers: this.headers,
-      withCredentials: true,
-    });
+    return this.http
+      .get(`${this.baseURL}/users/me`, {
+        headers: this.headers,
+        withCredentials: true,
+      })
+      .pipe(
+        tap((user) => {
+          this.currentUserSubject.next(user);
+          this.isAuthenticatedSubject.next(true);
+        })
+      );
   }
-
-  isAuthenticated(): Observable<boolean> {
-    return this.http.get<boolean>(`${this.apiUrl}/users/me`, {
-      headers: this.headers,
-      withCredentials: true,
-    });
+  get isAuthenticated(): boolean {
+    return this.isAuthenticatedSubject.value;
+  }
+  get currentUser(): any {
+    return this.currentUserSubject.value;
   }
 }

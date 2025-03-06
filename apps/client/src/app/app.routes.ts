@@ -7,11 +7,11 @@ import { LoginComponent } from './components/auth/login/login.component';
 
 export const appRoutes: Route[] = [
   {
-    path: 'signup',
+    path: 'auth/signup',
     component: SignupComponent,
   },
   {
-    path: 'login',
+    path: 'auth/login',
     component: LoginComponent,
   },
   {
