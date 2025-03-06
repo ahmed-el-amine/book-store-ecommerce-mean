@@ -1,0 +1,65 @@
+.sticky-top {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+.cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  font-size: 0.7rem;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+.btn-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.search-form {
+  position: relative;
+}
+.search-icon {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  color: #6c757d;
+}
+.search-input {
+  padding-left: 35px;
+}
+.book-card-img {
+  aspect-ratio: 2/3;
+  height: 96px;
+  object-fit: cover;
+}
+.quantity-control {
+  display: flex;
+  align-items: center;
+}
+.quantity-btn {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.quantity-text {
+  width: 32px;
+  text-align: center;
+}
+.footer-bg {
+  background-color: #f8f9fa;
+}
+.card {
+  border-radius: 0.5rem;
+}

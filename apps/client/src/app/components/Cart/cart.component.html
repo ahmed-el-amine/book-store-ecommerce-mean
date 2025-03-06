@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>BookHaven</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+
+<body>
+  <div class="d-flex flex-column min-vh-100">
+    <!-- Main Content -->
+    <main class="flex-grow-1">
+      <div class="container py-4 py-md-5">
+        <!-- Back Link -->
+        <div class="mb-4">
+          <a href="/" class="text-decoration-none text-secondary">
+            <i class="fas fa-chevron-left mr-1"></i>
+            Continue Shopping
+          </a>
+        </div>
+
+        <!-- Cart Grid -->
+        <div class="row">
+          <!-- Cart Items Column -->
+          <div class="col-lg-8 mb-4 mb-lg-0">
+            <div class="d-flex justify-content-between align-items-center">
+              <h1 class="h2 font-weight-bold">Shopping Cart</h1>
+              <span class="text-muted small">3 items</span>
+            </div>
+            <hr class="my-3">
+
+            <!-- Cart Items -->
+            <div>
+              <!-- Cart Item 1 -->
+              <div class="d-flex py-3">
+                <div class="mr-3">
+                  <img src="/placeholder.svg?height=150&width=100&text=Book+1" alt="Book 1"
+                    class="book-card-img rounded">
+                </div>
+                <div class="d-flex flex-column justify-content-between flex-grow-1">
+                  <div>
+                    <h5 class="font-weight-medium">The Great Adventure</h5>
+                    <p class="text-muted small">John Doe</p>
+                  </div>
+                  <div class="quantity-control">
+                    <button class="btn btn-outline-secondary quantity-btn">
+                      <i class="fas fa-minus fa-xs"></i>
+                      <span class="sr-only">Decrease quantity</span>
+                    </button>
+                    <span class="quantity-text">1</span>
+                    <button class="btn btn-outline-secondary quantity-btn">
+                      <i class="fas fa-plus fa-xs"></i>
+                      <span class="sr-only">Increase quantity</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="d-flex flex-column justify-content-between align-items-end">
+                  <button class="btn btn-light btn-sm p-1">
+                    <i class="fas fa-trash"></i>
+                    <span class="sr-only">Remove item</span>
+                  </button>
+                  <div class="font-weight-medium">$24.99</div>
+                </div>
+              </div>
+              <hr>
+
+              <!-- Cart Item 2 -->
+              <div class="d-flex py-3">
+                <div class="mr-3">
+                  <img src="/placeholder.svg?height=150&width=100&text=Book+2" alt="Book 2"
+                    class="book-card-img rounded">
+                </div>
+                <div class="d-flex flex-column justify-content-between flex-grow-1">
+                  <div>
+                    <h5 class="font-weight-medium">The Great Adventure</h5>
+                    <p class="text-muted small">John Doe</p>
+                  </div>
+                  <div class="quantity-control">
+                    <button class="btn btn-outline-secondary quantity-btn">
+                      <i class="fas fa-minus fa-xs"></i>
+                      <span class="sr-only">Decrease quantity</span>
+                    </button>
+                    <span class="quantity-text">1</span>
+                    <button class="btn btn-outline-secondary quantity-btn">
+                      <i class="fas fa-plus fa-xs"></i>
+                      <span class="sr-only">Increase quantity</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="d-flex flex-column justify-content-between align-items-end">
+                  <button class="btn btn-light btn-sm p-1">
+                    <i class="fas fa-trash"></i>
+                    <span class="sr-only">Remove item</span>
+                  </button>
+                  <div class="font-weight-medium">$24.99</div>
+                </div>
+              </div>
+              <hr>
+
+              <!-- Cart Item 3 -->
+              <div class="d-flex py-3">
+                <div class="mr-3">
+                  <img src="/placeholder.svg?height=150&width=100&text=Book+3" alt="Book 3"
+                    class="book-card-img rounded">
+                </div>
+                <div class="d-flex flex-column justify-content-between flex-grow-1">
+                  <div>
+                    <h5 class="font-weight-medium">The Great Adventure</h5>
+                    <p class="text-muted small">John Doe</p>
+                  </div>
+                  <div class="quantity-control">
+                    <button class="btn btn-outline-secondary quantity-btn">
+                      <i class="fas fa-minus fa-xs"></i>
+                      <span class="sr-only">Decrease quantity</span>
+                    </button>
+                    <span class="quantity-text">1</span>
+                    <button class="btn btn-outline-secondary quantity-btn">
+                      <i class="fas fa-plus fa-xs"></i>
+                      <span class="sr-only">Increase quantity</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="d-flex flex-column justify-content-between align-items-end">
+                  <button class="btn btn-light btn-sm p-1">
+                    <i class="fas fa-trash"></i>
+                    <span class="sr-only">Remove item</span>
+                  </button>
+                  <div class="font-weight-medium">$24.99</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Order Summary Column -->
+          <div class="col-lg-4">
+            <div class="card">
+              <div class="card-body p-4">
+                <h2 class="h5 font-weight-bold">Order Summary</h2>
+                <hr class="my-3">
+                <div class="mb-4">
+                  <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Subtotal</span>
+                    <span>$74.97</span>
+                  </div>
+                  <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Shipping</span>
+                    <span>$4.99</span>
+                  </div>
+                  <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Tax</span>
+                    <span>$6.00</span>
+                  </div>
+                  <hr class="my-2">
+                  <div class="d-flex justify-content-between font-weight-medium">
+                    <span>Total</span>
+                    <span>$85.96</span>
+                  </div>
+                </div>
+                <div>
+                  <div class="mb-3">
+                    <label for="promo-code" class="small font-weight-medium mb-2">Promo Code</label>
+                    <div class="input-group">
+                      <input type="text" class="form-control" placeholder="Enter code">
+                      <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button">Apply</button>
+                      </div>
+                    </div>
+                  </div>
+                  <button class="btn btn-primary btn-block">Proceed to Checkout</button>
+                  <div class="text-center small text-muted mt-3">
+                    Taxes and shipping calculated at checkout
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+  </div>
