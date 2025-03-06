@@ -61,6 +61,7 @@
     "http-status": "^2.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.11.0",
+    "ngx-stars": "^1.6.5",
     "rxjs": "~7.8.0",
     "winston": "^3.17.0",
     "zod": "^3.24.2",
