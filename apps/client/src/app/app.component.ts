@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { HeaderComponent } from './components/Header/header.component';
-import { HeroComponent } from './components/hero/hero.component';
+import { RouterModule,RouterOutlet } from '@angular/router';
+import { HeaderComponent } from './components/homePage/header/header.component';
 import { NgxStarsModule } from 'ngx-stars';
 
 @Component({
-  imports: [RouterModule,HeaderComponent,HeroComponent,NgxStarsModule],
+  imports: [RouterModule,HeaderComponent,RouterOutlet,NgxStarsModule],
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
