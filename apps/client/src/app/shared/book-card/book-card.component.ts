@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { StarsGeneratorComponent } from "../../stars-generator/stars-generator.component";
+import { StarsGeneratorComponent } from "../stars-generator/stars-generator.component";
 
 @Component({
   selector: 'app-book-card',

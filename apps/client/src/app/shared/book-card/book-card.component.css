@@ -1,11 +1,8 @@
-*{
-  padding: 0px;
-  margin: 0px;
-}
+
 .card-container {
-  /* Ensures relative positioning for absolute elements inside */
+ 
   overflow: hidden;
-  border: 1px solid #ddd; /* subtle border for definition */
+  border: 1px solid #ddd; 
 }
 
 .card-image img {
@@ -16,7 +13,6 @@
   transform: scale(1.05);
 }
 
-/* Badges positioned at top-left */
 .badges {
   position: absolute;
   top: 0.75rem;
@@ -27,7 +23,6 @@
   z-index: 2;
 }
 
-/* Quick actions (e.g., wishlist) at top-right */
 .quick-actions {
   position: absolute;
   top: 0.75rem;
@@ -41,14 +36,13 @@
   opacity: 1;
 }
 
-/* Action Bar with updated color */
 .action-bar {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
   height: 48px;
-  background-color: rgba(40, 40, 40, 0.8); /* Changed to a blue tone with transparency */
+  background-color: rgba(40, 40, 40, 0.8); 
   backdrop-filter: blur(5px);
   display: flex;
   align-items: center;
@@ -79,31 +73,28 @@ img {
   -o-border-radius: 12px;
 }
 
-/* Updated text styling for Book Info */
+
 .card-title {
-  font-size: 1.2rem; /* Slightly larger title */
-  color: rgba(34, 34, 34, 1); /* Dark title text in RGBA format */
+  font-size: 1.2rem; 
+  color: rgba(34, 34, 34, 1); 
   margin-bottom: 0.5rem;
 }
 
 .card-text {
-  font-size: 0.9rem; /* Slightly smaller text for subtitles */
-  color: #555; /* A softer gray for description text */
+  font-size: 0.9rem;
+  color: #555;
 }
 
-/* Make the entire action-bar clickable */
 .action-bar.clickable {
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Optionally adjust font-size or color if needed */
   font-size: 1rem;
   font-weight: 500;
   color: #fff;
 }
 
-/* Optional: Hover effect for the clickable action-bar */
 .action-bar.clickable:hover {
-  background-color: rgba(40, 40, 40, 1); /* Darker on hover */
+  background-color: rgba(40, 40, 40, 1);
 }
