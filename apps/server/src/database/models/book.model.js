@@ -1,6 +1,6 @@
 import  mongoose  from 'mongoose'
 import authorModel from '../models/author.model.js';
-import AppError from '../../utils/customError';
+import AppError from '../../utils/customError.js';
 
 const BookModel = new mongoose.Schema({
   title:{
