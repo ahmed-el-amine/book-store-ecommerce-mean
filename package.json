@@ -61,7 +61,7 @@
     "express-rate-limit": "^7.5.0",
     "http-status": "^2.1.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.11.0",
+    "mongoose": "^8.12.1",
     "ngx-stars": "^1.6.5",
     "ngx-toastr": "^19.0.0",
     "rxjs": "~7.8.0",

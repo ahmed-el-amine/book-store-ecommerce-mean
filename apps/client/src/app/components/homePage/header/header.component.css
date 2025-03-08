@@ -76,3 +76,24 @@
   margin-right: 15px;
   margin-left: auto;
 }
+
+.logout-button {
+  transition: background-color 0.3s, color 0.3s;
+  text-decoration: none;
+  color: white;
+}
+
+.logout-button:hover {
+  background-color: #4e0101;
+  color: #fff;
+}
+
+.welcome-message {
+  font-size: 0.85rem;
+  color: #ffffff;
+  background-color: #3886d4;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  margin: 0;
+  display: inline-block;
+}
