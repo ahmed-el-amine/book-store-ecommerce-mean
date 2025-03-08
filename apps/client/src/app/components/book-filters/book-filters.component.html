@@ -1,0 +1,59 @@
+<div class="container row">
+    <!-- Form Section -->
+    <div class="col-5 col-md-4 main">
+        <form [formGroup]="searchForm" (ngSubmit)="onSubmit()" class="search-form">
+            <div class="form-group">
+                <label for="price">Min Price</label>
+                <input type="number" name="price" id="price" min="1" formControlName="price">
+            </div>
+            <div class="form-group">
+                <label for="title">Search by Title</label>
+                <input type="text" id="title" formControlName="title" placeholder="Enter book title">
+            </div>
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select id="category" formControlName="categories">
+                    <!-- Loop through categories -->
+                    @for(category of categories; track category.id) {
+                    <option [value]="category.value">
+                        {{ category.name }}
+                    </option>
+                    }
+                </select>
+            </div>
+            <div class="form-group rating-container">
+                <div class="rating-title">Min Rate</div>
+                <label for="one" class="rating-label">
+                    <input type="radio" id="one" formControlName="rating" value="1">
+                    1
+                </label>
+                <label for="two" class="rating-label">
+                    <input type="radio" id="two" formControlName="rating" value="2">
+                    2
+                </label>
+                <label for="three" class="rating-label">
+                    <input type="radio" id="three" formControlName="rating" value="3">
+                    3
+                </label>
+                <label for="four" class="rating-label">
+                    <input type="radio" id="four" formControlName="rating" value="4">
+                    4
+                </label>
+                <label for="five" class="rating-label">
+                    <input type="radio" id="five" formControlName="rating" value="5">
+                    5
+                </label>
+            </div>
+            <div class="form-group">
+                <button type="submit" [disabled]="searchForm.invalid" class="submit-btn">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Book Cards Section -->
+    <div class="col-12 col-md-8 book-list">
+        @for(book of books; track book.id){
+        <app-book-card [bookData]="book" class="book-card"></app-book-card>
+        }
+    </div>
+</div>

@@ -2,14 +2,26 @@ import BookModel from '../database/models/book.model.js';
 import AppError from '../utils/customError.js';
 
 const getBooks = async (req) => {
-  const { categories } = req.query;
+  const { categories, price, rating, title } = req.query;
   const filter = {};
+
   if (categories) {
-    filter.categories = categories;
+    filter.categories = { $in: [categories] };
   }
+  if (title) {
+    filter.title = { $regex: title, $options: 'i' };  }
+  if (price) {
+    filter.price = { $gte: price };
+  }
+
+  if (rating) {
+    filter.rating = { $gte: rating };
+  }
+  console.log('Filter:', filter); 
   const books = await BookModel.find(filter).populate('authors').exec();
   return books;
 };
+
 
 const getBook = async (id) => {
   const book = await BookModel.findById(id).populate('authors').exec();
