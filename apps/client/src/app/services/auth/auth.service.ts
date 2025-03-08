@@ -109,4 +109,28 @@ export class AuthService {
   get currentUser(): any {
     return this.currentUserSubject.value;
   }
+  getAddresses(): Observable<any> {
+    return this.http.get(`${this.baseURL}/users/me/address`, {
+      headers: this.headers,
+      withCredentials: true,
+    });
+  }
+  addAddress(addressData: any): Observable<any> {
+    return this.http.post(`${this.baseURL}/users/me/address`, addressData, {
+      headers: this.headers,
+      withCredentials: true,
+    });
+  }
+  updateAddress(addressId: string, addressData: any): Observable<any> {
+    return this.http.patch(`${this.baseURL}/users/me/address/${addressId}`, addressData, {
+      headers: this.headers,
+      withCredentials: true,
+    });
+  }
+  deleteAddress(addressId: string): Observable<any> {
+    return this.http.delete(`${this.baseURL}/users/me/address/${addressId}`, {
+      headers: this.headers,
+      withCredentials: true,
+    });
+  }
 }

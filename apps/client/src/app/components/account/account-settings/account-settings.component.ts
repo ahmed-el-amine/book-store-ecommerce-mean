@@ -5,12 +5,12 @@ import { AuthService } from '../../../services/auth/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
+import { AddressesComponent } from './addresses/addresses.component';
 
 @Component({
   selector: 'app-account-settings',
   standalone: true,
-  // Update the imports array in your @Component decorator
-  imports: [CommonModule, ReactiveFormsModule, DatePipe],
+  imports: [CommonModule, ReactiveFormsModule, DatePipe, AddressesComponent],
   templateUrl: './account-settings.component.html',
   styleUrls: ['./account-settings.component.css'],
 })
@@ -70,26 +70,26 @@ export class AccountSettingsComponent implements OnInit {
       this.toastr.error('Please check your form inputs', 'Validation Error');
       return;
     }
-  
+
     // Get only changed values
     const formValues = this.profileForm.value;
     const changedValues: any = {};
     let hasChanges = false;
-  
+
     // Check each field for changes
-    Object.keys(formValues).forEach(key => {
+    Object.keys(formValues).forEach((key) => {
       if (formValues[key] !== this.user[key] && formValues[key] !== '') {
         changedValues[key] = formValues[key];
         hasChanges = true;
       }
     });
-  
+
     // If no changes, show message and return
     if (!hasChanges) {
       this.toastr.info('No changes detected', 'Info');
       return;
     }
-  
+
     this.loading = true;
     this.authService.updateProfile(changedValues).subscribe({
       next: () => {
