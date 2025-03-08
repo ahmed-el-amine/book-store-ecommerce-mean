@@ -1,9 +1,9 @@
 import express from 'express';
 import { userRoles } from '../database/models/user.model.js';
 import useAuth from '../middleware/useAuth.middleware.js';
-import { addAddress, deleteAddress, getAllAddresses, getAllUsers, update, updateAddress } from '../controllers/user.controller.js';
+import { addAddress, changePassword, deleteAddress, getAllAddresses, getAllUsers, update, updateAddress } from '../controllers/user.controller.js';
 import useZod from '../middleware/useZod.js';
-import { addUserAddressSchema, updateUserSchema, updateUserAddressSchema } from '../lib/zod/user.zod.js';
+import { addUserAddressSchema, updateUserSchema, updateUserAddressSchema, changeUserPasswordSchema } from '../lib/zod/user.zod.js';
 const router = express.Router();
 
 // Get all users for admin only
@@ -19,6 +19,9 @@ router.patch('/me', useAuth([userRoles.admin, userRoles.user]), useZod(updateUse
 
 // get all address
 router.get('/me/address', useAuth([userRoles.admin, userRoles.user]), getAllAddresses);
+
+// change password
+router.post('/me/change-password', useAuth([userRoles.admin, userRoles.user]), useZod(changeUserPasswordSchema), changePassword);
 
 // add new address
 router.post('/me/address', useAuth([userRoles.admin, userRoles.user]), useZod(addUserAddressSchema), addAddress);

@@ -82,6 +82,27 @@ export class AuthService {
         })
       );
   }
+  updateProfile(userData: any): Observable<any> {
+    return this.http
+      .patch(`${this.baseURL}/users/me`, userData, {
+        headers: this.headers,
+        withCredentials: true,
+      })
+      .pipe(
+        tap(() => {
+          // Update the current user data
+          const updatedUser = { ...this.currentUserSubject.value, ...userData };
+          this.currentUserSubject.next(updatedUser);
+        })
+      );
+  }
+
+  changePassword(passwordData: { currentPassword: string; newPassword: string }): Observable<any> {
+    return this.http.post(`${this.baseURL}/users/me/change-password`, passwordData, {
+      headers: this.headers,
+      withCredentials: true,
+    });
+  }
   get isAuthenticated(): boolean {
     return this.isAuthenticatedSubject.value;
   }

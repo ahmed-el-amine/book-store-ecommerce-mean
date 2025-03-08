@@ -32,10 +32,15 @@ const baseUser = z
 export const createUserSchema = baseUser.omit({ address: true }).strip();
 
 export const updateUserSchema = baseUser
-  .omit({ username: true, address: true })
+  .pick({ firstName: true, lastName: true, email: true, phone: true })
   .partial()
   .strip()
   .refine((data) => Object.keys(data).length > 0, { message: 'At least one field must be provided for update', path: [] });
+
+export const changeUserPasswordSchema = z.object({
+  currentPassword: z.string().min(1, 'Current password is required'),
+  newPassword: baseUser.shape.password,
+});
 
 export const loginUserSchema = z
   .object({

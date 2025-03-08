@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -13,7 +13,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.css'],
 })
-export class SignupComponent {
+export class SignupComponent implements OnInit {
   signupForm: FormGroup;
   submitted = false;
   formErrors: Record<string, string> = {};
@@ -26,6 +26,15 @@ export class SignupComponent {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
       phone: ['', [Validators.pattern(/^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/)]],
+    });
+  }
+
+  ngOnInit() {
+    // Redirect if already logged in
+    this.authService.isAuthenticated$.subscribe((isAuth) => {
+      if (isAuth) {
+        this.router.navigate(['/account']);
+      }
     });
   }
 
@@ -42,8 +51,8 @@ export class SignupComponent {
       const validatedData = createUserSchema.parse(this.signupForm.value);
       this.authService.signup(validatedData).subscribe({
         next: () => {
-          this.toastr.success('Account created successfully you can login now!', 'Success');
-          this.router.navigate(['/login']);
+          this.toastr.success('Account created successfully! Please login.', 'Success');
+          this.router.navigate(['/auth/login']);
         },
         error: (error) => {
           this.toastr.error(error.error.message || 'Registration failed', 'Error');

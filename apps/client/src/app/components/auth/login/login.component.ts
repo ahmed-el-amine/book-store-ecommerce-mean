@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -13,7 +13,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   submitted = false;
   formErrors: Record<string, string> = {};
@@ -25,6 +25,15 @@ export class LoginComponent {
     });
   }
 
+  ngOnInit() {
+    // Redirect if already logged in
+    this.authService.isAuthenticated$.subscribe((isAuth) => {
+      if (isAuth) {
+        this.router.navigate(['/account']);
+      }
+    });
+  }
+
   onSubmit() {
     if (this.loginForm.invalid) return;
 
@@ -33,7 +42,7 @@ export class LoginComponent {
       this.authService.login(validatedData).subscribe({
         next: () => {
           this.toastr.success('Login successful!', 'Success');
-           this.router.navigate(['/']);
+          this.router.navigate(['/account']);
         },
         error: (error) => {
           this.toastr.error(error.error.message || 'Login failed', 'Error');

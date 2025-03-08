@@ -193,3 +193,20 @@ export const updateAddress = async (req, res) => {
     address: req.user.address,
   });
 };
+
+export const changePassword = async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  const user = req.user;
+
+  // Verify current password
+  const isPasswordValid = await user.comparePassword(currentPassword);
+  if (!isPasswordValid) {
+    return res.status(401).json({ message: 'Current password is incorrect' });
+  }
+
+  // Update password
+  user.password = newPassword;
+  await user.save();
+
+  res.json({ message: 'Password updated successfully' });
+};
