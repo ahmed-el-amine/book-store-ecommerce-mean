@@ -69,10 +69,6 @@ const orderSchema = new mongoose.Schema({
             message: 'Estimated delivery date must be in the future'
         }
     },
-    notes: {
-        type: String,
-        maxlength: [500, 'Notes cannot exceed 500 characters']
-    },
     discountApplied: {
         type: Number,
         default: 0,
