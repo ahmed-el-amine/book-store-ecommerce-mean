@@ -33,7 +33,7 @@ export class LoginComponent {
       this.authService.login(validatedData).subscribe({
         next: () => {
           this.toastr.success('Login successful!', 'Success');
-          // this.router.navigate(['/']);
+           this.router.navigate(['/']);
         },
         error: (error) => {
           this.toastr.error(error.error.message || 'Login failed', 'Error');

@@ -27,4 +27,15 @@ export class HeaderComponent {
       }
     );
   }
+
+  logUserOut(){
+    this.authService.logout().subscribe({
+      next:()=>{
+        console.log('Logged out user successfully');
+      },
+      error:(err)=>{
+        console.error('Error during logout',err);
+      }
+    });
+  }
 }
