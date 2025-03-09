@@ -8,13 +8,14 @@ import { AuthService } from '../../services/auth/auth.service';
 
 
 
+
 @Component({
   selector: 'app-book-filters',
   imports: [CommonModule, BookCardComponent, ReactiveFormsModule],
   templateUrl: './book-filters.component.html',
   styleUrl: './book-filters.component.css',
 })
-export class BookFiltersComponent implements OnInit {
+export class BookFiltersComponent implements OnInit  {
 
   searchForm: FormGroup;
   filters: any = {};
@@ -35,6 +36,7 @@ export class BookFiltersComponent implements OnInit {
       categories: new FormControl(''),
       title: new FormControl(''),
     });
+
   }
   onSubmit() {
     if (this.searchForm.valid) {
@@ -67,9 +69,9 @@ export class BookFiltersComponent implements OnInit {
       this.isAuthenticated = isAuth;
 
     if (this.isAuthenticated) {
-      this.authService.getCurrentUser().subscribe({
+      this.authService.currentUser$.subscribe({
         next: (user) => {
-          console.log('User Data:', user);//see this
+          console.log('User Data:', user);
           this.userData = user;
         },
         error: (err) => {

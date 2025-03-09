@@ -30,6 +30,7 @@ export class AuthService {
       },
     });
   }
+
   login(credentials: { username: string; password: string }): Observable<any> {
     return this.http
       .post(`${this.apiUrl}/login`, credentials, {
@@ -63,6 +64,7 @@ export class AuthService {
       )
       .pipe(
         tap(() => {
+          document.cookie = `token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`; 
           this.isAuthenticatedSubject.next(false);
           this.currentUserSubject.next(null);
         })
@@ -77,7 +79,6 @@ export class AuthService {
       })
       .pipe(
         tap((user) => {
-          console.log('User data received:', user);
           this.currentUserSubject.next(user);
           this.isAuthenticatedSubject.next(true);
         })
