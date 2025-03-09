@@ -1,0 +1,70 @@
+<div class="row">
+    <!-- Image Column -->
+    <div class="col-md-4 mb-4">
+        <img src="https://images.pexels.com/photos/1704488/pexels-photo-1704488.jpeg?cs=srgb&dl=pexels-sulimansallehi-1704488.jpg&fm=jpg"
+            alt="Book Image" class="img-fluid rounded shadow-lg">
+    </div>
+
+    <!-- Book Details Column -->
+    <div class="col-md-8">
+        <h2 class="text-primary mb-3">{{book.title}}</h2>
+        <p class="text-muted mb-4">{{book.description}}</p>
+
+        <!-- Book Price and Stock -->
+        <div class="d-flex justify-content-between mb-3">
+            <h4 class="text-success">Price: ${{book.price}}</h4>
+            <h5 class="text-warning">Stock: {{book.stock}}</h5>
+        </div>
+        <!-- Rating with Stars -->
+        <h5>Rating:
+            <span class="star-rating">
+                <!-- عرض النجوم المملوءة -->
+                <i *ngFor="let i of [].constructor(getStars(book.rating).full)" class="fas fa-star"
+                    style="color: gold;"></i>
+
+                <!-- عرض النجم الجزئي -->
+                <i *ngIf="getStars(book.rating).half === 1" class="fas fa-star-half-alt" style="color: gold;"></i>
+
+                <!-- عرض النجوم الفارغة -->
+                <i *ngFor="let i of [].constructor(getStars(book.rating).empty)" class="far fa-star"
+                    style="color: lightgray;"></i>
+            </span>
+        </h5>
+        <!-- Collapse Buttons -->
+        <div class="d-flex gap-2 mb-4">
+            <a class="btn btn-outline-primary" data-bs-toggle="collapse" href="#categoryCollapse" role="button"
+                aria-expanded="false" aria-controls="categoryCollapse">
+                Categories
+            </a>
+            <a class="btn btn-outline-primary" data-bs-toggle="collapse" href="#authorCollapse" role="button"
+                aria-expanded="false" aria-controls="authorCollapse">
+                Authors
+            </a>
+        </div>
+
+        <!-- Collapse Content -->
+        <div class="row">
+            <!-- Categories -->
+            <div class="col">
+                <div class="collapse" id="categoryCollapse">
+                    <ul class="list-group">
+                        @for(catigory of book.categories; track book.id){
+                        <li class="list-group-item">{{catigory}}</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Authors -->
+            <div class="col">
+                <div class="collapse" id="authorCollapse">
+                    <ul class="list-group">
+                        @for(author of book.authors; track book.id){
+                        <li class="list-group-item">{{author}}</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

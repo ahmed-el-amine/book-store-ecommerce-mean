@@ -8,12 +8,16 @@
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:application",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/apps/client",
         "index": "apps/client/src/index.html",
         "browser": "apps/client/src/main.ts",
-        "polyfills": ["zone.js"],
+        "polyfills": [
+          "zone.js"
+        ],
         "tsConfig": "apps/client/tsconfig.app.json",
         "assets": [
           {
@@ -21,8 +25,11 @@
             "input": "apps/client/public"
           }
         ],
-        "styles": ["apps/client/src/styles.css"],
-        "scripts": []
+        "styles": [
+          "node_modules/bootstrap/dist/css/bootstrap.min.css",
+          "node_modules/ngx-toastr/toastr.css",
+          "apps/client/src/styles.css"
+        ]
       },
       "configurations": {
         "production": {

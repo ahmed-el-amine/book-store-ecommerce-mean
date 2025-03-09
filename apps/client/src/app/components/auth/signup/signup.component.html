@@ -1,0 +1,76 @@
+<div class="signup-container">
+  <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="signup-form">
+    <h2>Create Account</h2>
+
+    <div class="name-group">
+      <div class="form-group">
+        <label for="firstName">First Name</label>
+        <input id="firstName" type="text" formControlName="firstName" [class.is-invalid]="hasError('firstName')" placeholder="firstName" />
+        @if (hasError('firstName')) {
+        <div class="error-message">
+          {{ getErrorMessage('firstName') }}
+        </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <input id="lastName" type="text" formControlName="lastName" [class.is-invalid]="hasError('lastName')" placeholder="lastName" />
+        @if (hasError('lastName')) {
+        <div class="error-message">
+          {{ getErrorMessage('lastName') }}
+        </div>
+        }
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input id="username" type="text" formControlName="username" [class.is-invalid]="hasError('username')" placeholder="username" />
+      @if (hasError('username')) {
+      <div class="error-message">
+        {{ getErrorMessage('username') }}
+      </div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input id="email" type="email" formControlName="email" [class.is-invalid]="hasError('email')" placeholder="email@example.com" />
+      @if (hasError('email')) {
+      <div class="error-message">
+        {{ getErrorMessage('email') }}
+      </div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="phone">Phone Number</label>
+      <input 
+        id="phone" 
+        type="tel" 
+        formControlName="phone" 
+        [class.is-invalid]="hasError('phone')" 
+        placeholder="+1 (555) 000-0000"
+        pattern="[0-9+\- ]+"
+      />
+      @if (hasError('phone')) {
+        <div class="error-message">
+          {{ getErrorMessage('phone') }}
+        </div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input id="password" type="password" formControlName="password" [class.is-invalid]="hasError('password')" placeholder="••••••••" />
+      @if (hasError('password')) {
+      <div class="error-message">
+        {{ getErrorMessage('password') }}
+      </div>
+      }
+    </div>
+
+    <button type="submit" [disabled]="signupForm.invalid">Create Account</button>
+  </form>
+</div>

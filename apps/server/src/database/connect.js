@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+import {importDataOfAuthors} from './models/author.model.js';
+import logger from '../lib/winston/index.js';
 
 const connectToDB = () =>
   new Promise((resolve, reject) => {
@@ -8,7 +10,14 @@ const connectToDB = () =>
 
     mongoose
       .connect(MONGODB_URI)
-      .then(() => resolve(true))
+      .then(() => {
+        logger.info('Connected to database successfully');
+       // return importDataOfAuthors();
+      })
+      .then(()=>{
+       // logger.info('Author data imported successfully');
+        return resolve(true);
+      })
       .catch((error) => reject(error));
   });
 

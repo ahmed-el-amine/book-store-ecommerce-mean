@@ -2,6 +2,12 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
+export const userRoles = Object.freeze({
+  user: 'user',
+  admin: 'admin',
+  superAdmin: 'superAdmin',
+});
+
 export const addressSchema = new mongoose.Schema({
   street: { type: String, required: true },
   city: { type: String, required: true },
@@ -20,10 +26,7 @@ const userSchema = new mongoose.Schema(
       trim: true,
       minlength: [3, 'Username must be at least 3 characters'],
       maxlength: [30, 'Username cannot exceed 30 characters'],
-      match: [
-        /^[a-zA-Z0-9_]+$/,
-        'Username can only contain letters, numbers, and underscores',
-      ],
+      match: [/^[a-zA-Z0-9_]+$/, 'Username can only contain letters, numbers, and underscores'],
     },
     password: {
       type: String,
@@ -59,17 +62,15 @@ const userSchema = new mongoose.Schema(
     phone: String,
     role: {
       type: String,
-      enum: ['user', 'admin'],
-      default: 'user',
+      enum: [userRoles.user, userRoles.admin, userRoles.superAdmin],
+      default: userRoles.user,
     },
-    passwordChangedAt: Date
-
+    passwordChangedAt: Date,
   },
   {
     timestamps: true,
   }
 );
-
 
 userSchema.methods.comparePassword = async function (password) {
   const isMatch = await bcrypt.compare(password, this.password);
@@ -85,13 +86,12 @@ userSchema.methods.createAuthToken = function () {
 };
 
 userSchema.methods.hasPasswordChangedAfterToken = function (tokenTimestamp) {
-
   if (!this.passwordChangedAt) {
     return false;
   }
-  const newPassTimestamp = Math.floor(this.passwordChangedAt.getTime() / 1000)
+  const newPassTimestamp = Math.floor(this.passwordChangedAt.getTime() / 1000);
   return tokenTimestamp < newPassTimestamp;
-}
+};
 async function hashPassword(next) {
   if (this.isModified('password')) {
     this.password = await bcrypt.hash(this.password, 10);
@@ -109,11 +109,9 @@ async function hashPasswordForQuery(next) {
   next();
 }
 
-
 userSchema.pre('updateOne', hashPasswordForQuery);
 userSchema.pre('findOneAndUpdate', hashPasswordForQuery);
 userSchema.pre('updateMany', hashPasswordForQuery);
-
 
 userSchema.set('toJSON', {
   transform: (doc, ret) => {

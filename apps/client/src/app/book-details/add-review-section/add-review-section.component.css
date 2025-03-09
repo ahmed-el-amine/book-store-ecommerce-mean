@@ -1,0 +1,44 @@
+textarea {
+    padding: 10px;
+    font-size: 16px;
+}
+
+button {
+    padding: 10px 20px;
+    margin: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+button:disabled {
+    background-color: #ddd;
+    cursor: not-allowed;
+}
+
+form {
+    border: 2px solid;
+    border-radius: 5px;
+    width: fit-content;
+    padding: 10px;
+
+}
+label ,.rating-title    {
+    display: block;
+    text-align: left;
+    margin: 5px;
+    font-size: larger;
+    font-weight: bold;
+}
+
+h2 {
+    text-align: left;
+}
+
+.rating-label input[type="radio"] {
+    margin-right: 5px;
+    transform: scale(1.5);
+}

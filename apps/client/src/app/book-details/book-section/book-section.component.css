@@ -1,0 +1,6 @@
+.star-rating i {
+    font-size: 20px;
+    /* حجم النجوم */
+    margin-right: 5px;
+    /* مسافة بين النجوم */
+}

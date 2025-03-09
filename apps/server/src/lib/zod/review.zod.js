@@ -4,8 +4,7 @@ const ObjectIdSchema = z.string().regex(/^[0-9a-fA-F]{24}$/, {
     message: "Invalid ObjectId format",
 });
 
-const reviewSchema = z.object({
-    userId: ObjectIdSchema,
+export const reviewSchema = z.object({
     bookId: ObjectIdSchema,
     rating: z.number().min(1, { message: "Rating must be between 1 and 5" }).max(5, { message: "Rating must be between 1 and 5" }),
     comment: z.string()
@@ -18,4 +17,4 @@ const reviewSchema = z.object({
     .strip();
 
 
-export const createReviewSchema = reviewSchema;
+export const patchReviewSchema = reviewSchema.partial();

@@ -1,0 +1,190 @@
+<!-- eslint-disable @angular-eslint/template/label-has-associated-control -->
+<div class="container py-4">
+  <div class="row">
+    <!-- Profile Summary Card -->
+    <div class="col-12 mb-4">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div class="position-relative">
+              <img src="/default-avatar.png" alt="Profile" class="rounded-circle" width="100" height="100" style="object-fit: cover" />
+              <div class="position-absolute bottom-0 end-0">
+                <span class="badge rounded-pill bg-success">Active</span>
+              </div>
+            </div>
+            <div class="ms-4">
+              <h4 class="mb-1">{{ user?.firstName }} {{ user?.lastName }}</h4>
+              <p class="text-muted mb-1">{{ user?.email }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Existing Sidebar and Forms -->
+    <div class="col-md-3">
+      <div class="card shadow-sm">
+        <div class="card-body p-0">
+          <div class="list-group list-group-flush">
+            <a
+              href="javascript:void(0)"
+              class="list-group-item list-group-item-action d-flex align-items-center"
+              [class.active]="activeTab === 'profile'"
+              (click)="setActiveTab('profile')"
+            >
+              <i class="bi bi-person-circle me-3"></i>
+              Profile Information
+            </a>
+            <a
+              href="javascript:void(0)"
+              class="list-group-item list-group-item-action d-flex align-items-center"
+              [class.active]="activeTab === 'password'"
+              (click)="setActiveTab('password')"
+            >
+              <i class="bi bi-shield-lock me-3"></i>
+              Change Password
+            </a>
+            <!-- New addresses link -->
+            <a
+              href="javascript:void(0)"
+              class="list-group-item list-group-item-action d-flex align-items-center"
+              [class.active]="activeTab === 'addresses'"
+              (click)="setActiveTab('addresses')"
+            >
+              <i class="bi bi-geo-alt me-3"></i>
+              Addresses
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-md-9">
+      <div class="card shadow-sm">
+        <!-- Profile Section -->
+        <div class="tab-content" [class.d-none]="activeTab !== 'profile'">
+          <div class="card-header bg-white">
+            <h5 class="card-title mb-0">Profile Information</h5>
+          </div>
+          <div class="card-body">
+            <form [formGroup]="profileForm" (ngSubmit)="onProfileSubmit()">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="firstName" class="form-label">First Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="firstName"
+                    formControlName="firstName"
+                    [class.is-invalid]="hasError(profileForm, 'firstName')"
+                  />
+                  <div class="invalid-feedback">
+                    {{ getErrorMessage(profileForm, 'firstName') }}
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label for="lastName" class="form-label">Last Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="lastName"
+                    formControlName="lastName"
+                    [class.is-invalid]="hasError(profileForm, 'lastName')"
+                  />
+                  <div class="invalid-feedback">
+                    {{ getErrorMessage(profileForm, 'lastName') }}
+                  </div>
+                </div>
+                <div class="col-12">
+                  <label for="email" class="form-label">Email</label>
+                  <input type="email" class="form-control" id="email" formControlName="email" [class.is-invalid]="hasError(profileForm, 'email')" />
+                  <div class="invalid-feedback">
+                    {{ getErrorMessage(profileForm, 'email') }}
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label for="phone" class="form-label">Phone Number</label>
+                  <input type="tel" class="form-control" id="phone" formControlName="phone" [class.is-invalid]="hasError(profileForm, 'phone')" />
+                  <div class="invalid-feedback">
+                    {{ getErrorMessage(profileForm, 'phone') }}
+                  </div>
+                </div>
+                <div class="col-12">
+                  <button type="submit" class="btn btn-primary" [disabled]="loading || profileForm.invalid">
+                    <span class="spinner-border spinner-border-sm me-2" *ngIf="loading"></span>
+                    {{ loading ? 'Updating...' : 'Update Profile' }}
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Password Section -->
+        <div class="tab-content" [class.d-none]="activeTab !== 'password'">
+          <div class="card-header bg-white">
+            <h5 class="card-title mb-0">Change Password</h5>
+          </div>
+          <div class="card-body">
+            <form [formGroup]="passwordForm" (ngSubmit)="onPasswordSubmit()">
+              <div class="row g-3">
+                <div class="col-12">
+                  <label for="currentPassword" class="form-label">Current Password</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="currentPassword"
+                    formControlName="currentPassword"
+                    [class.is-invalid]="hasError(passwordForm, 'currentPassword')"
+                  />
+                  <div class="invalid-feedback">
+                    {{ getErrorMessage(passwordForm, 'currentPassword') }}
+                  </div>
+                </div>
+                <div class="col-12">
+                  <label for="newPassword" class="form-label">New Password</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="newPassword"
+                    formControlName="newPassword"
+                    [class.is-invalid]="hasError(passwordForm, 'newPassword')"
+                  />
+                  <div class="invalid-feedback">
+                    {{ getErrorMessage(passwordForm, 'newPassword') }}
+                  </div>
+                </div>
+                <div class="col-12">
+                  <label for="confirmPassword" class="form-label">Confirm New Password</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="confirmPassword"
+                    formControlName="confirmPassword"
+                    [class.is-invalid]="hasError(passwordForm, 'confirmPassword') || passwordForm.errors?.['notMatching']"
+                  />
+                  <div class="invalid-feedback" *ngIf="hasError(passwordForm, 'confirmPassword')">
+                    {{ getErrorMessage(passwordForm, 'confirmPassword') }}
+                  </div>
+                  <div class="invalid-feedback" *ngIf="passwordForm.errors?.['notMatching']">Passwords do not match</div>
+                </div>
+                <div class="col-12">
+                  <button type="submit" class="btn btn-primary" [disabled]="loading || passwordForm.invalid">
+                    <span class="spinner-border spinner-border-sm me-2" *ngIf="loading"></span>
+                    {{ loading ? 'Changing Password...' : 'Change Password' }}
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Addresses Section -->
+        <div class="tab-content" [class.d-none]="activeTab !== 'addresses'">
+          <app-addresses></app-addresses>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

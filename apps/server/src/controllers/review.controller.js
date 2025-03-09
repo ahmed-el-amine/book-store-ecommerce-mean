@@ -1,55 +1,60 @@
-import Review from '../database/models/reviews.model.js'
+import Review from '../database/models/reviews.model.js';
 import AppError from '../utils/customError.js';
+import httpStatus from 'http-status';
+import Books from '../database/models/book.model.js';
 
-
-export const getByBookId = async (id, next) => {
-    const reviews = await Review
-        .find({ bookIdid: id })
+export const getByBookId = async (id) => {
+    const reviews = await Review.find({ bookId: id })
+        .populate('reviewOwnerData')
         .exec();
     if (!reviews) {
-        const err = new AppError('Review not found');
-        return next(err)
+        throw new AppError(httpStatus.NOT_FOUND, 'Review not found');
     }
     return reviews;
-
 };
 
-export const create = async (data) => {
+export const create = async (req) => {
 
-    const review = await Review.create(data);
-
-    return review;
+    const { comment, rating, bookId } = req.body;
+    const userId = req.user.id;
+    const book = await Books.findById(bookId).exec();
+    if (!book) {
+        throw new AppError(httpStatus.NOT_FOUND, 'Book not found');
+    }
+    const review = await Review.create({
+        reviewOwnerData: userId,
+        bookId: bookId,
+        comment: comment,
+        rating: rating
+    });
+    const reviewData = await Review.findById(review._id).populate('reviewOwnerData').exec();
+    return reviewData;
 };
 
-export const deleteReview = async (req, res, next) => {
-
-
+export const deleteReview = async (req, res) => {
     const deletedReview = await Review.findById(req.params.id).exec();
 
     if (!deletedReview) {
-        const err = new AppError('Review not found');
-        return next(err)
+        throw new AppError(httpStatus.NOT_FOUND, 'Review not found');
     }
-    if (deletedReview.userId.toString() !== req.user.userId) {
+    if (deletedReview.reviewOwnerData.toString() !== req.user.id) {
         return res.status(403).json({ message: 'You are not authorized to delete this review' });
     }
-    await deletedReview.delete();
+
+    await Review.findByIdAndDelete(req.params.id);
     return deletedReview;
 };
-export const updateReview = async (req, res, next) => {
+export const updateReview = async (req, res) => {
     const review = await Review.findById(req.params.id).exec();
 
     if (!review) {
-        const err = new AppError('Review not found');
-        return next(err)
+        throw new AppError(httpStatus.NOT_FOUND, 'Review not found');
     }
-    if (review.userId.toString() !== req.user.userId) {
+    if (review.reviewOwnerData.toString() !== req.user.id) {
         return res.status(403).json({ message: 'You are not authorized to update this review' });
     }
-    const updatedReview = await Review.findByIdAndUpdate(
-        req.params.id,
-        req.body,
-        { new: true }
-    );
+    const { reviewOwnerData, bookId, ...updatedData } = req.body;
+    const updatedReview = await Review.findByIdAndUpdate(req.params.id, updatedData, { new: true }).populate('reviewOwnerData')
+        .exec();;
     return updatedReview;
-}
+};

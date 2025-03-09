@@ -1,0 +1,70 @@
+<div style="text-align:center; margin-top: 50px;">
+  <h2> Add Comment </h2>
+
+  <!-- form -->
+  <form [formGroup]="commentForm" (ngSubmit)="onSubmit()">
+    <!-- comment input -->
+    <div>
+      <label for="comment" class="main">Comment</label>
+      <textarea id="comment" formControlName="comment" rows="5" cols="40" lass="form-control"></textarea>
+    </div>
+    <!-- error message -->
+    @if (formControl['comment'].invalid && formControl['comment'].touched ) {
+    @if (formControl['comment'].hasError('required')) {
+
+    <div class="form-text text-danger">Required </div>
+    }
+    @if (formControl['comment'].hasError('minLength')){
+    <div class="form-text text-danger">number of characters cant be less than 30 </div>
+    }
+    @if (formControl['comment'].hasError('maxLength')){
+    <div class="form-text text-danger">number of characters cant be more than 500 </div>
+    }
+    }
+    <!--  Rating input<---->
+    <div class="rating-container">
+      <div class="rating-title">Rating</div>
+      <label for="one" class="rating-label">
+        <input type="radio" id="one" formControlName="rating" value="1">
+        1
+      </label>
+      <label for="two" class="rating-label">
+        <input type="radio" id="two" formControlName="rating" value="2">
+        2
+      </label>
+      <label for="three" class="rating-label">
+        <input type="radio" id="three" formControlName="rating" value="3">
+        3
+      </label>
+      <label for="four" class="rating-label">
+        <input type="radio" id="four" formControlName="rating" value="4">
+        4
+      </label>
+      <label for="five" class="rating-label">
+        <input type="radio" id="five" formControlName="rating" value="5">
+        5
+      </label>
+    </div>
+
+
+    <!-- عرض رسائل الخطأ لو فيه -->
+    @if (formControl['rating'].invalid && formControl['rating'].touched ) {
+    @if (formControl['rating'].hasError('required')) {
+
+    <div class="form-text text-danger">Required </div>
+    }
+    @if (formControl['rating'].hasError('min') || formControl['rating'].hasError('max')){
+    <div class="form-text text-danger">rating from 1 to 5 </div>
+    }
+
+    }
+    <button type="submit" [disabled]="commentForm.invalid">Submit</button>
+    @if(submittedSuccessfully){
+    <div>comment added sucssifully</div>
+    }
+    @if(errorOccurred){
+    <div>Something wrong happend</div>
+
+    }
+  </form>
+</div>

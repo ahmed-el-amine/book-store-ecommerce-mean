@@ -1,0 +1,23 @@
+<div class="card card-container border-0 position-relative">
+  <div class="card-image position-relative overflow-hidden">
+    <a>
+      <img src="https://diwanegypt.com/wp-content/uploads/2023/06/9781612681139.jpg" [alt]="book.title" class="img-fluid w-100 h-50">
+    </a>
+
+    <!-- Bottom Action Bar: Entire area is clickable -->
+    <div class="action-bar clickable"  title="Add to Cart">
+      <span>Add to Cart</span>
+    </div>
+  </div>
+
+  <!-- Book Info -->
+  <div class="card-body p-0 mt-3">
+    <a class="text-decoration-none">
+      <h5 class="card-title mb-1 text-truncate">Book Title</h5>
+    </a>
+    <p class="card-text text-muted mb-2">by Author name</p>
+    <div class="d-flex align-items-center">
+      <app-stars-generator></app-stars-generator>
+    </div>
+  </div>
+</div>
