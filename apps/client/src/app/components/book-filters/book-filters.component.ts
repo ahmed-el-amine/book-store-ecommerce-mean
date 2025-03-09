@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';  // الاستيراد هن
-import { BookServiceService } from '../../service/books/book.service';
-import { BookCardComponent } from '../../shared/book-card/book-card.component'
+import { ReactiveFormsModule } from '@angular/forms'; // الاستيراد هن
+import { BookService } from '../../service/books/book.service';
+import { BookCardComponent } from '../../shared/book-card/book-card.component';
 import { AuthService } from '../../services/auth/auth.service';
-
-
 
 @Component({
   selector: 'app-book-filters',
@@ -15,7 +13,6 @@ import { AuthService } from '../../services/auth/auth.service';
   styleUrl: './book-filters.component.css',
 })
 export class BookFiltersComponent implements OnInit {
-
   searchForm: FormGroup;
   filters: any = {};
   books: any = null;
@@ -23,12 +20,11 @@ export class BookFiltersComponent implements OnInit {
     { value: 'Fiction', name: 'Fiction' },
     { value: 'Ccience', name: 'Science' },
     { value: 'History', name: 'History' },
-    { value: 'Biography', name: 'Biography' }
+    { value: 'Biography', name: 'Biography' },
   ];
   userData: any;
   isAuthenticated = false;
-  constructor(private bookService: BookServiceService, private authService: AuthService) {
-
+  constructor(private bookService: BookService, private authService: AuthService) {
     this.searchForm = new FormGroup({
       rating: new FormControl('', [Validators.min(1), Validators.max(5)]),
       price: new FormControl('', Validators.pattern('^[0-9]*$')),
@@ -43,14 +39,14 @@ export class BookFiltersComponent implements OnInit {
       this.filters.categories = this.searchForm.value.categories;
       this.filters.title = this.searchForm.value.title;
 
-      this.bookService.getBooks(this.filters).subscribe({
+      this.bookService.getBooksDetails().subscribe({
         next: (response) => {
           this.books = response;
-          console.log(this.books)
+          console.log(this.books);
         },
         error: (err) => {
           console.error('soemthing wrrong happend', err);
-        }
+        },
       });
     } else {
       console.log('invalid form');
@@ -66,18 +62,17 @@ export class BookFiltersComponent implements OnInit {
     this.authService.isAuthenticated$.subscribe((isAuth) => {
       this.isAuthenticated = isAuth;
 
-    if (this.isAuthenticated) {
-      this.authService.getCurrentUser().subscribe({
-        next: (user) => {
-          console.log('User Data:', user);//see this
-          this.userData = user;
-        },
-        error: (err) => {
-          console.error('Error fetching user data', err);
-        }
-      });
-    }
+      if (this.isAuthenticated) {
+        this.authService.getCurrentUser().subscribe({
+          next: (user) => {
+            console.log('User Data:', user); //see this
+            this.userData = user;
+          },
+          error: (err) => {
+            console.error('Error fetching user data', err);
+          },
+        });
+      }
     });
-
   }
 }
