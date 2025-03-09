@@ -16,6 +16,13 @@ const cartItemSchema = new mongoose.Schema({
     required: [true, 'Price is required'],
     min: [0, 'Price cannot be negative'],
   },
+  title: {
+    type: String,
+    required: [true, 'Book title is required'],
+  },
+  coverImage: {
+    type: String,
+  },
 });
 
 const cartSchema = new mongoose.Schema(
