@@ -28,7 +28,7 @@ export class AddReviewSectionComponent {
   onSubmit() {
     if (this.commentForm.valid && this.bookId) {
       const comment = this.commentForm.value.comment;
-      const rating = this.commentForm.value.rating;
+      const rating = Number(this.commentForm.value.rating);
 
       this.reviewService.addReview(this.bookId, comment, rating).subscribe({
         next: (response) => {
