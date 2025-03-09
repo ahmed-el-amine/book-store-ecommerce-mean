@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { StarsGeneratorComponent } from "../stars-generator/stars-generator.component";
+import { Book } from './book.interface';
 
 @Component({
   selector: 'app-book-card',
@@ -8,6 +9,8 @@ import { StarsGeneratorComponent } from "../stars-generator/stars-generator.comp
   imports: [StarsGeneratorComponent]
 })
 export class BookCardComponent {
+@Input() bookData: Book | undefined
+
   book = {
     id: '1',
     title: 'The Great Gatsby',

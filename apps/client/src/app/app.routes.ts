@@ -6,7 +6,7 @@ import { CartComponent } from './components/Cart/cart.component';
 import { SignupComponent } from './components/auth/signup/signup.component';
 import { LoginComponent } from './components/auth/login/login.component';
 import { authGuard, publicGuard } from './guards/auth.guard';
-
+import { BookFiltersComponent } from './components/book-filters/book-filters.component';
 export const appRoutes: Routes = [
   {
     path: 'auth/signup',
@@ -23,6 +23,7 @@ export const appRoutes: Routes = [
   {
     path: 'book-details/:id',
     component: BookDetailsComponent,
+    title: 'Book-details'
   },
   {
     path: 'cart-details',
@@ -39,5 +40,11 @@ export const appRoutes: Routes = [
     component: AccountSettingsComponent,
     canActivate: [authGuard],
     title: 'Account Settings'
+  },
+  {
+    path: 'books-filters',
+    component: BookFiltersComponent,
+    
+    title: 'Books'
   },
 ];

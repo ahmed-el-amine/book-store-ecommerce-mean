@@ -1,0 +1,86 @@
+/* General Styles */
+.container {
+    width: 100%;
+    margin: 100px auto;
+        padding: 20px;
+    text-align: left;
+}
+
+.search-form {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input[type="number"],
+select ,input[type="text"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    width: 100%;
+}
+
+input[type="radio"] {
+    margin-right: 10px;
+}
+
+
+
+.rating-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.rating-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.rating-label {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.submit-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.submit-btn:disabled {
+    background-color: #ddd;
+    cursor: not-allowed;
+}
+
+.submit-btn:hover:not(:disabled) {
+    background-color: #45a049;
+}
+.book-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.book-card {
+    flex: 1 1 calc(33.33% - 20px);
+    box-sizing: border-box;
+}

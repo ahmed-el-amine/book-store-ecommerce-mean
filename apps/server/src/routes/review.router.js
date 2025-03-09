@@ -8,7 +8,7 @@ import { userRoles } from '../database/models/user.model.js';
 
 const router = express.Router();
 
-router.get('/:id',async (req, res) => {
+router.get('/:id', useAuth([userRoles.admin, userRoles.user]),async (req, res) => {
     const reviewList = await getByBookId(req.params.id);
     res.json({ reviewList: reviewList }, 200)
 
