@@ -1,6 +1,8 @@
 import logger from '../lib/winston/index.js';
 import AppError from '../utils/customError.js';
 import httpStatus from 'http-status';
+import { MulterError } from 'multer';
+
 
 const handleCastErrDB = (err) => {
   const message = `Invalid ${err.path}: ${err.value}`;
@@ -59,7 +61,8 @@ export default (err, req, res, next) => {
     logger.error(err.stack);
   } else if (err.statusCode >= 400) {
     logger.warn(logMessage);
-  } else {
+  }
+  else {
     logger.info(logMessage);
   }
   if (process.env.NODE_ENV === 'development') {
@@ -69,7 +72,20 @@ export default (err, req, res, next) => {
     if (error.name === 'CastError') error = handleCastErrDB(error);
     if (error.code === 11000) error = handleDuplicateFieldsDB(error);
     if (error.name === 'ValidationError') error = handleValidationErrorDB(error);
+    if (err instanceof MulterError) {
+      logger.error(logMessage);
+      let message;
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        message = 'File too large (max 5MB)';
+      } else if (err.code === 'LIMIT_FILE_TYPE') {
+        message = 'Invalid file type';
+      } else {
+        message = 'File upload failed';
+      }
+      return res.status(400).json({ error: message });
+    }
 
     sentErroProd(error, res);
   }
+
 };
