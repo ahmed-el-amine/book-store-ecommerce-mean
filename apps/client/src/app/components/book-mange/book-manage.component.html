@@ -1,7 +1,13 @@
 <div class="book-manage-container">
   <div class="book-manage-card">
     <div class="book-manage-header">
-      <h3>Book Management</h3>
+      @if(mode === 'add'){
+      <h3>Add Book</h3>
+      }@else if(mode === 'update'){
+      <h3>Update Book</h3>
+      }@else {
+      <h3>Delete Book</h3>
+      }
     </div>
     <div class="book-manage-body">
       <!-- Book Selection Section -->

@@ -16,7 +16,6 @@ export class HeaderComponent implements OnInit {
   isAuthenticated = false;
   currentUser: any = null;
   books: Book[] = [];
-  buttonClick = false;
 
   constructor(private authService: AuthService, private bookService: BookService) {
     this.authService.isAuthenticated$.subscribe((isAuth) => {
@@ -40,10 +39,6 @@ export class HeaderComponent implements OnInit {
         console.log('Finished loading books');
       },
     });
-  }
-
-  showData() {
-    this.buttonClick = true;
   }
 
   logUserOut() {

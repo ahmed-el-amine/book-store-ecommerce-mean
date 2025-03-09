@@ -51,5 +51,17 @@ export const appRoutes: Routes = [
   {
     path: 'books/add',
     component: BookManageComponent,
+    data: { mode: 'add' },
+    title: 'Add book',
+  },
+  {
+    path: 'books/update',
+    data: { mode: 'update' },
+    component: BookManageComponent,
+  },
+  {
+    path: 'books/delete',
+    data: { mode: 'delete' },
+    component: BookManageComponent,
   },
 ];
