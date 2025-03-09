@@ -15,50 +15,45 @@ import { Book } from '../../../interfaces/BookDetails';
 export class HeaderComponent implements OnInit {
   isAuthenticated = false;
   currentUser: any = null;
-  books:Book[] = [];
+  books: Book[] = [];
   buttonClick = false;
 
-  constructor(private authService: AuthService,private bookService:BookService) {
-    this.authService.isAuthenticated$.subscribe(
-      (isAuth) => {
-        this.isAuthenticated = isAuth;
-      }
-    );
+  constructor(private authService: AuthService, private bookService: BookService) {
+    this.authService.isAuthenticated$.subscribe((isAuth) => {
+      this.isAuthenticated = isAuth;
+    });
 
-    this.authService.currentUser$.subscribe(
-      (user) => {
-        this.currentUser = user;
-      }
-    );
+    this.authService.currentUser$.subscribe((user) => {
+      this.currentUser = user;
+    });
   }
 
   ngOnInit(): void {
     this.bookService.getBooksDetails().subscribe({
-      next:(data:Book[])=>{this.books=data},
-      error: (error)=>{
-        console.error('Error fetching books data',error);
+      next: (data: Book[]) => {
+        this.books = data;
       },
-      complete:()=>{
+      error: (error) => {
+        console.error('Error fetching books data', error);
+      },
+      complete: () => {
         console.log('Finished loading books');
-      }
-    }
-    )
-
+      },
+    });
   }
 
-  showData(){
-   this.buttonClick = true;
-   console.log(this.books);
+  showData() {
+    this.buttonClick = true;
   }
 
-  logUserOut(){
+  logUserOut() {
     this.authService.logout().subscribe({
-      next:()=>{
+      next: () => {
         console.log('Logged out user successfully');
       },
-      error:(err)=>{
-        console.error('Error during logout',err);
-      }
+      error: (err) => {
+        console.error('Error during logout', err);
+      },
     });
   }
 }
