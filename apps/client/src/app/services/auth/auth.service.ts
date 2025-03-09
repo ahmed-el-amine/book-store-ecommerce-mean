@@ -37,7 +37,7 @@ export class AuthService {
         withCredentials: true,
       })
       .pipe(
-        tap((response) => {
+        tap((response: any) => {
           this.isAuthenticatedSubject.next(true);
           this.currentUserSubject.next((response as any)?.data?.user);
         })
@@ -77,6 +77,7 @@ export class AuthService {
       })
       .pipe(
         tap((user) => {
+          console.log('User data received:', user);
           this.currentUserSubject.next(user);
           this.isAuthenticatedSubject.next(true);
         })

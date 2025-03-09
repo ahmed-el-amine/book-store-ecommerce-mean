@@ -10,7 +10,7 @@ export class ReviewService {
 
   constructor(private http: HttpClient) { }
   getAllBookReview(id: string): Observable<any[]> {
-    return this.http.get<any[]>(`http://localhost:3000/api/v1/reviews/${id}`);
+    return this.http.get<any[]>(`http://localhost:3000/api/v1/reviews/${id}`, { withCredentials: true });
   }
   addReview(bookId: string, comment: string, rating: string): Observable<any> {
     const body = {
@@ -18,7 +18,7 @@ export class ReviewService {
       comment: comment,
       rating: rating
     };
-    return this.http.post('http://localhost:3000/api/v1/reviews', body);
+    return this.http.post('http://localhost:3000/api/v1/reviews', body, { withCredentials: true });
   }
 
 

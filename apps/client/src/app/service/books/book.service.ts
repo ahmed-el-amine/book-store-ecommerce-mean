@@ -7,9 +7,12 @@ import { Observable } from 'rxjs';
 })
 export class BookServiceService {
 
+  private baseURL = 'http://localhost:3000/api/v1';
+
   constructor(private http: HttpClient) { }
-  getBookById(id: string): Observable<any[]> {
-    return this.http.get<any[]>(`http://localhost:3000/api/v1/books/${id}`);
+
+  getBookById(id: string): Observable<any> {
+    return this.http.get<any>(`${this.baseURL}/books/${id}`, { withCredentials: true });
   }
 
   getBooks(filters: { categories?: string, title?: string, price?: number, rating?: number }): Observable<any> {
@@ -28,7 +31,6 @@ export class BookServiceService {
       params = params.append('rating', filters.rating.toString());
     }
 
-    return this.http.get<any>('http://localhost:3000/api/v1/books/', { params });
+    return this.http.get<any>(`${this.baseURL}/books/`, { params, withCredentials: true });
   }
 }
-

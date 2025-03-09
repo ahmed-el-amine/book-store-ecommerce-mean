@@ -44,6 +44,7 @@ export const appRoutes: Routes = [
   {
     path: 'books-filters',
     component: BookFiltersComponent,
+    
     title: 'Books'
   },
 ];
