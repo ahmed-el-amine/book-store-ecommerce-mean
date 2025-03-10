@@ -63,7 +63,7 @@
                 </svg>
               </div>
 
-              @if(currentUser?.role === 'admin') {
+              @if(currentUser?.role === 'admin'||currentUser?.role==='superAdmin') {
               <div class="dropdown mx-2">
                 <button
                   class="btn btn-primary dropdown-toggle"

@@ -24,7 +24,7 @@ export class BookManageComponent implements OnInit {
       }
     });
 
-    this.bookService.getBooksDetails().subscribe({
+    this.bookService.getBooksEssential().subscribe({
       next: (data: BookEssential[]) => {
         this.books = data;
       },
