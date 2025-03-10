@@ -19,22 +19,31 @@ const getBook = async (id) => {
 
 
 const addBook = async (data) => {
-  const { title, isbn13, description, price, rating, publish_date, stock, coverImage, dimensions, weight, authors, categories } = data;
-  const book = BookModel.create({
-    title,
-    isbn13,
-    description,
-    price, rating,
-    publish_date,
-    stock,
-    coverImage,
-    dimensions,
-    weight,
-    authors,
-    categories
-  });
-  return book;
-}
+  try {
+    const { title, isbn13, description, price, rating, publish_date, stock, dimensions, weight, authors, categories, coverPublicId, coverUrl } = data;
+
+    const book = await BookModel.create({
+      title,
+      isbn13,
+      description,
+      price,
+      rating,
+      publish_date,
+      stock,
+      coverImage: coverUrl,
+      dimensions,
+      weight,
+      authors,
+      categories,
+      coverPublicId
+    });
+
+    return book;
+  } catch (error) {
+    return null;
+  }
+};
+
 
 const updateBook = async (data, id) => {
   const book = await BookModel.findById(id).exec();

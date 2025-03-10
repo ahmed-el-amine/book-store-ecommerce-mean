@@ -1,20 +1,24 @@
 import { v2 as cloudinary } from 'cloudinary';
-
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET,
     secure: true,
 });
-
-export const uploadBookCover = async (imagePath, publicId, folder = 'book_covers') => {
+export const uploadBookCover = async (buffer, mimetype) => {
     try {
-        const result = await cloudinary.uploader.upload(imagePath, {
-            folder,
-            public_id: publicId,
-            overwrite: true,
-        });
-        return result.secure_url;
+        const result = await cloudinary.uploader.upload(
+            `data:${mimetype};base64,${buffer.toString('base64')}`,
+            {
+                folder: 'book_covers',
+                public_id: `book_${Date.now()}`,
+                overwrite: true,
+            }
+        );
+        return {
+            coverPublicUrl: result.secure_url,
+            coverPublicId: result.public_id
+        };
     } catch (error) {
         throw new Error(`Upload failed: ${error.message}`);
     }

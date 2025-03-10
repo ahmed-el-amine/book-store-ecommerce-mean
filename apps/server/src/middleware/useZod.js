@@ -2,9 +2,12 @@ import { z } from "zod";
 
 export const useZod = (schema) => (req, res, next) => {
   try {
+
     req.body = schema.parse(req.body);
+
     next();
   } catch (error) {
+
     if (error instanceof z.ZodError) {
       const formValidation = error.errors
         .map((err) => ({

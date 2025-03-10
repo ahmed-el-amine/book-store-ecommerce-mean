@@ -1,19 +1,7 @@
 import multer from 'multer';
 import path from 'node:path';
-import sanitize from 'sanitize-filename';
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/covers/');
-    },
-    filename: function (req, file, cb) {
-        const cleanName = sanitize(file.originalname);
-        const ext = path.extname(cleanName);
-        const base = path.basename(cleanName, ext);
-        const fileSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-        cb(null, `${base}-${fileSuffix}${ext}`);
-    }
-});
+const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, cb) => {
 
@@ -33,7 +21,7 @@ const upload = multer({
     storage: storage,
     fileFilter: fileFilter,
     limits: {
-        fileSize: 5 * 1024 * 1024 // 5MB
+        fileSize: 20 * 1024 * 1024
     }
 });
 
