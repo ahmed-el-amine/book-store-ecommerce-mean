@@ -3,6 +3,8 @@ import User from '../database/models/user.model.js';
 import AppError from '../utils/customError.js';
 import httpStatus from 'http-status';
 import { sendActiveEmail } from '../services/email.service.js';
+import jwt from 'jsonwebtoken';
+import Token, { tokenTypes } from '../database/models/tokens.module.js';
 
 export const create = async (req, res) => {
   // check if there is a user with the same username and email
@@ -94,6 +96,32 @@ export const login = async (req, res) => {
   });
 
   res.status(httpStatus.OK).json({ message: `Welcome back mr/ms ${user.firstName}`, data: { user, token } });
+};
+
+export const activeEmail = async (req, res) => {
+  const token = req.body.token;
+
+  const payload = jwt.verify(token, process.env.JWT_SEC_KEY_ACTIVE_EMAIL);
+
+  const user = await User.findById(payload.id);
+
+  if (!user) {
+    return res.status(httpStatus.BAD_REQUEST).json({ error: true, message: 'Invalid token' });
+  }
+
+  if (user.emailData.isEmailVerified) {
+    return res.status(httpStatus.BAD_REQUEST).json({ error: true, message: 'Your account is already verified' });
+  }
+
+  user.emailData.isEmailVerified = true;
+  await user.save();
+
+  // delete token
+  await Token.deleteMany({ userId: user._id, tokenType: tokenTypes.activeEmail });
+
+  return res.status(httpStatus.OK).json({ message: 'Your account is verified successfully' });
+
+  // return res.status(httpStatus.BAD_REQUEST).json({ error: true, message: 'Invalid token' });
 };
 
 export const getAllUsers = async (req, res) => {
