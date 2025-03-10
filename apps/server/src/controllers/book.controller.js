@@ -9,7 +9,8 @@ const getBooks = async (req) => {
     filter.categories = { $in: [categories] };
   }
   if (title) {
-    filter.title = { $regex: title, $options: 'i' };  }
+    filter.title = { $regex: title, $options: 'i' };
+  }
   if (price) {
     filter.price = { $gte: price };
   }
@@ -17,12 +18,11 @@ const getBooks = async (req) => {
   if (rating) {
     filter.rating = { $gte: rating };
   }
-  console.log('Filter:', filter); 
-  const books = await BookModel.find(filter).populate('authors').exec();
+  console.log('Filter:', filter);
+  const books = await BookModel.find(filter).populate('authors')
+    .select('title isbn13 description price rating publish_date stock coverImage').exec();
   return books;
 };
-
-
 const getBook = async (id) => {
   const book = await BookModel.findById(id).populate('authors').exec();
   if (!book) throw new AppError(404, 'Book not found try again');
