@@ -2,13 +2,28 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { ReviewResponse, Review } from '../../book-details/review-section/review-interface';
+import { BehaviorSubject } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReviewService {
+  private reviewsSubject = new BehaviorSubject<Review[]>([]);
+  reviews$ = this.reviewsSubject.asObservable();
+
+
 
   constructor(private http: HttpClient) { }
+
+
+
+  loadReviews(initialReviews: Review[]) {
+    this.reviewsSubject.next(initialReviews);
+  }
+
+
+
 
   getAllBookReview(id: string): Observable<Review[]> {
     return this.http.get<ReviewResponse>(`http://localhost:3000/api/v1/reviews/${id}`, { withCredentials: true }).pipe(
@@ -25,6 +40,13 @@ export class ReviewService {
       rating: rating
     };
     return this.http.post('http://localhost:3000/api/v1/reviews', body, { withCredentials: true });
+  }
+  addNewReview(newReview: Review) {
+    const currentReviews = this.reviewsSubject.value;
+
+    const updatedReviews = [...currentReviews, newReview];
+
+    this.reviewsSubject.next(updatedReviews);
   }
   updateReview(reviewId: string, comment?: string, rating?: number): Observable<any> {
     const body = {
