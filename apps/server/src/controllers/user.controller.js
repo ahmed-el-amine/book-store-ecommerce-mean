@@ -2,6 +2,7 @@ import { isValidObjectId } from 'mongoose';
 import User from '../database/models/user.model.js';
 import AppError from '../utils/customError.js';
 import httpStatus from 'http-status';
+import { sendActiveEmail } from '../services/email.service.js';
 
 export const create = async (req, res) => {
   // check if there is a user with the same username and email
@@ -41,8 +42,10 @@ export const create = async (req, res) => {
     role: role,
   });
 
+  sendActiveEmail(user);
+
   res.status(201).json({
-    message: `${role.charAt(0).toUpperCase() + role.slice(1)} created successfully`,
+    message: `${role.charAt(0).toUpperCase() + role.slice(1)} created successfully, please check your email to activate your account`,
     user,
   });
 };
@@ -66,6 +69,16 @@ export const login = async (req, res) => {
     return res.status(httpStatus.BAD_REQUEST).json({
       error: true,
       message: 'Username or password is incorrect',
+    });
+  }
+
+  // before login check if email is active or not
+  if (!user.emailData.isEmailVerified) {
+    sendActiveEmail(user);
+
+    return res.status(httpStatus.BAD_REQUEST).json({
+      error: true,
+      message: 'Your account is not verified, we alrady sent you an activation email please check your inbox to activate your account',
     });
   }
 
