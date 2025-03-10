@@ -139,3 +139,11 @@
   border-radius: 4px;
   color: #c62828;
 }
+
+.delete-mode {
+  background-color: #dc3545 !important;
+}
+
+.delete-mode h3 {
+  color: white;
+}

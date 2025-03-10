@@ -1,6 +1,6 @@
 <div class="book-manage-container">
   <div class="book-manage-card">
-    <div class="book-manage-header">
+    <div class="book-manage-header" [ngClass]="{ 'delete-mode': mode === 'delete' }">
       @if(mode === 'add'){
       <h3>Add Book</h3>
       }@else if(mode === 'update'){
@@ -10,16 +10,18 @@
       }
     </div>
     <div class="book-manage-body">
+      @if(mode==='update'||mode==='delete'){
       <!-- Book Selection Section -->
       <div class="book-select-section">
         <label for="bookSelect" class="form-label">Select Book</label>
         <select id="bookSelect" class="form-select">
           <option value="">-- Select a book --</option>
-          <option value="1">Book Title 1</option>
-          <option value="2">Book Title 2</option>
-          <option value="3">Book Title 3</option>
+          @for(book of books;track book.id){
+          <option value="book._id">{{ book.title }}</option>
+          }
         </select>
       </div>
+      }
 
       <!-- Book Form -->
       <form class="book-form">
