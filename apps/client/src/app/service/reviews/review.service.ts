@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import { ReviewResponse, Review } from '../../book-details/review-section/review-interface';
 import { BehaviorSubject } from 'rxjs';
 
@@ -58,7 +58,13 @@ export class ReviewService {
 
   deleteReview(reviewId: string): Observable<any> {
 
-    return this.http.delete(`http://localhost:3000/api/v1/reviews/${reviewId}`, { withCredentials: true });
-
+    return this.http.delete(`http://localhost:3000/api/v1/reviews/${reviewId}`, { withCredentials: true }).pipe(
+      tap(() => {
+        const currentReviews = this.reviewsSubject.value;
+        const updatedReviews = currentReviews.filter(review => review.id !== reviewId);
+        this.reviewsSubject.next(updatedReviews); // تحديث المراجعات بعد الحذف
+      })
+    );
+    
   };
 }
