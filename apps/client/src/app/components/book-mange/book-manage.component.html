@@ -1,0 +1,91 @@
+<div class="book-manage-container">
+  <div class="book-manage-card">
+    <div class="book-manage-header" [ngClass]="{ 'delete-mode': mode === 'delete' }">
+      @if(mode === 'add'){
+      <h3>Add Book</h3>
+      }@else if(mode === 'update'){
+      <h3>Update Book</h3>
+      }@else {
+      <h3>Delete Book</h3>
+      }
+    </div>
+    <div class="book-manage-body">
+      @if(mode==='update'||mode==='delete'){
+      <!-- Book Selection Section -->
+      <div class="book-select-section">
+        <label for="bookSelect" class="form-label">Select Book</label>
+        <select id="bookSelect" class="form-select">
+          <option value="">-- Select a book --</option>
+          @for(book of books;track book.id){
+          <option value="book._id">{{ book.title }}</option>
+          }
+        </select>
+      </div>
+      }
+
+      <!-- Book Form -->
+      <form class="book-form">
+        <div class="form-group">
+          <label for="title" class="form-label">Title</label>
+          <input type="text" id="title" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label for="author" class="form-label">Author</label>
+          <input type="text" id="author" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label for="description" class="form-label">Description</label>
+          <textarea id="description" class="form-control" rows="3"></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group half-width">
+            <label for="price" class="form-label">Price</label>
+            <div class="price-input-group">
+              <span class="price-symbol">$</span>
+              <input type="number" id="price" class="form-control" />
+            </div>
+          </div>
+
+          <div class="form-group half-width">
+            <label for="quantity" class="form-label">Quantity in Stock</label>
+            <input type="number" id="quantity" class="form-control" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="category" class="form-label">Category</label>
+          <select id="category" class="form-select">
+            <option value="">-- Select a category --</option>
+            <option value="fiction">Fiction</option>
+            <option value="non-fiction">Non-Fiction</option>
+            <option value="science">Science</option>
+            <option value="history">History</option>
+            <option value="biography">Biography</option>
+            <option value="children">Children</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="imageUrl" class="form-label">Image URL</label>
+          <input type="text" id="imageUrl" class="form-control" />
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="button" class="btn btn-danger">Delete</button>
+        </div>
+      </form>
+
+      <!-- Confirmation Message -->
+      <div class="confirmation-message">
+        <p><strong>Warning:</strong> You are about to delete this book. This action cannot be undone.</p>
+        <p>Are you sure you want to delete this book?</p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -63,7 +63,7 @@
                 </svg>
               </div>
 
-              @if(currentUser?.role === 'admin') {
+              @if(currentUser?.role === 'admin'||currentUser?.role==='superAdmin') {
               <div class="dropdown mx-2">
                 <button
                   class="btn btn-primary dropdown-toggle"
@@ -82,7 +82,6 @@
                 </div>
               </div>
               }
-
               <button class="btn btn-danger logout-button" (click)="logUserOut()">Logout</button>
             </div>
             } @if(!isAuthenticated){

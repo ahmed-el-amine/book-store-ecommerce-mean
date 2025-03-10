@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BookServiceService } from '../../service/books/book.service'
+import { BookService } from '../../service/books/book.service'
 
 @Component({
   selector: 'app-book-section',
@@ -8,11 +8,11 @@ import { BookServiceService } from '../../service/books/book.service'
   templateUrl: './book-section.component.html',
   styleUrl: './book-section.component.css',
 })
-export class BookSectionComponent {
+export class BookSectionComponent implements OnInit {
   @Input() bookId: string | undefined;
   book: any = null;
 
-  constructor(private bookService: BookServiceService) { }
+  constructor(private bookService: BookService) { }
 
   ngOnInit(): void {
 
