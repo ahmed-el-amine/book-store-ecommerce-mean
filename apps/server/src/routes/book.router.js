@@ -14,7 +14,7 @@ router
         const books = await bookController.getBooks(req);
         res.json(books);
     })
-    .get('/:id', authorization(['user', 'admin']), useZod(bookSchema), async (req, res) => {
+    .get('/:id', authorization(['user', 'admin']), async (req, res) => {
         try {
             const book = await bookController.getBook(req.params.id);
             if (!book) {
