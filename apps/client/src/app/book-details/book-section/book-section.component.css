@@ -1,6 +1,85 @@
-.star-rating i {
+/* .star-rating i {
     font-size: 20px;
     /* حجم النجوم */
     margin-right: 5px;
     /* مسافة بين النجوم */
+.container{
+    margin: auto;
+}
+/* General styles for the book section */
+.book-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #1a73e8;
+    /* Light Blue */
+    text-transform: capitalize;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.book-description {
+    font-size: 1rem;
+    font-style: italic;
+    color: #7e7e7e;
+    text-align: justify;
+    margin-bottom: 20px;
+}
+
+.price,
+.stock {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.star-rating i {
+    font-size: 1.2rem;
+}
+
+/* Image styling */
+.book-image {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.book-image:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Buttons for collapsing categories/authors */
+.category-btn,
+.author-btn {
+    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+}
+
+.category-btn:hover,
+.author-btn:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+.category-btn {
+    background-color: #f0f8ff;
+    /* Light Blue */
+}
+
+.author-btn {
+    background-color: #f7f7f7;
+}
+
+/* Styling for list items */
+.category-item,
+.author-item {
+    font-size: 1rem;
+    padding: 10px;
+    color: #333;
+    border-bottom: 1px solid #ddd;
+}
+
+.category-item:hover,
+.author-item:hover {
+    background-color: #f0f0f0;
+    cursor: pointer;
 }

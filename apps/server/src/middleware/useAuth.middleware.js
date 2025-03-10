@@ -14,7 +14,7 @@ const verifyToken = (token, key) => {
   }
 };
 
-const useAuth =
+const  useAuth =
   (allowedRoles = defaultAllowedRoles) =>
   async (req, res, next) => {
     // read the cookie from the request

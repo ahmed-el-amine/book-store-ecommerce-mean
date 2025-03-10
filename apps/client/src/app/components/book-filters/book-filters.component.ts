@@ -31,6 +31,7 @@ export class BookFiltersComponent implements OnInit {
       categories: new FormControl(''),
       title: new FormControl(''),
     });
+
   }
   onSubmit() {
     if (this.searchForm.valid) {
@@ -61,18 +62,17 @@ export class BookFiltersComponent implements OnInit {
   ngOnInit(): void {
     this.authService.isAuthenticated$.subscribe((isAuth) => {
       this.isAuthenticated = isAuth;
-
-      if (this.isAuthenticated) {
-        this.authService.getCurrentUser().subscribe({
-          next: (user) => {
-            console.log('User Data:', user); //see this
-            this.userData = user;
-          },
-          error: (err) => {
-            console.error('Error fetching user data', err);
-          },
-        });
-      }
+    if (this.isAuthenticated) {
+      this.authService.currentUser$.subscribe({
+        next: (user) => {
+          console.log('User Data:', user);
+          this.userData = user;
+        },
+        error: (err) => {
+          console.error('Error fetching user data', err);
+        }
+      });
+    }
     });
   }
 }
