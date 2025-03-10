@@ -4,6 +4,7 @@ dotenv.config({ path: path.join(process.cwd(), '.env') });
 import express from 'express';
 import connectToDB from './database/connect';
 import logger from './lib/winston/index.js';
+import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import cors from 'cors';
@@ -11,6 +12,13 @@ import routesHandler from './routes/index.js';
 import errorHandler from './middleware/errorHandler.js';
 import seedSuperAdmin from './database/seeders/seedSuperAdmin';
 import limiter from './middleware/rateLimiter.middleware.js';
+import { v2 as cloudinary } from 'cloudinary';
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+  secure: true
+});
 
 // Placed first to caught any uncaught exception in the program
 process.on('uncaughtException', (err) => {
@@ -23,6 +31,7 @@ const host = process.env.HOST ?? 'localhost';
 const port = process.env.PORT ? Number(process.env.PORT) : 3000;
 const app = express();
 
+app.use(helmet());
 app.use(cors({ origin: ['http://localhost:3001'], credentials: true }));
 app.use(compression());
 app.use(cookieParser());
@@ -49,7 +58,7 @@ const server = app.listen(port, host, () => {
 
 connectToDB();
 
-// Placed at the bottom to handle any promise rejection in our app
+
 process.on('unhandledRejection', (err) => {
   logger.error('UNHANDLED REJECTION! Shutting down...');
   logger.error(err.name, err.message);

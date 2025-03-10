@@ -7,7 +7,6 @@ const BookModel = new mongoose.Schema({
     type: String,
     minLength: [5, 'Book title must be 5 character at least'],
     required: true,
-    unique: true,
   },
   isbn13: {
     type: String,
@@ -43,9 +42,8 @@ const BookModel = new mongoose.Schema({
     required: true,
     min: 0
   },
-  coverImage: {
-    type: String,
-    required: true
+  coverPublicId: {
+    type: String
   },
   dimensions: {
     width: Number,

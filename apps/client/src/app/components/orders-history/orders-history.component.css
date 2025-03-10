@@ -1,0 +1,34 @@
+/* orders-history.component.css */
+.hover-shadow {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.hover-shadow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.badge.status-completed {
+  background-color: #198754;
+  color: white;
+}
+
+.badge.status-processing {
+  background-color: #0dcaf0;
+  color: black;
+}
+
+.badge.status-cancelled {
+  background-color: #dc3545;
+  color: white;
+}
+
+.badge.status-shipped {
+  background-color: #ffc107;
+  color: black;
+}
+
+.order-item-image {
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+}
