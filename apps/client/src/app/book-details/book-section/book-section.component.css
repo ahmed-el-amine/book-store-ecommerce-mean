@@ -3,9 +3,7 @@
     /* حجم النجوم */
     margin-right: 5px;
     /* مسافة بين النجوم */
-.container{
-    margin: auto;
-}
+
 /* General styles for the book section */
 .book-title {
     font-size: 2rem;

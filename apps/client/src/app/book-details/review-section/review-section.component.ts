@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReviewService } from '../../service/reviews/review.service';
 import {  Review } from './review-interface';
+import { AuthService } from '../../services/auth/auth.service';
 
 
 @Component({
@@ -16,10 +17,26 @@ import {  Review } from './review-interface';
 export class ReviewSectionComponent {
   @Input() bookId: string | undefined;
   reviews: Review[] = [];
-  constructor(private reviewService: ReviewService) {
+  userData: any;
+  isAuthenticated = false;
+  constructor(private reviewService: ReviewService, private authService: AuthService) {
 
   }
   ngOnInit(): void {
+    this.authService.isAuthenticated$.subscribe((isAuth) => {
+      this.isAuthenticated = isAuth;
+      if (this.isAuthenticated) {
+        this.authService.currentUser$.subscribe({
+          next: (user) => {
+            console.log('User Data:', user);
+            this.userData = user;
+          },
+          error: (err) => {
+            console.error('Error fetching user data', err);
+          }
+        });
+      }
+    });
     if (this.bookId) {
       this.reviewService.getAllBookReview(this.bookId).subscribe({
         next: (data: Review[]) => {

@@ -1,37 +1,35 @@
 <div class="container-fluid">
-    @for(review of reviews; track review.id) {
+  <!-- تكرار كل مراجعة -->
+  @for(review of reviews; track review.id) {
     <div class="review-card">
-        <!-- Profile Section -->
-        <div class="profile">
-            <img src="https://images.pexels.com/photos/1704488/pexels-photo-1704488.jpeg?cs=srgb&dl=pexels-sulimansallehi-1704488.jpg&fm=jpg"
-                alt="Profile Image" class="profile-img">
-            <h3 class="name">{{review.reviewOwnerData.username}}</h3>
-            <!-- Edit/Delete Arrow -->
-            <a href="#editDeleteOptions" data-bs-toggle="collapse" aria-expanded="false" aria-controls="editDeleteOptions">
-                <i class="fas fa-chevron-down" style="cursor: pointer;"> </i>
-            </a>
-        </div>
-        
-        <!-- Comment Section -->
-        <div class="description">
-            <p>{{review.comment}}</p>
-        </div>
-        
-        <!-- Rating Section -->
-        <div class="rating">
-            <h4>Rating: <span [innerHTML]="getStars(review.rating)" style="color: gold;"></span></h4>
-        </div>
+      <!-- قسم الملف الشخصي -->
+      <div class="profile">
+        <img src="https://images.pexels.com/photos/1704488/pexels-photo-1704488.jpeg?cs=srgb&dl=pexels-sulimansallehi-1704488.jpg&fm=jpg"
+            alt="Profile Image" class="profile-img">
+        <h3 class="name">{{review.reviewOwnerData.username}}</h3>
+        <!-- سهم تحرير/حذف -->
+        <a href="#editDeleteOptions" data-bs-toggle="collapse" aria-expanded="false" aria-controls="editDeleteOptions">
+          <i class="fas fa-chevron-down" style="cursor: pointer;"> </i>
+        </a>
+      </div>
 
-        <!-- Edit/Delete Options -->
-        <div class="collapse" id="editDeleteOptions">
-            <div class="d-flex gap-3 mt-2">
-                <button class="btn btn-warning" (click)="editComment(review.id)">Edit</button>
-                <button class="btn btn-danger" (click)="deleteComment(review.id)">Delete</button>
-            </div>
-        </div>
+      <!-- قسم التعليق -->
+      <div class="description">
+        <p>{{review.comment}}</p>
+      </div>
 
-        <!-- Divider -->
-        <hr class="review-divider">
+      <!-- قسم التقييم -->
+      <div class="rating">
+        <h4>Rating: <span [innerHTML]="getStars(review.rating)" style="color: gold;"></span></h4>
+      </div>
+
+      <!-- أزرار الحذف والتحديث في حالة كون المستخدم Admin أو مطابق للبريد الإلكتروني -->
+      @if(review.reviewOwnerData.role === "admin" || review.reviewOwnerData.email === userData.email) {
+        <button type="button" class="btn btn-danger" (click)="deleteComment(review.id)">Delete</button>
+        <button type="button" class="btn btn-info" (click)="editComment(review.id)">Update</button>
+      }
+      <!-- الفاصل بين المراجعات -->
+      <hr class="review-divider">
     </div>
-    }
+  }
 </div>
