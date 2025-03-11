@@ -71,6 +71,10 @@ export class AuthService {
       );
   }
 
+  forgotPassword(email: string) {
+    return this.http.post(`${this.apiUrl}/forgot-password`, { email });
+  }
+
   getCurrentUser(): Observable<any> {
     return this.http
       .get(`${this.baseURL}/users/me`, {
@@ -118,7 +122,7 @@ export class AuthService {
     });
   }
   verifyEmail(data: { token: string }) {
-    return this.http.post(`${this.apiUrl}/activeEmail`, data);
+    return this.http.post(`${this.apiUrl}/active-email`, data);
   }
   addAddress(addressData: any): Observable<any> {
     return this.http.post(`${this.baseURL}/users/me/address`, addressData, {
@@ -137,5 +141,9 @@ export class AuthService {
       headers: this.headers,
       withCredentials: true,
     });
+  }
+
+  resetPassword(data: { newPassword: string; token: string }) {
+    return this.http.post(`${this.apiUrl}/reset-password`, data);
   }
 }

@@ -3,14 +3,13 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../services/auth/auth.service';
 import { ToastrService } from 'ngx-toastr';
-import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { AddressesComponent } from './addresses/addresses.component';
 
 @Component({
   selector: 'app-account-settings',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, DatePipe, AddressesComponent],
+  imports: [CommonModule, ReactiveFormsModule, AddressesComponent],
   templateUrl: './account-settings.component.html',
   styleUrls: ['./account-settings.component.css'],
 })

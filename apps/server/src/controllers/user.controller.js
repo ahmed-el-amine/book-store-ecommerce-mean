@@ -2,7 +2,7 @@ import { isValidObjectId } from 'mongoose';
 import User from '../database/models/user.model.js';
 import AppError from '../utils/customError.js';
 import httpStatus from 'http-status';
-import { sendActiveEmail } from '../services/email.service.js';
+import { sendActiveEmail, sendResetPasswordEmail } from '../services/email.service.js';
 import jwt from 'jsonwebtoken';
 import Token, { tokenTypes } from '../database/models/tokens.module.js';
 
@@ -101,7 +101,14 @@ export const login = async (req, res) => {
 export const activeEmail = async (req, res) => {
   const token = req.body.token;
 
-  const payload = jwt.verify(token, process.env.JWT_SEC_KEY_ACTIVE_EMAIL);
+  let payload;
+  try {
+    payload = jwt.verify(token, process.env.JWT_SEC_KEY);
+  } catch (error) {
+    return res
+      .status(httpStatus.BAD_REQUEST)
+      .json({ error: true, message: 'This token has expires please request another token to active your account' });
+  }
 
   const user = await User.findById(payload.id);
 
@@ -120,6 +127,43 @@ export const activeEmail = async (req, res) => {
   await Token.deleteMany({ userId: user._id, tokenType: tokenTypes.activeEmail });
 
   return res.status(httpStatus.OK).json({ message: 'Your account is verified successfully' });
+};
+
+export const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  // first check if email is exist in database
+  const user = await User.findOne({ 'emailData.emailAddress': email });
+
+  if (!user) return res.status(httpStatus.BAD_REQUEST).json({ error: true, message: 'there is no user with this email' });
+
+  sendResetPasswordEmail(user);
+
+  return res.status(httpStatus.OK).json({ message: 'Password reset instructions have been sent to your email' });
+};
+
+export const resetForgotPassword = async (req, res) => {
+  const { token, newPassword } = req.body;
+
+  let payload;
+  try {
+    payload = jwt.verify(token, process.env.JWT_SEC_KEY);
+  } catch (error) {
+    return res
+      .status(httpStatus.BAD_REQUEST)
+      .json({ error: true, message: 'This token has expires please request another token to reset your password' });
+  }
+
+  const user = await User.findById(payload.id);
+
+  if (!user) {
+    return res.status(httpStatus.BAD_REQUEST).json({ error: true, message: 'Invalid token' });
+  }
+
+  user.password = newPassword;
+
+  Promise.all([user.save(), Token.deleteMany({ userId: user._id, tokenType: tokenTypes.restPassword })]);
+
+  return res.status(httpStatus.OK).json({ message: 'Your account password reset successfully' });
 };
 
 export const getAllUsers = async (req, res) => {

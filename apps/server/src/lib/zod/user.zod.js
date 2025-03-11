@@ -57,6 +57,19 @@ export const activeUserEmailSchema = z
   })
   .strict();
 
+export const forgotUserPasswordSchema = baseUser
+  .pick({
+    email: true,
+  })
+  .strip();
+
+export const resetUserPasswordSchema = z
+  .object({
+    token: z.string(),
+    newPassword: baseUser.shape.password,
+  })
+  .strip();
+
 export const updateUserAddressSchema = addressSchema
   .partial()
   .strip()
