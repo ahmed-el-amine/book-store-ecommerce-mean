@@ -1,7 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { Order } from './order.interface';
-import { OrderService } from '../../service/orders/order.service';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-orders-history',
@@ -9,20 +7,9 @@ import { OrderService } from '../../service/orders/order.service';
   templateUrl: './orders-history.component.html',
   styleUrls: ['./orders-history.component.scss']
 })
-export class OrdersHistoryComponent implements OnInit  {
-  
-  filteredOrders:Order[]=[];
-constructor(private orderService:OrderService){}
-ngOnInit():void{
-  this.orderService.getOrders().subscribe(
-    {next:(data)=>{
-      this.filteredOrders=data;
-    },
-    error:(err)=>console.log("Error while fetching orders",err)
-})
-}
-  /*
-  filteredOrders:Order = [
+export class OrdersHistoryComponent {
+  // Static data for orders
+  filteredOrders = [
     {
       orderNumber: '235689',
       date: new Date('2024-03-15'),
@@ -91,7 +78,7 @@ ngOnInit():void{
       ],
       total: 199.99
     }
-  ];*/
+  ];
 
   activeFilter = 'all';
   filters = [

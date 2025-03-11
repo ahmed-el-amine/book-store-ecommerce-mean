@@ -1,14 +1,14 @@
-<div class="container-fluid py-4">
-  <!-- Page Header -->
+ <div class="container-fluid py-4">
+  
   <div class="row mb-4">
     <div class="col">
-      <h1 class="h2 mb-0">Order History</h1>
+      <h1 class="h2 mb-0">Orders History</h1>
       <p class="text-muted mb-0">View and manage your past orders</p>
     </div>
    
   </div>
 
-  <!-- Filters -->
+ 
   <div class="row mb-3">
     <div class="col">
       <div class="d-flex gap-2 flex-wrap">
@@ -22,59 +22,43 @@
     </div>
   </div>
 
-  <!-- Orders List -->
   <div class="row g-4">
     <div *ngFor="let order of filteredOrders" class="col-12">
       <div class="card shadow-sm hover-shadow">
         <div class="card-body">
-          <!-- Order Header -->
           <div class="d-flex justify-content-between align-items-center mb-3">
             <div>
               <h5 class="card-title mb-0">Order #{{ order.orderNumber }}</h5>
-              <small class="text-muted">{{ order.createdAt }}</small>
+              <small class="text-muted">{{ order.date }}</small>
             </div>
             <div class="d-flex align-items-center gap-3">
               <span class="badge rounded-pill">
                 {{ order.status }}
               </span>
-              <div class="dropdown">
-                <button class="btn btn-link text-muted" data-bs-toggle="dropdown">
-                  <i class="bi bi-three-dots-vertical"></i>
-                </button>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Reorder</a></li>
-                  <li><a class="dropdown-item" href="#">View Details</a></li>
-                  <li><a class="dropdown-item" href="#">Download Invoice</a></li>
-                </ul>
-              </div>
+            
             </div>
           </div>
 
-          <!-- Order Items -->
           <div class="row g-3 mb-3">
             <div *ngFor="let item of order.items" class="col-auto">
               <div class="d-flex align-items-center gap-3">
-                <img [src]="item.coverImage" 
+                <img [src]="item.image" 
                      alt="Product image" 
                      class="rounded-2" 
                      style="width: 60px; height: 60px; object-fit: cover;">
                 <div>
-                  <div class="fw-medium">{{ item.title }}</div>
+                  <div class="fw-medium">{{ item.name }}</div>
                   <small class="text-muted">Qty: {{ item.quantity }}</small>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Order Footer -->
           <div class="d-flex justify-content-between align-items-center">
             <div class="text-muted">
-              {{ order.items.length }} items · Total: {{ order.totalPrice }}
+              {{ order.items.length }} items · Total: {{ order.total }}
             </div>
             <div class="d-flex gap-2">
-              <button class="btn btn-outline-primary btn-sm">
-                Track Order
-              </button>
               <button class="btn btn-primary btn-sm">
                 Buy Again
               </button>
@@ -85,7 +69,6 @@
     </div>
   </div>
 
-  <!-- Pagination -->
   <div class="row mt-4">
     <div class="col">
       <nav aria-label="Orders pagination">
@@ -103,4 +86,4 @@
       </nav>
     </div>
   </div>
-</div>
+</div> 
