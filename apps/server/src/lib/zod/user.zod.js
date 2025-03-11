@@ -51,6 +51,12 @@ export const loginUserSchema = z
 
 export const addUserAddressSchema = addressSchema.strip();
 
+export const activeUserEmailSchema = z
+  .object({
+    token: z.string(),
+  })
+  .strict();
+
 export const updateUserAddressSchema = addressSchema
   .partial()
   .strip()

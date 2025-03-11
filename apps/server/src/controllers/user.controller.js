@@ -2,6 +2,9 @@ import { isValidObjectId } from 'mongoose';
 import User from '../database/models/user.model.js';
 import AppError from '../utils/customError.js';
 import httpStatus from 'http-status';
+import { sendActiveEmail } from '../services/email.service.js';
+import jwt from 'jsonwebtoken';
+import Token, { tokenTypes } from '../database/models/tokens.module.js';
 
 export const create = async (req, res) => {
   // check if there is a user with the same username and email
@@ -41,8 +44,10 @@ export const create = async (req, res) => {
     role: role,
   });
 
+  sendActiveEmail(user);
+
   res.status(201).json({
-    message: `${role.charAt(0).toUpperCase() + role.slice(1)} created successfully`,
+    message: `${role.charAt(0).toUpperCase() + role.slice(1)} created successfully, please check your email to activate your account`,
     user,
   });
 };
@@ -69,6 +74,16 @@ export const login = async (req, res) => {
     });
   }
 
+  // before login check if email is active or not
+  if (!user.emailData.isEmailVerified) {
+    sendActiveEmail(user);
+
+    return res.status(httpStatus.BAD_REQUEST).json({
+      error: true,
+      message: 'Your account is not verified, we alrady sent you an activation email please check your inbox to activate your account',
+    });
+  }
+
   // if password is correct then return user and create token
   const token = user.createAuthToken();
 
@@ -81,6 +96,32 @@ export const login = async (req, res) => {
   });
 
   res.status(httpStatus.OK).json({ message: `Welcome back mr/ms ${user.firstName}`, data: { user, token } });
+};
+
+export const activeEmail = async (req, res) => {
+  const token = req.body.token;
+
+  const payload = jwt.verify(token, process.env.JWT_SEC_KEY_ACTIVE_EMAIL);
+
+  const user = await User.findById(payload.id);
+
+  if (!user) {
+    return res.status(httpStatus.BAD_REQUEST).json({ error: true, message: 'Invalid token' });
+  }
+
+  if (user.emailData.isEmailVerified) {
+    return res.status(httpStatus.BAD_REQUEST).json({ error: true, message: 'Your account is already verified' });
+  }
+
+  user.emailData.isEmailVerified = true;
+  await user.save();
+
+  // delete token
+  await Token.deleteMany({ userId: user._id, tokenType: tokenTypes.activeEmail });
+
+  return res.status(httpStatus.OK).json({ message: 'Your account is verified successfully' });
+
+  // return res.status(httpStatus.BAD_REQUEST).json({ error: true, message: 'Invalid token' });
 };
 
 export const getAllUsers = async (req, res) => {

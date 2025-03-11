@@ -8,7 +8,6 @@ const BookModel = new mongoose.Schema(
       type: String,
       minLength: [5, 'Book title must be 5 character at least'],
       required: true,
-      unique: true,
     },
     isbn13: {
       type: String,
@@ -24,6 +23,38 @@ const BookModel = new mongoose.Schema(
       type: String,
       required: true,
       minLength: [15, 'Book description must be 15 character at least'],
+    },
+    price: {
+      type: Number,
+      required: true,
+      index: true,
+    },
+    rating: {
+      type: Number,
+      required: true,
+    },
+    publish_date: {
+      type: Date,
+      required: true,
+      index: true,
+    },
+    stock: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+    coverPublicId: {
+      type: String,
+    },
+    dimensions: {
+      width: Number,
+      height: Number,
+      depth: Number,
+      unit: {
+        type: String,
+        required: true,
+        minLength: [15, 'Book description must be 15 character at least'],
+      },
     },
     price: {
       type: Number,

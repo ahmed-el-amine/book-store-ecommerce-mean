@@ -19,10 +19,9 @@ const getBooks = async (req) => {
     filter.rating = { $gte: rating };
   }
   console.log('Filter:', filter);
-  const books = await BookModel.findEssentials(filter).populate('authors').exec();
-  return books.map((book) => book.toEssentials());
+  const books = await BookModel.find(filter).populate('authors').select('title isbn13 description price rating publish_date stock coverImage').exec();
+  return books;
 };
-
 const getBook = async (id) => {
   const book = await BookModel.findById(id).populate('authors').exec();
   if (!book) throw new AppError(404, 'Book not found try again');
@@ -30,22 +29,29 @@ const getBook = async (id) => {
 };
 
 const addBook = async (data) => {
-  const { title, isbn13, description, price, rating, publish_date, stock, coverImage, dimensions, weight, authors, categories } = data;
-  const book = BookModel.create({
-    title,
-    isbn13,
-    description,
-    price,
-    rating,
-    publish_date,
-    stock,
-    coverImage,
-    dimensions,
-    weight,
-    authors,
-    categories,
-  });
-  return book;
+  try {
+    const { title, isbn13, description, price, rating, publish_date, stock, dimensions, weight, authors, categories, coverPublicId, coverUrl } = data;
+
+    const book = await BookModel.create({
+      title,
+      isbn13,
+      description,
+      price,
+      rating,
+      publish_date,
+      stock,
+      coverImage: coverUrl,
+      dimensions,
+      weight,
+      authors,
+      categories,
+      coverPublicId,
+    });
+
+    return book;
+  } catch (error) {
+    return { error };
+  }
 };
 
 const updateBook = async (data, id) => {

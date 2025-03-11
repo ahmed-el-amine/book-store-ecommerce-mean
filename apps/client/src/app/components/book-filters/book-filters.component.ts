@@ -5,6 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms'; // الاستيراد هن
 import { BookService } from '../../service/books/book.service';
 import { BookCardComponent } from '../../shared/book-card/book-card.component';
 import { AuthService } from '../../services/auth/auth.service';
+import { response } from 'express';
 
 @Component({
   selector: 'app-book-filters',
@@ -31,6 +32,7 @@ export class BookFiltersComponent implements OnInit {
       categories: new FormControl(''),
       title: new FormControl(''),
     });
+
   }
   onSubmit() {
     if (this.searchForm.valid) {
@@ -39,7 +41,7 @@ export class BookFiltersComponent implements OnInit {
       this.filters.categories = this.searchForm.value.categories;
       this.filters.title = this.searchForm.value.title;
 
-      this.bookService.getBooksDetails().subscribe({
+      this.bookService.getBooks(this.filters).subscribe({
         next: (response) => {
           this.books = response;
           console.log(this.books);
@@ -61,18 +63,26 @@ export class BookFiltersComponent implements OnInit {
   ngOnInit(): void {
     this.authService.isAuthenticated$.subscribe((isAuth) => {
       this.isAuthenticated = isAuth;
-
       if (this.isAuthenticated) {
-        this.authService.getCurrentUser().subscribe({
+        this.authService.currentUser$.subscribe({
           next: (user) => {
-            console.log('User Data:', user); //see this
+            console.log('User Data:', user);
             this.userData = user;
           },
           error: (err) => {
             console.error('Error fetching user data', err);
-          },
+          }
         });
       }
+    });
+    this.bookService.getBooksEssential().subscribe({
+      next: (response) => {
+        this.books = response;
+        console.log(this.books);
+      },
+      error: (err) => {
+        console.error('soemthing wrrong happend', err);
+      },
     });
   }
 }

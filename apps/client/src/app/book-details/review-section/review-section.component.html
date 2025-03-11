@@ -1,1 +1,26 @@
+<div class="container-fluid">
+  @for(review of reviews; track review.id) {
+    <div class="review-card">
+      <div class="profile">
+        <img src="https://images.pexels.com/photos/1704488/pexels-photo-1704488.jpeg?cs=srgb&dl=pexels-sulimansallehi-1704488.jpg&fm=jpg"
+            alt="Profile Image" class="profile-img">
+        <h3 class="name">{{review.reviewOwnerData.username}}</h3>
 
+      </div>
+
+      <div class="description">
+        <p>{{review.comment}}</p>
+      </div>
+
+      <div class="rating">
+        <h4>Rating: <span [innerHTML]="getStars(review.rating)" style="color: gold;"></span></h4>
+      </div>
+
+      @if(review.reviewOwnerData.role === "admin" || review.reviewOwnerData.email === userData.email) {
+        <button type="button" class="btn btn-danger" (click)="deleteComment(review.id)">Delete</button>
+        <button type="button" class="btn btn-info" (click)="editComment(review.id)">Update</button>
+      }
+      <hr class="review-divider">
+    </div>
+  }
+</div>

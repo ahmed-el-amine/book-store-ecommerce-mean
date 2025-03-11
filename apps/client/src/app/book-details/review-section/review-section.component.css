@@ -1,0 +1,92 @@
+/* التنسيق العام لعرض المراجعات */
+.container-fluid {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    /* المسافة بين كل مكون */
+}
+
+/* تنسيق كل مراجعة */
+.review-card {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+.review-card:hover {
+    transform: translateY(-5px);
+    /* تأثير عند المرور بالماوس على المراجعة */
+}
+
+/* تنسيق قسم الصورة والاسم */
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.profile-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+
+/* تنسيق قسم التعليق */
+.description {
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #555;
+}
+
+/* تنسيق قسم التقييم */
+.rating {
+    margin-bottom: 15px;
+}
+
+.rating h4 {
+    font-size: 16px;
+    color: #333;
+}
+
+/* تنسيق الأزرار */
+.btn {
+    padding: 6px 12px;
+    border-radius: 5px;
+    margin-right: 10px;
+    font-size: 14px;
+}
+
+.btn-danger {
+    background-color: #f44336;
+    color: white;
+    border: none;
+}
+
+.btn-info {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+/* الفاصل بين المراجعات */
+.review-divider {
+    border: 1px solid #e0e0e0;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}

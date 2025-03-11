@@ -9,14 +9,14 @@ import { userRoles } from '../database/models/user.model.js';
 const router = express.Router();
 
 router.get('/:id', useAuth([userRoles.admin, userRoles.user]),async (req, res) => {
-    const reviewList = await getByBookId(req.params.id);
-    res.json({ reviewList: reviewList }, 200)
+    const reviews = await getByBookId(req.params.id);
+    res.json({ reviewList: reviews }, 200)
 
 })
 
 router.post('/', useAuth([userRoles.admin, userRoles.user]), useZod(reviewSchema),async (req, res) => {
     const review = await create(req,res);
-    res.json({ message: 'Employee created successfully', review }, 201);
+    res.json({ message: 'Review created successfully', review }, 201);
 })
 
 router.patch('/:id', useAuth([userRoles.admin, userRoles.user]), useZod(patchReviewSchema), async (req, res, next) => {

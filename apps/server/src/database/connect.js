@@ -4,8 +4,8 @@ import logger from '../lib/winston/index.js';
 
 const connectToDB = () =>
   new Promise((resolve, reject) => {
-    const MONGODB_URI = process.env.MONGODB_URI;
 
+    const MONGODB_URI = process.env.MONGODB_URI;
     if (!MONGODB_URI) throw new Error('MONGODB_URI is not defined');
 
     mongoose

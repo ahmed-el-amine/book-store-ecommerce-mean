@@ -1,7 +1,7 @@
 import express from 'express';
 import useZod from '../middleware/useZod';
-import { createUserSchema, loginUserSchema } from '../lib/zod/user.zod';
-import { create, login } from '../controllers/user.controller';
+import { activeUserEmailSchema, createUserSchema, loginUserSchema } from '../lib/zod/user.zod';
+import { activeEmail, create, login } from '../controllers/user.controller.js';
 import csurf from 'csurf';
 import authorization from '../middleware/useAuth.middleware.js';
 
@@ -24,6 +24,8 @@ router.get('/csrf-token', csrfProtection, (req, res) => {
 router.post('/signup', useZod(createUserSchema), create);
 
 router.post('/login', useZod(loginUserSchema), login);
+
+router.post('/activeEmail', useZod(activeUserEmailSchema), activeEmail);
 
 router.post(
   '/addAdmin',
