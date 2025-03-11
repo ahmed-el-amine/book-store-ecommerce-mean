@@ -115,6 +115,7 @@ userSchema.pre('updateMany', hashPasswordForQuery);
 userSchema.set('toJSON', {
   transform: (doc, ret) => {
     return {
+      id: ret._id,
       username: ret.username,
       firstName: ret.firstName,
       lastName: ret.lastName,
