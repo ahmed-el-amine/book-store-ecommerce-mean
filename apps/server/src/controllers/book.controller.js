@@ -19,16 +19,14 @@ const getBooks = async (req) => {
     filter.rating = { $gte: rating };
   }
   console.log('Filter:', filter);
-  const books = await BookModel.find(filter).populate('authors')
-    .select('title isbn13 description price rating publish_date stock coverImage').exec();
+  const books = await BookModel.find(filter).populate('authors').select('title isbn13 description price rating publish_date stock coverImage').exec();
   return books;
 };
 const getBook = async (id) => {
   const book = await BookModel.findById(id).populate('authors').exec();
   if (!book) throw new AppError(404, 'Book not found try again');
-  return book;
-}
-
+  return book.toDetails();
+};
 
 const addBook = async (data) => {
   try {
@@ -47,37 +45,27 @@ const addBook = async (data) => {
       weight,
       authors,
       categories,
-      coverPublicId
+      coverPublicId,
     });
 
     return book;
   } catch (error) {
-
     return { error };
   }
 };
-
 
 const updateBook = async (data, id) => {
   const book = await BookModel.findById(id).exec();
   if (!book) throw new AppError(404, `Book with ID ${id} not found please try again!`);
   const updatedBook = BookModel.findByIdAndUpdate(id, data, { runValidators: true });
   return updatedBook;
-}
+};
 
 const deleteBook = async (id) => {
   const book = await BookModel.findById(id).exec();
   if (!book) throw new AppError(404, `Book with ID ${id} not found please try again!`);
   const deletedBook = BookModel.findByIdAndDelete(id).exec();
   return deletedBook;
-}
+};
 
-
-
-export {
-  getBooks,
-  getBook,
-  addBook,
-  updateBook,
-  deleteBook
-}
+export { getBooks, getBook, addBook, updateBook, deleteBook };
