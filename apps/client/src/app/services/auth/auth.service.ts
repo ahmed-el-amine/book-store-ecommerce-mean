@@ -64,11 +64,15 @@ export class AuthService {
       )
       .pipe(
         tap(() => {
-          document.cookie = `token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`; 
+          document.cookie = `token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
           this.isAuthenticatedSubject.next(false);
           this.currentUserSubject.next(null);
         })
       );
+  }
+
+  forgotPassword(email: string) {
+    return this.http.post(`${this.apiUrl}/forgot-password`, { email });
   }
 
   getCurrentUser(): Observable<any> {
@@ -117,6 +121,9 @@ export class AuthService {
       withCredentials: true,
     });
   }
+  verifyEmail(data: { token: string }) {
+    return this.http.post(`${this.apiUrl}/active-email`, data);
+  }
   addAddress(addressData: any): Observable<any> {
     return this.http.post(`${this.baseURL}/users/me/address`, addressData, {
       headers: this.headers,
@@ -134,5 +141,9 @@ export class AuthService {
       headers: this.headers,
       withCredentials: true,
     });
+  }
+
+  resetPassword(data: { newPassword: string; token: string }) {
+    return this.http.post(`${this.apiUrl}/reset-password`, data);
   }
 }
