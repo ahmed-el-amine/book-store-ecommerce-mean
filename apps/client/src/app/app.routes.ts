@@ -10,6 +10,7 @@ import { BookFiltersComponent } from './components/book-filters/book-filters.com
 import { BookManageComponent } from './components/book-mange/book-manage.component';
 import { ReviewSectionComponent } from './book-details/review-section/review-section.component';
 import { EmailVerifyComponent } from './components/auth/email-verify/email-verify.component';
+
 export const appRoutes: Routes = [
   {
     path: 'auth/signup',
@@ -36,6 +37,7 @@ export const appRoutes: Routes = [
   {
     path: 'cart-details',
     component: CartComponent,
+    canActivate: [authGuard],
     title: 'Cart Items',
   },
   {

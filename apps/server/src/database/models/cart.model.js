@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const cartItemSchema = new mongoose.Schema({
   bookId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Book',
+    ref: 'Books',
     required: [true, 'Book ID is required'],
   },
   quantity: {
@@ -43,6 +43,11 @@ const cartSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+cartSchema.pre('save', function (next) {
+  this.totalPrice = this.items.reduce((total, item) => total + item.price * item.quantity, 0);
+  next();
+});
 
 const Cart = mongoose.model('Cart', cartSchema);
 
