@@ -8,7 +8,7 @@ import { LoginComponent } from './components/auth/login/login.component';
 import { authGuard, publicGuard } from './guards/auth.guard';
 import { BookFiltersComponent } from './components/book-filters/book-filters.component';
 import { BookManageComponent } from './components/book-mange/book-manage.component';
-import { ReviewSectionComponent } from './book-details/review-section/review-section.component'
+import { ReviewSectionComponent } from './book-details/review-section/review-section.component';
 export const appRoutes: Routes = [
   {
     path: 'auth/signup',
@@ -67,6 +67,6 @@ export const appRoutes: Routes = [
   },
   {
     path: 'show-reviews:bookId',
-    component: ReviewSectionComponent
-  }
+    component: ReviewSectionComponent,
+  },
 ];

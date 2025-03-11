@@ -10,34 +10,73 @@
       }
     </div>
     <div class="book-manage-body">
-      @if(mode==='update'||mode==='delete'){
+      @if(mode==='update'){
       <!-- Book Selection Section -->
       <div class="book-select-section">
-        <label for="bookSelect" class="form-label">Select Book</label>
+        <label for="bookSelect" class="form-label">Select Book to update</label>
         <select id="bookSelect" class="form-select">
           <option value="">-- Select a book --</option>
-          @for(book of books;track book.id){
-          <option value="book._id">{{ book.title }}</option>
+          @for(book of books;track book._id){
+          <option [value]="book._id">{{ book.title }}</option>
           }
         </select>
       </div>
       }
 
+      <div class="book-manage-body">
+        <!-- Delete Mode Section -->
+        @if(mode === 'delete'){
+        <div class="delete-section">
+          <div class="book-select-section">
+            <label for="bookSelect" class="form-label">Select Book to Delete</label>
+            <select id="bookSelect" class="form-select" (change)="onBookSelect($event)">
+              <option value="">-- Select a book --</option>
+              @for(book of books;track book._id){
+              <option [value]="book._id">{{ book.title }}</option>
+              }
+            </select>
+          </div>
+        </div>
+        }
+
+        @if(selectedBook){
+        <div class="book-details mt-4">
+          <h4>Book Details</h4>
+          <p><strong>Title:</strong> {{selectedBook.title}}</p>
+          <p><strong>ISBN:</strong> {{selectedBook.isbn13}}</p>
+          <p><strong>Price:</strong> ${{selectedBook.price}}</p>
+          <button class="btn btn-danger mt-3" (click)="showDeleteConfirmation()">Delete This Book</button>
+        </div>
+        }
+
+        @if(showDeleteWaring){
+        <div class="confirmation-message">
+          <p><strong>Warning:</strong> You are about to delete this book. This action cannot be undone.</p>
+          <p>Are you sure you want to delete this book?</p>
+          <div class="confirmation-actions">
+            <button class="btn btn-secondary" (click)="onclickCancel()">Cancel</button>
+            <button class="btn btn-danger" (click)="onClickConfirm()">Confirm Delete</button>
+          </div>
+        </div>
+        }
+      </div>
+
+      @if(mode==='add'||mode==='update'){
       <!-- Book Form -->
-      <form class="book-form">
+      <form class="book-form" [formGroup]="myform">
         <div class="form-group">
           <label for="title" class="form-label">Title</label>
-          <input type="text" id="title" class="form-control" />
+          <input type="text" id="title" class="form-control" formControlName="title" />
         </div>
 
         <div class="form-group">
-          <label for="author" class="form-label">Author</label>
-          <input type="text" id="author" class="form-control" />
+          <label for="isbn13" class="form-label">ISBN-13 </label>
+          <input type="text" id="isbn13" class="form-control" formControlName="isbn13" />
         </div>
 
         <div class="form-group">
           <label for="description" class="form-label">Description</label>
-          <textarea id="description" class="form-control" rows="3"></textarea>
+          <textarea id="description" class="form-control" formControlName="description" rows="3"></textarea>
         </div>
 
         <div class="form-row">
@@ -45,21 +84,101 @@
             <label for="price" class="form-label">Price</label>
             <div class="price-input-group">
               <span class="price-symbol">$</span>
-              <input type="number" id="price" class="form-control" />
+              <input type="number" id="price" class="form-control" formControlName="price" />
             </div>
           </div>
 
           <div class="form-group half-width">
-            <label for="quantity" class="form-label">Quantity in Stock</label>
-            <input type="number" id="quantity" class="form-control" />
+            <label for="stock" class="form-label">Quantity in Stock</label>
+            <input type="number" id="stock" class="form-control" formControlName="stock" />
           </div>
         </div>
 
+        <div class="form-row">
+          <div class="form-group half-width">
+            <label for="rating" class="form-label">Rating</label>
+            <input type="number" id="rating" class="form-control" min="0" max="5" step="0.1" formControlName="rating" />
+          </div>
+
+          <div class="form-group half-width">
+            <label for="publish_date" class="form-label">Publish Date</label>
+            <input type="date" id="publish_date" class="form-control" formControlName="publish_date" />
+          </div>
+        </div>
+
+        <!-- Dimensions Section -->
+        <div class="card mb-3" formGroupName="dimensions">
+          <div class="card-header">Dimensions</div>
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-group col-md-3">
+                <label for="width" class="form-label">Width</label>
+                <input type="number" id="width" class="form-control" min="0" step="0.1" formControlName="width" />
+              </div>
+
+              <div class="form-group col-md-3">
+                <label for="height" class="form-label">Height</label>
+                <input type="number" id="height" class="form-control" min="0" step="0.1" formControlName="height" />
+              </div>
+
+              <div class="form-group col-md-3">
+                <label for="depth" class="form-label">Depth</label>
+                <input type="number" id="depth" class="form-control" min="0" step="0.1" formControlName="depth" />
+              </div>
+
+              <div class=" form-group col-md-3">
+                <label for="dimension_unit" class="form-label">Unit</label>
+                <select id="dimension_unit" class="form-select" formControlName="unit">
+                  <option value="cm">cm</option>
+                  <option value="in">in</option>
+                  <option value="mm">mm</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Weight Section -->
+        <div class="card mb-3" formGroupName="weight">
+          <div class="card-header">Weight</div>
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="weight_value" class="form-label">Value</label>
+                <input type="number" id="weight_value" class="form-control" min="0" step="0.1"
+                  formControlName="value" />
+              </div>
+
+              <div class="form-group col-md-6">
+                <label for="weight_unit" class="form-label">Unit</label>
+                <select id="weight_unit" class="form-select" formControlName="unit">
+                  <option value="g">g</option>
+                  <option value="kg">kg</option>
+                  <option value="lb">lb</option>
+                  <option value="oz">oz</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Authors Section - Updated -->
+        <div class="form-group">
+          <label for="authors" class="form-label">Author ID</label>
+          <input type="text" id="authors" class="form-control" placeholder="Enter MongoDB ObjectID of author"
+            formControlName="authors" />
+          <small class="form-text text-muted">Enter a valid author ID (e.g., 6123f8d45e1a2b3c4d5e6f7g)</small>
+          <div class="invalid-feedback">Author with this ID doesn't exist in the database. Please add the author
+            first.
+          </div>
+        </div>
+
+        <!-- Categories Section - Dropdown style -->
         <div class="form-group">
           <label for="category" class="form-label">Category</label>
-          <select id="category" class="form-select">
+          <select id="category" class="form-select" formControlName="categories">
             <option value="">-- Select a category --</option>
-            <option value="fiction">Fiction</option>
+            <option value=" fiction">Fiction</option>
             <option value="non-fiction">Non-Fiction</option>
             <option value="science">Science</option>
             <option value="history">History</option>
@@ -70,22 +189,18 @@
         </div>
 
         <div class="form-group">
-          <label for="imageUrl" class="form-label">Image URL</label>
-          <input type="text" id="imageUrl" class="form-control" />
+          <label for="coverImage" class="form-label">Cover Image URL</label>
+          <input type="text" id="coverImage" class="form-control" formControlName="coverImage" />
         </div>
 
         <div class="form-actions">
           <button type="button" class="btn btn-cancel">Cancel</button>
           <button type="submit" class="btn btn-primary">Save</button>
-          <button type="button" class="btn btn-danger">Delete</button>
         </div>
       </form>
+      }
 
-      <!-- Confirmation Message -->
-      <div class="confirmation-message">
-        <p><strong>Warning:</strong> You are about to delete this book. This action cannot be undone.</p>
-        <p>Are you sure you want to delete this book?</p>
-      </div>
+
     </div>
   </div>
 </div>

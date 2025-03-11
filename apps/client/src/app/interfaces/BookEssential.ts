@@ -1,5 +1,5 @@
 export interface BookEssential{
-  id?:string;
+  _id?:string;
   title:string;
   isbn13:string;
   description:string;

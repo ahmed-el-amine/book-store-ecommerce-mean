@@ -53,39 +53,6 @@ const BookModel = new mongoose.Schema(
       unit: {
         type: String,
         required: true,
-        minLength: [15, 'Book description must be 15 character at least'],
-      },
-    },
-    price: {
-      type: Number,
-      required: true,
-      index: true,
-    },
-    rating: {
-      type: Number,
-      required: true,
-    },
-    publish_date: {
-      type: Date,
-      required: true,
-      index: true,
-    },
-    stock: {
-      type: Number,
-      required: true,
-      min: 0,
-    },
-    coverImage: {
-      type: String,
-      required: true,
-    },
-    dimensions: {
-      width: Number,
-      height: Number,
-      depth: Number,
-      unit: {
-        type: String,
-        default: 'cm',
       },
     },
     weight: {
