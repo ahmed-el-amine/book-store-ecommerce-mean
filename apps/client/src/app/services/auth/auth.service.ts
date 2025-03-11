@@ -64,7 +64,7 @@ export class AuthService {
       )
       .pipe(
         tap(() => {
-          document.cookie = `token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`; 
+          document.cookie = `token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
           this.isAuthenticatedSubject.next(false);
           this.currentUserSubject.next(null);
         })
@@ -116,6 +116,9 @@ export class AuthService {
       headers: this.headers,
       withCredentials: true,
     });
+  }
+  verifyEmail(data: { token: string }) {
+    return this.http.post(`${this.apiUrl}/activeEmail`, data);
   }
   addAddress(addressData: any): Observable<any> {
     return this.http.post(`${this.baseURL}/users/me/address`, addressData, {
