@@ -15,7 +15,7 @@ router.post('/place-order', async (req, res, next) => {
 router.get('/view-order-history', async (req, res, next) => {
     try {
         const orders = await getOrders(req);
-        res.json(...orders);
+        res.json(orders);
     } catch (err) {
         next(err);
     }

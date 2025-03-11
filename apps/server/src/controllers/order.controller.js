@@ -40,7 +40,15 @@ export const addNewOrder = async (req) => {
 };
 export const getOrders = async (req) => {
     try {
-        const userId = req.userId;
+        const userId = "607d1b2f5b3c2a0f88d1f7a9";
+         const filter = { userId };
+        const { status } = req.query;  // استخراج status من query parameters
+
+        if (status) {
+            filter.status = status;
+            const orders = await Order.find(filter);
+            return orders;
+        }
         const orders = await Order.find({ userId });
         return orders;
     } catch (err) {
