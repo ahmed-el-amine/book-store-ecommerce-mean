@@ -120,8 +120,6 @@ export const activeEmail = async (req, res) => {
   await Token.deleteMany({ userId: user._id, tokenType: tokenTypes.activeEmail });
 
   return res.status(httpStatus.OK).json({ message: 'Your account is verified successfully' });
-
-  // return res.status(httpStatus.BAD_REQUEST).json({ error: true, message: 'Invalid token' });
 };
 
 export const getAllUsers = async (req, res) => {

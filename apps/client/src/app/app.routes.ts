@@ -9,6 +9,8 @@ import { authGuard, publicGuard } from './guards/auth.guard';
 import { BookFiltersComponent } from './components/book-filters/book-filters.component';
 import { BookManageComponent } from './components/book-mange/book-manage.component';
 import { ReviewSectionComponent } from './book-details/review-section/review-section.component';
+import { EmailVerifyComponent } from './components/auth/email-verify/email-verify.component';
+
 export const appRoutes: Routes = [
   {
     path: 'auth/signup',
@@ -21,6 +23,11 @@ export const appRoutes: Routes = [
     component: LoginComponent,
     canActivate: [publicGuard],
     title: 'Login',
+  },
+  {
+    path: 'auth/verify-email/:token',
+    component: EmailVerifyComponent,
+    title: 'Verify Email',
   },
   {
     path: 'book-details/:id',

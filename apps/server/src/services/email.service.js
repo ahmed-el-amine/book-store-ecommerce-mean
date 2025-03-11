@@ -29,7 +29,7 @@ export const sendActiveEmail = async (user) => {
       text: `${process.env.WEBSITE_NAME} account activation`,
       html: activeEmailTemplate({
         firstName: user.firstName,
-        activeURL: `${process.env.WEBSITE_URL}/active-email?token=${activeEmailToken.token}`,
+        activeURL: `${process.env.CLIENT_WEBSITE_URL}/auth/verify-email/${activeEmailToken.token}`,
       }),
     });
 
