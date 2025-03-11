@@ -1,11 +1,11 @@
-<div class="card card-container border-0 position-relative" >
+<div class="card card-container border-0 position-relative">
   <div class="card-image position-relative overflow-hidden">
     <a>
-      <img [src]="bookData.coverImage" [alt]="bookData.title"  class="img-fluid w-100 h-50">
+      <img [src]="bookData.coverImage" [alt]="bookData.title" class="img-fluid w-100 h-50">
     </a>
 
     <!-- Bottom Action Bar: Entire area is clickable -->
-    <div class="action-bar clickable"  title="Add to Cart">
+    <div class="action-bar clickable" title="Add to Cart" (click)="addToCart()">
       <span>Add to Cart</span>
     </div>
   </div>
@@ -16,11 +16,10 @@
       <h5 class="card-title mb-1 text-truncate">{{bookData.title}}</h5>
     </a>
     <p class="card-text text-muted mb-2">{{
-       bookData.authors[0].firstName}} 
-        {{bookData.authors[0].lastName 
-    }}</p>
+        bookData.authors[0].firstName}}
+      {{bookData.authors[0].lastName
+      }}</p>
     <div class="d-flex align-items-center">
-
       <app-stars-generator [currProduct]="bookData"></app-stars-generator>
     </div>
   </div>
