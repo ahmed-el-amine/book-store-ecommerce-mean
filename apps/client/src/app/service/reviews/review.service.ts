@@ -51,7 +51,7 @@ export class ReviewService {
   updateReview(reviewId: string, comment?: string, rating?: number): Observable<any> {
     const body = {
       comment: comment,
-      rating: rating
+      rating: Number(rating)
     };
     return this.http.patch(`http://localhost:3000/api/v1/reviews/${reviewId}`, body, { withCredentials: true });
   }

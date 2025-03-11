@@ -3,11 +3,14 @@ import { CommonModule } from '@angular/common';
 import { ReviewService } from '../../service/reviews/review.service';
 import {  Review } from './review-interface';
 import { AuthService } from '../../services/auth/auth.service';
+import { AddReviewSectionComponent } from '../add-review-section/add-review-section.component';
+import { FormsModule } from '@angular/forms';
+
 
 
 @Component({
   selector: 'app-review-section',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule, AddReviewSectionComponent ],
   templateUrl: './review-section.component.html',
   styleUrl: './review-section.component.css',
 })
@@ -19,6 +22,10 @@ export class ReviewSectionComponent {
   reviews: Review[] = [];
   userData: any;
   isAuthenticated = false;
+  status = "data"
+  reviewId: string | undefined;
+  updatedReview = '';
+
   constructor(private reviewService: ReviewService, private authService: AuthService) {
 
   }
@@ -68,9 +75,30 @@ export class ReviewSectionComponent {
     return fullStars + emptyStars; // إرجاع النجوم الممتلئة والفارغة
   }
   editComment(id: string) {
-    // this.reviewService.updateReview(id,).subscribe((response) => {
-    //   next:
-    // })
+    this.status = 'update'
+    this.reviewId = id
+
+
+  }
+  saveReview(newComment:Review): void {
+    console.log(newComment)
+
+      const index = this.reviews.findIndex((review) => review.id === newComment.id);
+    if (index !== -1) {
+        console.log(newComment)
+        this.reviews[index] = newComment; 
+      }
+    
+    this.status = 'data';
+    this.reviewId = undefined; 
+    this.reviewService.updateReview(newComment.id, newComment.comment, newComment.rating).subscribe({
+      next: (updateReview: Review) => {
+        console.log('Review updated successfully:', updateReview);
+      },
+      error: (error) => {
+        console.error('Error updating review:', error);
+      },
+    });
   }
   deleteComment(id: string) {
     this.reviewService.deleteReview(id,).subscribe({
