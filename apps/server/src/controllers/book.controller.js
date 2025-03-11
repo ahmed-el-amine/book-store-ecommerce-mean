@@ -9,7 +9,8 @@ const getBooks = async (req) => {
     filter.categories = { $in: [categories] };
   }
   if (title) {
-    filter.title = { $regex: title, $options: 'i' };  }
+    filter.title = { $regex: title, $options: 'i' };
+  }
   if (price) {
     filter.price = { $gte: price };
   }
@@ -17,18 +18,16 @@ const getBooks = async (req) => {
   if (rating) {
     filter.rating = { $gte: rating };
   }
-  console.log('Filter:', filter); 
-  const books = await BookModel.find(filter).populate('authors').exec();
-  return books;
+  console.log('Filter:', filter);
+  const books = await BookModel.findEssentials(filter).populate('authors').exec();
+  return books.map((book) => book.toEssentials());
 };
-
 
 const getBook = async (id) => {
   const book = await BookModel.findById(id).populate('authors').exec();
   if (!book) throw new AppError(404, 'Book not found try again');
-  return book;
-}
-
+  return book.toDetails();
+};
 
 const addBook = async (data) => {
   const { title, isbn13, description, price, rating, publish_date, stock, coverImage, dimensions, weight, authors, categories } = data;
@@ -36,38 +35,31 @@ const addBook = async (data) => {
     title,
     isbn13,
     description,
-    price, rating,
+    price,
+    rating,
     publish_date,
     stock,
     coverImage,
     dimensions,
     weight,
     authors,
-    categories
+    categories,
   });
   return book;
-}
+};
 
 const updateBook = async (data, id) => {
   const book = await BookModel.findById(id).exec();
   if (!book) throw new AppError(404, `Book with ID ${id} not found please try again!`);
   const updatedBook = BookModel.findByIdAndUpdate(id, data, { runValidators: true });
   return updatedBook;
-}
+};
 
 const deleteBook = async (id) => {
   const book = await BookModel.findById(id).exec();
   if (!book) throw new AppError(404, `Book with ID ${id} not found please try again!`);
   const deletedBook = BookModel.findByIdAndDelete(id).exec();
   return deletedBook;
-}
+};
 
-
-
-export {
-  getBooks,
-  getBook,
-  addBook,
-  updateBook,
-  deleteBook
-}
+export { getBooks, getBook, addBook, updateBook, deleteBook };
