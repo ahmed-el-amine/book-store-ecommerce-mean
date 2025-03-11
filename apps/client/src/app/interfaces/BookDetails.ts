@@ -1,3 +1,9 @@
+interface Author {
+  firstName: string;
+  lastName: string;
+  id: string;
+}
+
 export interface Book {
   id?: string; 
   title: string;
@@ -18,6 +24,6 @@ export interface Book {
     value: number;
     unit: string; 
   };
-  authors: string[]; 
+  authors:  Author[];
   categories: string[];
 }

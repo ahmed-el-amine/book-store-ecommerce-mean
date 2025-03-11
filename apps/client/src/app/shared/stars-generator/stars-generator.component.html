@@ -1,8 +1,8 @@
-<div style="margin-bottom: 1%">
+<div >
   <ngx-stars
     style="pointer-events: none"
     [maxStars]="5"
-    [initialStars]="4"
+    [initialStars]="currProduct.rating"
     [size]="1"
     color="black"
     (ratingOutput)="onRatingChange($event)"
