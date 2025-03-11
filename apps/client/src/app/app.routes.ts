@@ -51,7 +51,6 @@ export const appRoutes: Routes = [
   {
     path: 'cart-details',
     component: CartComponent,
-    canActivate: [authGuard],
     title: 'Cart Items',
   },
   {

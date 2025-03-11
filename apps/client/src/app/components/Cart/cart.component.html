@@ -1,114 +1,122 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>BookHaven</title>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
-  </head>
+<div class="d-flex flex-column min-vh-100">
+  <!-- Main Content -->
+  <main class="flex-grow-1">
+    <div class="cart-container">
+      <div class="container py-4 py-md-5">
+        <!-- Back Link -->
+        <div class="back-link mb-4">
+          <a routerLink="/books-filters" class="text-decoration-none">
+            <i class="fas fa-chevron-left mr-2"></i>
+            Continue Shopping
+          </a>
+        </div>
 
-  <body>
-    <div class="d-flex flex-column min-vh-100">
-      <!-- Main Content -->
-      <main class="flex-grow-1">
-        <div class="container py-4 py-md-5">
-          <!-- Back Link -->
-          <div class="mb-4">
-            <a routerLink="/books" class="text-decoration-none text-secondary">
-              <i class="fas fa-chevron-left mr-1"></i>
-              Continue Shopping
-            </a>
-          </div>
-
-          <!-- Loading State -->
-          <div *ngIf="loading" class="text-center py-5">
+        <!-- Initial Loading State -->
+        <div *ngIf="initialLoading" class="text-center py-5">
+          <div class="spinner-loader">
             <div class="spinner-border text-primary" role="status">
               <span class="sr-only">Loading...</span>
             </div>
-            <p class="mt-3">Loading your cart...</p>
           </div>
+          <p class="mt-3 loading-text">Loading your cart...</p>
+        </div>
 
-          <!-- Error State -->
-          <div *ngIf="error" class="alert alert-danger" role="alert">
-            {{ error }}
-          </div>
-
-          <!-- Empty Cart State -->
-          <div *ngIf="!loading && !error && (!cart || cart.items.length === 0)" class="text-center py-5">
-            <i class="fas fa-shopping-cart fa-3x mb-3 text-muted"></i>
-            <h2>Your cart is empty</h2>
-            <p class="text-muted">Looks like you haven't added any books to your cart yet.</p>
-            <a routerLink="/books" class="btn btn-primary mt-3">Browse Books</a>
-          </div>
-
-          <!-- Cart Content -->
-          <div *ngIf="!loading && !error && cart && cart.items.length > 0" class="row">
-            <!-- Cart Items Column -->
-            <div class="col-lg-8 mb-4 mb-lg-0">
-              <div class="d-flex justify-content-between align-items-center">
-                <h1 class="h2 font-weight-bold">Shopping Cart</h1>
-                <span class="text-muted small">{{ cart.items.length }} {{ cart.items.length === 1 ? 'item' : 'items' }}</span>
-              </div>
-              <hr class="my-3" />
-
-              <!-- Cart Items -->
-              <div>
-                <ng-container *ngFor="let item of cart.items; let last = last">
-                  <div class="d-flex py-3">
-                    <div class="mr-3">
-                      <img [src]="item.coverImage || '/assets/placeholder-book.png'" [alt]="item.title" class="book-card-img rounded" />
-                    </div>
-                    <div class="d-flex flex-column justify-content-between flex-grow-1">
-                      <div>
-                        <h5 class="font-weight-medium">{{ item.title }}</h5>
-                      </div>
-                      <div class="quantity-control">
-                        <button class="btn btn-outline-secondary quantity-btn" (click)="decreaseQuantity(item)">
-                          <i class="fas fa-minus fa-xs"></i>
-                          <span class="sr-only">Decrease quantity</span>
-                        </button>
-                        <span class="quantity-text">{{ item.quantity }}</span>
-                        <button class="btn btn-outline-secondary quantity-btn" (click)="increaseQuantity(item)">
-                          <i class="fas fa-plus fa-xs"></i>
-                          <span class="sr-only">Increase quantity</span>
-                        </button>
-                      </div>
-                    </div>
-                    <div class="d-flex flex-column justify-content-between align-items-end">
-                      <button class="btn btn-light btn-sm p-1" (click)="removeItem(item.bookId)">
-                        <i class="fas fa-trash"></i>
-                        <span class="sr-only">Remove item</span>
-                      </button>
-                      <div class="font-weight-medium">${{ (item.price * item.quantity).toFixed(2) }}</div>
-                    </div>
-                  </div>
-                  <hr *ngIf="!last" />
-                </ng-container>
-              </div>
-            </div>
-
-            <!-- Order Summary Column -->
-            <div class="col-lg-4">
-              <div class="card">
-                <div class="card-body p-4">
-                  <h2 class="h5 font-weight-bold">Order Summary</h2>
-                  <hr class="my-3" />
-                  <div class="mb-4">
-                    <div class="d-flex justify-content-between font-weight-medium">
-                      <span>Total</span>
-                      <span>${{ getSubtotal().toFixed(2) }}</span>
-                    </div>
-                  </div>
-                  <button class="btn btn-primary btn-block" (click)="proceedToCheckout()">Proceed to Checkout</button>
-                </div>
-              </div>
+        <!-- CRUD Operation Loading Overlay -->
+        <div *ngIf="operationLoading" class="operation-loading-overlay">
+          <div class="operation-spinner">
+            <div class="spinner-grow text-light" role="status">
+              <span class="sr-only">Processing...</span>
             </div>
           </div>
         </div>
-      </main>
+
+        <!-- Error State -->
+        <div *ngIf="error" class="alert alert-danger custom-alert" role="alert">
+          <i class="fas fa-exclamation-circle mr-2"></i>
+          {{ error }}
+          <button type="button" class="close" (click)="clearError()">
+            <span>&times;</span>
+          </button>
+        </div>
+
+        <!-- Empty Cart State -->
+        <div *ngIf="!initialLoading && !error && (!cart || cart.items.length === 0)" class="text-center py-5 empty-cart">
+          <i class="fas fa-shopping-cart empty-icon mb-3"></i>
+          <h2 class="empty-title">Your cart is empty</h2>
+          <p class="text-muted empty-text">Looks like you haven't added any books to your cart yet.</p>
+          <a routerLink="/books-filters" class="btn btn-primary browse-btn mt-3">Browse Books</a>
+        </div>
+
+        <!-- Cart Content -->
+        <div *ngIf="!initialLoading && !error && cart && cart.items.length > 0" class="row">
+          <!-- Cart Items Column -->
+          <div class="col-lg-8 mb-4 mb-lg-0">
+            <div class="cart-header d-flex justify-content-between align-items-center">
+              <h1 class="cart-title">Shopping Cart</h1>
+              <span class="cart-count">{{ cart.items.length }} {{ cart.items.length === 1 ? 'item' : 'items' }}</span>
+            </div>
+            <hr class="divider" />
+
+            <!-- Cart Items -->
+            <div class="cart-items">
+              <ng-container *ngFor="let item of cart.items; let last = last">
+                <div class="cart-item">
+                  <div class="item-image">
+                    <!-- Use helper method instead of direct property access -->
+                    <img [src]="getBookImage(item)" [alt]="getBookTitle(item)" class="book-image" />
+                  </div>
+                  <div class="item-details">
+                    <div class="item-title">
+                      <!-- Use helper method instead of optional chaining -->
+                      <h5>{{ getBookTitle(item) }}</h5>
+                    </div>
+                    <div class="quantity-control">
+                      <button class="quantity-btn decrease" (click)="decreaseQuantity(item)" [disabled]="item.quantity <= 1 || operationLoading">
+                        <i class="fas fa-minus"></i>
+                        <span class="sr-only">Decrease quantity</span>
+                      </button>
+                      <span class="quantity-text">{{ item.quantity }}</span>
+                      <button class="quantity-btn increase" (click)="increaseQuantity(item)" [disabled]="item.quantity >= 99 || operationLoading">
+                        <i class="fas fa-plus"></i>
+                        <span class="sr-only">Increase quantity</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="item-actions">
+                    <button class="remove-btn" (click)="removeItem(item)" [disabled]="operationLoading" title="Remove from cart">
+                      <i class="fas fa-trash-alt"></i>
+                      <span class="sr-only">Remove item</span>
+                    </button>
+                    <!-- Use helper method to calculate price -->
+                    <div class="item-price">${{ getItemTotal(item).toFixed(2) }}</div>
+                  </div>
+                </div>
+                <hr *ngIf="!last" class="item-divider" />
+              </ng-container>
+            </div>
+          </div>
+
+          <!-- Order Summary Column -->
+          <div class="col-lg-4">
+            <div class="summary-card">
+              <div class="summary-header">
+                <h2>Order Summary</h2>
+              </div>
+              <hr class="divider" />
+              <div class="summary-content">
+                <div class="summary-row">
+                  <span class="summary-label">Total</span>
+                  <span class="summary-value">${{ getSubtotal().toFixed(2) }}</span>
+                </div>
+              </div>
+              <button class="checkout-btn" (click)="proceedToCheckout()" [disabled]="initialLoading || operationLoading">
+                <i class="fas fa-lock mr-2"></i>
+                Proceed to Checkout
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </body>
-</html>
+  </main>
+</div>
