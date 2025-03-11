@@ -12,7 +12,6 @@
         formControlName="comment" 
         rows="5" 
         class="form-control"></textarea>
-
       <!-- error message -->
       @if (formControl['comment'].invalid && formControl['comment'].touched) {
         @if (formControl['comment'].hasError('required')) {
