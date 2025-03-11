@@ -18,7 +18,21 @@ export const addToCart = async (req, res, next) => {
   let cart = await Cart.findOne({ userId });
 
   if (!cart) {
-    cart = await Cart.create({ userId, items: [{ bookId, quantity, price: book.price, title: book.title, coverImage: book.coverImage }] });
+    // Calculate totalPrice when creating a new cart
+    const totalPrice = book.price * quantity;
+    cart = await Cart.create({
+      userId,
+      items: [
+        {
+          bookId,
+          quantity,
+          price: book.price,
+          title: book.title,
+          coverImage: book.coverImage,
+        },
+      ],
+      totalPrice, // Set the initial totalPrice
+    });
   } else {
     const itemIdx = cart.items.findIndex((item) => item.bookId.toString() === bookId);
 
@@ -66,6 +80,8 @@ export const getCart = async (req, res, next) => {
   if (!cart) {
     return next(new AppError(httpStatus.NOT_FOUND, 'Cart not found'));
   }
+  cart.totalPrice = cart.items.reduce((total, item) => total + item.price * item.quantity, 0);
+  await cart.save();
   res.status(httpStatus.OK).json(cart);
 };
 
