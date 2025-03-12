@@ -39,6 +39,7 @@ export const bookSchema = z.object({
   }, z.date()
     .max(new Date(), 'Publish date cannot be in the future')
   ),
+  coverImage: z.string().optional(),
   stock: z.coerce.number()
     .int('Stock must be an integer')
     .min(0, 'Stock cannot be negative'),
@@ -60,6 +61,6 @@ export const bookSchema = z.object({
     z.array(z.string().min(1))
       .nonempty('At least one category required!')
   )
-}).strict();
+}).strip();
 
 export const patchBookSchema = bookSchema.partial();

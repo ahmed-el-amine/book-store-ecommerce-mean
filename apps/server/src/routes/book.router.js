@@ -38,6 +38,8 @@ router
         coverImage: coverPublicUrl,
         coverPublicId,
       };
+      console.log(bookData);
+
       const book = await bookController.addBook(bookData);
       if (book.error) {
         await deleteBookCover(coverPublicId);
