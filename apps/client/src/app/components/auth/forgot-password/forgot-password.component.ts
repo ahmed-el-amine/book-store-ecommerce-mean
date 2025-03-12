@@ -34,7 +34,6 @@ export class ForgotPasswordComponent {
         this.router.navigate(['/auth/login']);
       },
       error: (error) => {
-        console.log(error);
         this.toastr.error(error.error?.message || 'Failed to process request');
         this.loading = false;
       },

@@ -31,34 +31,23 @@ export class NotificationService {
   }
 
   markAsRead(id: string): Observable<any> {
-    console.log('id', id);
     // For development, update mock data
     // In production, uncomment the HTTP request
-    return this.http
-      .patch(
-        `${this.apiUrl}/${id}/read`,
-        {},
-        {
-          withCredentials: true,
-        }
-      )
-      .pipe(
-        tap(() => {
-          const notifications = this.notificationsSubject.value;
-          const notification = notifications.find((n) => n.id === id);
-          if (notification) {
-            notification.isRead = true;
-            this.notificationsSubject.next([...notifications]);
-          }
-        })
-      );
+    const notifications = this.notificationsSubject.value;
+    const notification = notifications.find((n) => n.id === id);
+    if (notification) {
+      notification.isRead = true;
+      this.notificationsSubject.next([...notifications]);
+    }
 
-    // const notifications = this.notificationsSubject.value;
-    // const notification = notifications.find((n) => n.id === id);
-    // if (notification) {
-    //   notification.isRead = true;
-    //   this.notificationsSubject.next([...notifications]);
-    // }
+    return this.http.patch(
+      `${this.apiUrl}/${id}/read`,
+      {},
+      {
+        withCredentials: true,
+      }
+    );
+
     // return of({ success: true });
   }
 

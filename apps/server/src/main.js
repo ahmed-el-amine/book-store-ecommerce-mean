@@ -82,8 +82,6 @@ const server = app.listen(port, host, () => {
 connectToDB();
 
 process.on('unhandledRejection', (err) => {
-  console.log(err);
-
   logger.error('UNHANDLED REJECTION! Shutting down...');
   logger.error(err.name, err.message);
   server.close(() => {

@@ -32,7 +32,6 @@ export class BookFiltersComponent implements OnInit {
       categories: new FormControl(''),
       title: new FormControl(''),
     });
-
   }
   onSubmit() {
     if (this.searchForm.valid) {
@@ -71,7 +70,7 @@ export class BookFiltersComponent implements OnInit {
           },
           error: (err) => {
             console.error('Error fetching user data', err);
-          }
+          },
         });
       }
     });
