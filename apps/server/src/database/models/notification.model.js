@@ -14,6 +14,10 @@ const notificationSchema = new mongoose.Schema(
       ref: 'User',
       required: [true, 'User ID is required'],
     },
+    title: {
+      type: String,
+      required: [true, 'Title is required'],
+    },
     message: {
       type: String,
       required: [true, 'Message is required'],
@@ -37,9 +41,11 @@ notificationSchema.set('toJSON', {
   transform: (doc, ret) => {
     return {
       id: ret._id,
+      title: ret.title,
       message: ret.message,
       type: ret.type,
       isRead: ret.isRead,
+      createdAt: ret.createdAt,
     };
   },
 });

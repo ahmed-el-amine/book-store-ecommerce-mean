@@ -1,7 +1,17 @@
 import express from 'express';
 import { userRoles } from '../database/models/user.model.js';
 import useAuth from '../middleware/useAuth.middleware.js';
-import { addAddress, changePassword, deleteAddress, getAllAddresses, getAllUsers, update, updateAddress } from '../controllers/user.controller.js';
+import {
+  addAddress,
+  changePassword,
+  deleteAddress,
+  getAllAddresses,
+  getAllUsers,
+  getNotifications,
+  markAsRead,
+  update,
+  updateAddress,
+} from '../controllers/user.controller.js';
 import useZod from '../middleware/useZod.js';
 import { addUserAddressSchema, updateUserSchema, updateUserAddressSchema, changeUserPasswordSchema } from '../lib/zod/user.zod.js';
 const router = express.Router();
@@ -31,5 +41,9 @@ router.patch('/me/address/:id', useAuth([userRoles.admin, userRoles.user]), useZ
 
 // delete address
 router.delete('/me/address/:id', useAuth([userRoles.admin, userRoles.user]), deleteAddress);
+
+router.get('/me/notifications', useAuth([userRoles.admin, userRoles.user]), getNotifications);
+
+router.patch('/me/notifications/:id/read', useAuth([userRoles.admin, userRoles.user]), markAsRead);
 
 export default router;
