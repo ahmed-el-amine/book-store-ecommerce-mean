@@ -45,7 +45,8 @@ const BookModel = new mongoose.Schema(
     },
     coverPublicId: {
       type: String,
-    },coverImage:{
+    },
+    coverImage:{
       type: String,
       required:true
     }
