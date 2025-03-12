@@ -10,9 +10,9 @@ import { environment } from '../../environment';
   providedIn: 'root',
 })
 export class BookService {
-  apiUrl = `${environment.apiUrl}/books`;
+  apiUrl = `${environment.apiUrlV1}/books`;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getBooksEssential(): Observable<BookEssential[]> {
     return this.http.get<BookEssential[]>(this.apiUrl, { withCredentials: true }).pipe(catchError(this.handleError));
@@ -37,7 +37,7 @@ export class BookService {
   deleteBook(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`, { withCredentials: true }).pipe(catchError(this.handleError));
   }
-  getBooks(filters: { categories?: string, title?: string, price?: number, rating?: number }): Observable<BookEssential[]> {
+  getBooks(filters: { categories?: string; title?: string; price?: number; rating?: number }): Observable<BookEssential[]> {
     let params = new HttpParams();
     if (filters.categories) {
       params = params.append('categories', filters.categories);

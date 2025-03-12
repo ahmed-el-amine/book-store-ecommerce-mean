@@ -13,11 +13,16 @@ import errorHandler from './middleware/errorHandler.js';
 import seedSuperAdmin from './database/seeders/seedSuperAdmin';
 import limiter from './middleware/rateLimiter.middleware.js';
 import { v2 as cloudinary } from 'cloudinary';
+import socketIOSetup from './socket/socketIOSetup.js';
+import { sendNotificationToUser } from './services/socket.service.js';
+import { notificationType } from './database/models/notification.model';
+import { create } from './services/notifications.service.js';
+
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
-  secure: true
+  secure: true,
 });
 
 // Placed first to caught any uncaught exception in the program
@@ -54,12 +59,32 @@ app.use(errorHandler);
 
 const server = app.listen(port, host, () => {
   logger.info(`[ ready ] http://${host}:${port}`);
+  socketIOSetup(server);
 });
+
+setInterval(async () => {
+  // sendNotificationToAll({
+  //   message: 'Hello from the server',
+  //   type: 'info',
+  //   duration: 5000,
+  // });
+  // const notification = await create({
+  //   message: 'Hello from the server',
+  //   type: notificationType.ERROR,
+  //   userId: '67c32a551422a435b175f20b',
+  // });
+  sendNotificationToUser({
+    message: 'Hello from the server',
+    type: notificationType.ERROR,
+    userId: '67c32a551422a435b175f20',
+  });
+}, 10000);
 
 connectToDB();
 
-
 process.on('unhandledRejection', (err) => {
+  console.log(err);
+
   logger.error('UNHANDLED REJECTION! Shutting down...');
   logger.error(err.name, err.message);
   server.close(() => {
