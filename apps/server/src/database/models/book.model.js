@@ -45,7 +45,11 @@ const BookModel = new mongoose.Schema(
     },
     coverPublicId: {
       type: String,
-    },
+    },coverImage:{
+      type: String,
+      required:true
+    }
+    ,
     dimensions: {
       width: Number,
       height: Number,

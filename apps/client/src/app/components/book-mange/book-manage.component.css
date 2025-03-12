@@ -147,3 +147,27 @@
 .delete-mode h3 {
   color: white;
 }
+
+.image-preview {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.img-thumbnail {
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+}
+
+.bg-light {
+  background-color: #f8f9fa;
+}
+
+.current-categories {
+  border-left: 3px solid #007bff;
+  padding-left: 10px;
+}
