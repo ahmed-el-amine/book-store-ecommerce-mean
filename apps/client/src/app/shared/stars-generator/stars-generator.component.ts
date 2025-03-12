@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { NgxStarsModule } from 'ngx-stars';
 import { Book } from '../../interfaces/BookDetails';
+import { BookEssential } from '../../interfaces/BookEssential';
 
 @Component({
   selector: 'app-stars-generator',
@@ -9,7 +10,7 @@ import { Book } from '../../interfaces/BookDetails';
   styleUrl: './stars-generator.component.css',
 })
 export class StarsGeneratorComponent {
-  @Input() currProduct!: Book;
+  @Input() currProduct!: Book | BookEssential;
   onRatingChange(rating: number) {
     console.log('New rating:', rating);
   }

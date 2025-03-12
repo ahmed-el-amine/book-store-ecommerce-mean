@@ -1,26 +1,36 @@
-<div class="card card-container border-0 position-relative">
-  <div class="card-image position-relative overflow-hidden">
-    <a routerLink="/book-details/{{bookData._id}}" class="text-decoration-none">
-      <img [src]="bookData.coverImage" [alt]="bookData.title" class="img-fluid w-100 h-50">
+<div class="book-card">
+  <!-- Book Image with Link to Details -->
+  <div class="book-image-container">
+    <a [routerLink]="['/book-details', bookData._id]" class="image-link">
+      <img [src]="bookData.coverImage" [alt]="bookData.title" class="book-image" />
+      <div class="overlay">
+        <span class="view-details">View Details</span>
+      </div>
     </a>
-
-    <!-- Bottom Action Bar: Entire area is clickable -->
-    <div class="action-bar clickable" title="Add to Cart" (click)="addToCart()">
-      <span>Add to Cart</span>
+    <!-- Price Tag -->
+    <div class="price-tag">
+      <span>${{ bookData.price.toFixed(2) }}</span>
     </div>
   </div>
 
-  <!-- Book Info -->
-  <div class="card-body p-0 mt-3">
-    <a class="text-decoration-none">
-      <h5 class="card-title mb-1 text-truncate">{{bookData.title}}</h5>
-    </a>
-    <p class="card-text text-muted mb-2">{{
-        bookData.authors[0].firstName}}
-      {{bookData.authors[0].lastName
-      }}</p>
-    <div class="d-flex align-items-center">
+  <!-- Book Content -->
+  <div class="book-content">
+    <h5 class="book-title text-truncate">{{ bookData.title }}</h5>
+    <p class="book-author">{{ bookData.authors[0].firstName }} {{ bookData.authors[0].lastName }}</p>
+
+    <!-- Rating Stars -->
+    <div class="rating-container">
       <app-stars-generator [currProduct]="bookData"></app-stars-generator>
     </div>
+
+    <!-- Add to Cart Button -->
+    <button class="btn btn-primary add-to-cart-btn" (click)="addToCart()" [disabled]="isAddingToCart">
+      <i class="bi bi-cart-plus me-2"></i>
+      <span *ngIf="!isAddingToCart">Add to Cart</span>
+      <span *ngIf="isAddingToCart">
+        <i class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></i>
+        Adding...
+      </span>
+    </button>
   </div>
 </div>
