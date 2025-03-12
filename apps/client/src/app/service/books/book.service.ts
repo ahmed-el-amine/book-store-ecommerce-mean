@@ -22,19 +22,19 @@ export class BookService {
     return this.http.get<Book[]>(this.apiUrl, { withCredentials: true }).pipe(catchError(this.handleError));
   }
 
-  getBookById(id: string): Observable<Book[]> {
-    return this.http.get<Book[]>(`${this.apiUrl}/${id}`, { withCredentials: true }).pipe(catchError(this.handleError));
+  getBookById(id: string): Observable<Book> {
+    return this.http.get<Book>(`${this.apiUrl}/${id}`, { withCredentials: true }).pipe(catchError(this.handleError));
   }
 
-  addBook(book: Book): Observable<Book> {
-    return this.http.post<Book>(this.apiUrl, book, { withCredentials: true }).pipe(catchError(this.handleError));
+  addBook(book: FormData): Observable<any> {
+    return this.http.post<Book>(`${this.apiUrl}/add`, book, { withCredentials: true }).pipe(catchError(this.handleError));
   }
 
-  updateBook(id: number, book: Book): Observable<Book> {
-    return this.http.put<Book>(`${this.apiUrl}/${id}`, book, { withCredentials: true }).pipe(catchError(this.handleError));
+  updateBook(id: string, book: FormData): Observable<any> {
+    return this.http.patch<Book>(`${this.apiUrl}/${id}`, book, { withCredentials: true }).pipe(catchError(this.handleError));
   }
 
-  deleteBook(id: number): Observable<void> {
+  deleteBook(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`, { withCredentials: true }).pipe(catchError(this.handleError));
   }
   getBooks(filters: { categories?: string; title?: string; price?: number; rating?: number }): Observable<BookEssential[]> {

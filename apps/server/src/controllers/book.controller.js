@@ -30,22 +30,8 @@ const getBook = async (id) => {
 
 const addBook = async (data) => {
   try {
-    const { title, isbn13, description, price, rating, publish_date, stock, dimensions, weight, authors, categories, coverPublicId, coverUrl } = data;
-
     const book = await BookModel.create({
-      title,
-      isbn13,
-      description,
-      price,
-      rating,
-      publish_date,
-      stock,
-      coverImage: coverUrl,
-      dimensions,
-      weight,
-      authors,
-      categories,
-      coverPublicId,
+     ...data
     });
 
     return book;

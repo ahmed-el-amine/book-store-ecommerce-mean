@@ -1,92 +1,119 @@
-/* التنسيق العام لعرض المراجعات */
-.container-fluid {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    /* المسافة بين كل مكون */
-}
-
-/* تنسيق كل مراجعة */
 .review-card {
     background-color: #f9f9f9;
-    padding: 15px;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease-in-out;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
 }
 
 .review-card:hover {
-    transform: translateY(-5px);
-    /* تأثير عند المرور بالماوس على المراجعة */
-}
-
-/* تنسيق قسم الصورة والاسم */
-.profile {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 15px;
+    transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 .profile-img {
+    border-radius: 50%;
     width: 50px;
     height: 50px;
-    border-radius: 50%;
     object-fit: cover;
+    margin-right: 10px;
 }
 
 .name {
     font-size: 18px;
     font-weight: bold;
     color: #333;
-    margin: 0;
+    margin-bottom: 10px;
 }
 
-/* تنسيق قسم التعليق */
-.description {
-    margin-bottom: 10px;
+.description p {
     font-size: 16px;
+    line-height: 1.6;
     color: #555;
 }
 
-/* تنسيق قسم التقييم */
-.rating {
-    margin-bottom: 15px;
-}
-
-.rating h4 {
+textarea {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
     font-size: 16px;
-    color: #333;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin-top: 10px;
+    resize: none;
+    transition: all 0.3s ease;
 }
 
-/* تنسيق الأزرار */
-.btn {
-    padding: 6px 12px;
-    border-radius: 5px;
-    margin-right: 10px;
+textarea:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+input[type="number"] {
+    width: 60px;
+    padding: 5px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin-top: 10px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+input[type="number"]:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+button {
     font-size: 14px;
+    padding: 8px 15px;
+    border-radius: 8px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: 5px;
 }
 
 .btn-danger {
-    background-color: #f44336;
-    color: white;
+    background-color: #e74c3c;
     border: none;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #c0392b;
 }
 
 .btn-info {
-    background-color: #2196F3;
-    color: white;
+    background-color: #3498db;
     border: none;
+    color: white;
 }
 
-.btn:hover {
-    opacity: 0.9;
+.btn-info:hover {
+    background-color: #2980b9;
 }
 
-/* الفاصل بين المراجعات */
+.btn-success {
+    background-color: #2ecc71;
+    border: none;
+    color: white;
+}
+
+.btn-success:hover {
+    background-color: #27ae60;
+}
+
 .review-divider {
-    border: 1px solid #e0e0e0;
+    border: 0;
+    border-top: 1px solid #ddd;
     margin-top: 20px;
-    margin-bottom: 20px;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f6f8;
+    padding: 20px;
 }

@@ -21,7 +21,7 @@ router.post('/', useAuth([userRoles.admin, userRoles.user]), useZod(reviewSchema
 
 router.patch('/:id', useAuth([userRoles.admin, userRoles.user]), useZod(patchReviewSchema), async (req, res, next) => {
     const updatedReview = await updateReview(req, res, next);
-    res.json({ updatedReview: updatedReview }, 200)
+    res.json(updatedReview);
 })
 
 router.delete('/:id', useAuth([userRoles.admin, userRoles.user]),async (req, res, next) => {

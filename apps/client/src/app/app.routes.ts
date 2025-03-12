@@ -1,3 +1,5 @@
+import { OrdersHistoryComponent } from './components/orders-history/orders-history.component';
+import { Component } from '@angular/core';
 import { Routes } from '@angular/router';
 import { AccountSettingsComponent } from './components/account/account-settings/account-settings.component';
 import { BookDetailsComponent } from './book-details/book-details.component';
@@ -25,6 +27,11 @@ export const appRoutes: Routes = [
     component: LoginComponent,
     canActivate: [publicGuard],
     title: 'Login',
+  },
+    {
+    path:'orders-history',
+    component:OrdersHistoryComponent,
+    title:"Order History"
   },
   {
     path: 'auth/forgot-password',

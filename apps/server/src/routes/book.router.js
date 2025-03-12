@@ -35,9 +35,11 @@ router
 
       const bookData = {
         ...req.body,
-        coverPublicUrl,
+        coverImage: coverPublicUrl,
         coverPublicId,
       };
+      console.log(bookData);
+
       const book = await bookController.addBook(bookData);
       if (book.error) {
         await deleteBookCover(coverPublicId);
