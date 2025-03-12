@@ -46,30 +46,25 @@
 
 <!-- Notification Modal -->
 <ng-template #notificationModal>
-  <div class="modal-content">
-    <div
-      class="modal-header"
-      [ngClass]="{
-        'bg-success': selectedNotification?.type === 'success',
-        'bg-danger': selectedNotification?.type === 'error',
-        'bg-warning': selectedNotification?.type === 'warning',
-        'bg-info': selectedNotification?.type === 'info'
-      }"
-    >
-      <h4 class="modal-title text-white">
-        <i [class]="getNotificationIcon(selectedNotification?.type)" aria-hidden="true"></i>
-        {{ selectedNotification?.title }}
-      </h4>
-      <button type="button" class="close" aria-label="Close" (click)="modalRef?.hide()">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <p>{{ selectedNotification?.message }}</p>
-      <small class="text-muted">{{ selectedNotification?.createdAt | date : 'medium' }}</small>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" (click)="modalRef?.hide()">Close</button>
-    </div>
+  <div
+    class="modal-header"
+    [ngClass]="{
+      'bg-success': selectedNotification?.type === 'success',
+      'bg-danger': selectedNotification?.type === 'error',
+      'bg-warning': selectedNotification?.type === 'warning',
+      'bg-info': selectedNotification?.type === 'info'
+    }"
+  >
+    <h4 class="modal-title text-white">{{ selectedNotification?.title }}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modalRef?.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>{{ selectedNotification?.message }}</p>
+    <small class="text-muted">{{ selectedNotification?.createdAt | date : 'medium' }}</small>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modalRef?.hide()">Close</button>
   </div>
 </ng-template>

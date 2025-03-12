@@ -45,17 +45,16 @@
 .notification-dropdown {
   width: 320px;
   padding: 0;
-  max-height: 400px;
-  overflow-y: auto;
+  max-height: none; /* Remove max-height from dropdown */
   border-radius: 12px;
   border: none;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   z-index: 1050;
-  overflow-x: hidden;
+  overflow: hidden; /* Change to hidden to prevent scrollbar here */
 }
 
 .notification-list {
-  max-height: 340px;
+  max-height: 340px; /* Fixed height for the list */
   overflow-y: auto;
   overflow-x: hidden;
   scrollbar-width: thin;
@@ -90,7 +89,7 @@
 }
 
 .notification-list {
-  max-height: calc(80vh - 60px);
+  max-height: calc(45vh - 60px);
   overflow-y: auto;
 }
 
@@ -100,6 +99,7 @@
   border-bottom: 1px solid #f1f1f1;
   transition: all 0.2s ease;
   text-decoration: none !important;
+  cursor: pointer;
 }
 
 .notification-item:hover {
@@ -298,12 +298,12 @@
     top: 60px !important;
     right: 10px !important;
     left: auto !important;
-    max-height: 60vh;
     transform: none !important;
+    max-height: none; /* Remove max-height */
   }
 
   .notification-list {
-    max-height: calc(60vh - 60px);
+    max-height: 60vh; /* Use viewport height for mobile */
   }
 
   .notification-item {
@@ -319,10 +319,10 @@
 @media (min-width: 577px) and (max-width: 992px) {
   .notification-dropdown {
     width: 300px;
-    max-height: 70vh;
+    max-height: none; /* Remove max-height */
   }
 
   .notification-list {
-    max-height: calc(70vh - 60px);
+    max-height: 70vh; /* Use viewport height for tablets */
   }
 }
