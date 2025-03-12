@@ -31,7 +31,7 @@ export class BookSectionComponent implements OnInit {
   }
   getStars(rating: number): string {
     const fullStars = Math.floor(rating)
-    const halfStar = (rating % 1) >= 0.5 ? 1 : 0; 
+    const halfStar = (rating % 1) >= 0.5 ? 1 : 0;
     const emptyStars = 5 - fullStars - halfStar;
 
     let stars = '';

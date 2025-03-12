@@ -5,12 +5,13 @@ import { CartService } from '../../service/cart/cart.service';
 import { AuthService } from '../../services/auth/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { take } from 'rxjs/operators';
+import {RouterLink} from "@angular/router";
 
 @Component({
   selector: 'app-book-card',
   templateUrl: './book-card.component.html',
   styleUrls: ['./book-card.component.css'],
-  imports: [StarsGeneratorComponent],
+  imports: [StarsGeneratorComponent, RouterLink],
 })
 export class BookCardComponent {
   @Input() bookData!: Book;
