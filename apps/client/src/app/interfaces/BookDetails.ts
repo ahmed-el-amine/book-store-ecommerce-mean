@@ -1,7 +1,19 @@
 interface Author {
   firstName: string;
   lastName: string;
-  _id?: string;
+  id?: string;
+}
+
+interface Dimensions {
+  width: number;
+  height: number;
+  depth: number;
+  unit: string;
+}
+
+interface Weight {
+  value: number;
+  unit: string;
 }
 
 export interface Book {
@@ -14,9 +26,12 @@ export interface Book {
   rating: number; // Optional if you're using star ratings
   description?: string;
   categories?: string[];
-  publishedDate?: Date | string;
-  isbn?: string;
+  publish_date?: Date | string;
+  isbn13?: string;
+  stock:number;
   pageCount?: number;
   language?: string;
   publisher?: string;
+  dimensions:Dimensions;
+  weight:Weight;
 }

@@ -35,7 +35,7 @@ router
 
       const bookData = {
         ...req.body,
-        coverPublicUrl,
+        coverImage: coverPublicUrl,
         coverPublicId,
       };
       const book = await bookController.addBook(bookData);

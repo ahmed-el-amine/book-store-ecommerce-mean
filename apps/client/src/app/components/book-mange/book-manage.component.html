@@ -14,7 +14,7 @@
       <!-- Book Selection Section -->
       <div class="book-select-section">
         <label for="bookSelect" class="form-label">Select Book to update</label>
-        <select id="bookSelect" class="form-select">
+        <select id="bookSelect" class="form-select" (change)="onBookSelect($event)">
           <option value="">-- Select a book --</option>
           @for(book of books;track book._id){
           <option [value]="book._id">{{ book.title }}</option>
@@ -39,7 +39,7 @@
         </div>
         }
 
-        @if(selectedBook){
+        @if(mode==='delete'&&selectedBook){
         <div class="book-details mt-4">
           <h4>Book Details</h4>
           <p><strong>Title:</strong> {{selectedBook.title}}</p>
@@ -63,22 +63,38 @@
 
       @if(mode==='add'||mode==='update'){
       <!-- Book Form -->
-      <form class="book-form" [formGroup]="myform">
+      <form class="book-form" [formGroup]="myform" (ngSubmit)="onSubmit()">
+        <!-- Validation error display -->
+        @if(getValidationError('title')){
+        <div class="alert alert-danger">{{ getValidationError('title') }}</div>
+        }
         <div class="form-group">
           <label for="title" class="form-label">Title</label>
           <input type="text" id="title" class="form-control" formControlName="title" />
         </div>
 
+        <!-- ISBN13 validation -->
+        @if(getValidationError('isbn13')){
+        <div class="alert alert-danger">{{ getValidationError('isbn13') }}</div>
+        }
         <div class="form-group">
           <label for="isbn13" class="form-label">ISBN-13 </label>
           <input type="text" id="isbn13" class="form-control" formControlName="isbn13" />
         </div>
 
+        <!-- Description validation -->
+        @if(getValidationError('description')){
+        <div class="alert alert-danger">{{ getValidationError('description') }}</div>
+        }
         <div class="form-group">
           <label for="description" class="form-label">Description</label>
           <textarea id="description" class="form-control" formControlName="description" rows="3"></textarea>
         </div>
 
+        <!-- Price validation -->
+        @if(getValidationError('price')){
+        <div class="alert alert-danger">{{ getValidationError('price') }}</div>
+        }
         <div class="form-row">
           <div class="form-group half-width">
             <label for="price" class="form-label">Price</label>
@@ -89,6 +105,10 @@
           </div>
 
           <div class="form-group half-width">
+            <!-- Stock validation -->
+            @if(getValidationError('stock')){
+            <div class="alert alert-danger">{{ getValidationError('stock') }}</div>
+            }
             <label for="stock" class="form-label">Quantity in Stock</label>
             <input type="number" id="stock" class="form-control" formControlName="stock" />
           </div>
@@ -96,10 +116,18 @@
 
         <div class="form-row">
           <div class="form-group half-width">
+            <!-- Rating validation -->
+            @if(getValidationError('rating')){
+            <div class="alert alert-danger">{{ getValidationError('rating') }}</div>
+            }
             <label for="rating" class="form-label">Rating</label>
             <input type="number" id="rating" class="form-control" min="0" max="5" step="0.1" formControlName="rating" />
           </div>
 
+          <!-- Publish Date validation -->
+          @if(getValidationError('publish_date')){
+          <div class="alert alert-danger">{{ getValidationError('publish_date') }}</div>
+          }
           <div class="form-group half-width">
             <label for="publish_date" class="form-label">Publish Date</label>
             <input type="date" id="publish_date" class="form-control" formControlName="publish_date" />
@@ -112,21 +140,37 @@
           <div class="card-body">
             <div class="form-row">
               <div class="form-group col-md-3">
+                <!-- Width validation -->
+                @if(getValidationError('dimensions.width')){
+                <div class="alert alert-danger">{{ getValidationError('dimensions.width') }}</div>
+                }
                 <label for="width" class="form-label">Width</label>
                 <input type="number" id="width" class="form-control" min="0" step="0.1" formControlName="width" />
               </div>
 
               <div class="form-group col-md-3">
+                <!-- Height validation -->
+                @if(getValidationError('dimensions.height')){
+                <div class="alert alert-danger">{{ getValidationError('dimensions.height') }}</div>
+                }
                 <label for="height" class="form-label">Height</label>
                 <input type="number" id="height" class="form-control" min="0" step="0.1" formControlName="height" />
               </div>
 
               <div class="form-group col-md-3">
+                <!-- Depth validation -->
+                @if(getValidationError('dimensions.depth')){
+                <div class="alert alert-danger">{{ getValidationError('dimensions.depth') }}</div>
+                }
                 <label for="depth" class="form-label">Depth</label>
                 <input type="number" id="depth" class="form-control" min="0" step="0.1" formControlName="depth" />
               </div>
 
               <div class=" form-group col-md-3">
+                <!-- Unit validation -->
+                @if(getValidationError('dimensions.unit')){
+                <div class="alert alert-danger">{{ getValidationError('dimensions.unit') }}</div>
+                }
                 <label for="dimension_unit" class="form-label">Unit</label>
                 <select id="dimension_unit" class="form-select" formControlName="unit">
                   <option value="cm">cm</option>
@@ -144,12 +188,20 @@
           <div class="card-body">
             <div class="form-row">
               <div class="form-group col-md-6">
+                <!-- Weight value validation -->
+                @if(getValidationError('weight.value')){
+                <div class="alert alert-danger">{{ getValidationError('weight.value') }}</div>
+                }
                 <label for="weight_value" class="form-label">Value</label>
                 <input type="number" id="weight_value" class="form-control" min="0" step="0.1"
                   formControlName="value" />
               </div>
 
               <div class="form-group col-md-6">
+                <!-- Weight unit validation -->
+                @if(getValidationError('weight.unit')){
+                <div class="alert alert-danger">{{ getValidationError('weight.unit') }}</div>
+                }
                 <label for="weight_unit" class="form-label">Unit</label>
                 <select id="weight_unit" class="form-select" formControlName="unit">
                   <option value="g">g</option>
@@ -162,7 +214,10 @@
           </div>
         </div>
 
-        <!-- Authors Section - Updated -->
+        <!-- Authors Section -->
+        @if(getValidationError('authors')){
+        <div class="alert alert-danger">{{ getValidationError('authors') }}</div>
+        }
         <div class="form-group">
           <label for="authors" class="form-label">Author ID</label>
           <input type="text" id="authors" class="form-control" placeholder="Enter MongoDB ObjectID of author"
@@ -173,7 +228,10 @@
           </div>
         </div>
 
-        <!-- Categories Section - Dropdown style -->
+        <!-- Categories Section -->
+        @if(getValidationError('categories')){
+        <div class="alert alert-danger">{{ getValidationError('categories') }}</div>
+        }
         <div class="form-group">
           <label for="category" class="form-label">Category</label>
           <select id="category" class="form-select" formControlName="categories">
@@ -186,16 +244,39 @@
             <option value="children">Children</option>
             <option value="other">Other</option>
           </select>
+          @if(mode === 'update' && currentCategoriesText){
+          <div class="mt-2">
+            <label class="form-label text-muted">Current Categories:</label>
+            <input type="text" class="form-control bg-light" [value]="currentCategoriesText" readonly>
+            <small class="form-text text-muted">These are the current categories assigned to this book.</small>
+          </div>
+          }
         </div>
 
+        @if(getValidationError('coverImage')){
+        <div class="alert alert-danger">{{ getValidationError('coverImage') }}</div>
+        }
+        <!-- Cover Image validation -->
         <div class="form-group">
-          <label for="coverImage" class="form-label">Cover Image URL</label>
-          <input type="text" id="coverImage" class="form-control" formControlName="coverImage" />
+          <label for="coverImage" class="form-label">Cover Image</label>
+          <input type="file" id="coverImage" class="form-control" accept="image/*" (change)="onFileSelected($event)" />
+          @if(imagePreview){
+          <div class="image-preview mt-3">
+            <img [src]="imagePreview" alt="Cover preview" class="img-thumbnail" style="max-height: 200px;">
+          </div>
+          }
         </div>
 
-        <div class="form-actions">
-          <button type="button" class="btn btn-cancel">Cancel</button>
-          <button type="submit" class="btn btn-primary">Save</button>
+        <!-- Action Buttons -->
+        <div class="form-group d-flex justify-content-between mt-4">
+          <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+          <button type="submit" class="btn btn-primary">
+            @if(mode === 'add'){
+            Add Book
+            }@else{
+            Update Book
+            }
+          </button>
         </div>
       </form>
       }
