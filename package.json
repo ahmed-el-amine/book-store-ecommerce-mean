@@ -2,7 +2,9 @@
   "name": "@book-store-ecommerce-mean/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "start": "npx nx run node-api:serve --configuration=development"
+  },
   "private": true,
   "devDependencies": {
     "@angular-devkit/build-angular": "~19.1.0",
