@@ -14,9 +14,6 @@ import seedSuperAdmin from './database/seeders/seedSuperAdmin';
 import limiter from './middleware/rateLimiter.middleware.js';
 import { v2 as cloudinary } from 'cloudinary';
 import socketIOSetup from './socket/socketIOSetup.js';
-import { sendNotificationToUser } from './services/socket.service.js';
-import { notificationType } from './database/models/notification.model';
-import { create } from './services/notifications.service.js';
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -62,29 +59,29 @@ const server = app.listen(port, host, () => {
   socketIOSetup(server);
 });
 
-setInterval(async () => {
-  // sendNotificationToAll({
-  //   message: 'Hello from the server',
-  //   type: 'info',
-  //   duration: 5000,
-  // });
-  // const notification = await create({
-  //   message: 'Hello from the server',
-  //   type: notificationType.ERROR,
-  //   userId: '67c32a551422a435b175f20b',
-  // });
-  sendNotificationToUser({
-    message: 'Hello from the server',
-    type: notificationType.ERROR,
-    userId: '67c32a551422a435b175f20',
-  });
-}, 10000);
+// test notification
+// import { sendNotificationToUser } from './services/socket.service.js';
+// import { notificationType } from './database/models/notification.model';
+// import { create } from './services/notifications.service.js';
+
+// setTimeout(async () => {
+//   // sendNotificationToAll({
+//   //   message: 'Hello from the server',
+//   //   type: 'info',
+//   //   duration: 5000,
+//   // });
+//   const notification = await create({
+//     title: 'Hello',
+//     message: 'Hello from the server',
+//     type: notificationType.ERROR,
+//     userId: '67c32a551422a435b175f20b',
+//   });
+//   sendNotificationToUser(notification);
+// }, 10000);
 
 connectToDB();
 
 process.on('unhandledRejection', (err) => {
-  console.log(err);
-
   logger.error('UNHANDLED REJECTION! Shutting down...');
   logger.error(err.name, err.message);
   server.close(() => {

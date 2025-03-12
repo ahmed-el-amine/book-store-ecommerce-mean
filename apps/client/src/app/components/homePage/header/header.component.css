@@ -97,3 +97,13 @@
   margin: 0;
   display: inline-block;
 }
+
+/* Add spacing between notification and other header elements */
+app-notification {
+  margin-right: 15px;
+}
+
+/* Ensure proper alignment of header elements */
+.d-flex.align-items-center {
+  gap: 10px;
+}

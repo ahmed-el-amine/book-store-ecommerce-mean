@@ -4,20 +4,19 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../services/auth/auth.service';
 import { BookService } from '../../../service/books/book.service';
 import { Book } from '../../../interfaces/BookDetails';
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { NotificationComponent } from '../../notification/notification.component';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink, BsDropdownModule],
+  imports: [CommonModule, RouterLink, NotificationComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
-export class HeaderComponent  {
+export class HeaderComponent {
   isAuthenticated = false;
   currentUser: any = null;
   books: Book[] = [];
-
 
   constructor(private authService: AuthService, private bookService: BookService) {
     this.authService.isAuthenticated$.subscribe((isAuth) => {
@@ -28,7 +27,6 @@ export class HeaderComponent  {
       this.currentUser = user;
     });
   }
-
 
   logUserOut() {
     this.authService.logout().subscribe({

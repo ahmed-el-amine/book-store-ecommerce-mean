@@ -5,6 +5,8 @@ import { FooterComponent } from './components/homePage/footer/footer.component';
 import { NgxStarsModule } from 'ngx-stars';
 import { SocketService } from './services/socketIO/socket.service';
 import { ToastrService } from 'ngx-toastr';
+import { NotificationService } from './services/notification/notification.service';
+import { Notification, NotificationType } from './interfaces/notification.interface';
 
 @Component({
   imports: [RouterModule, HeaderComponent, RouterOutlet, NgxStarsModule, FooterComponent],
@@ -13,27 +15,30 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './app.component.css',
 })
 export class AppComponent implements OnInit, OnDestroy {
-  constructor(private socketService: SocketService, private toastr: ToastrService) {}
+  constructor(private socketService: SocketService, private toastr: ToastrService, private notificationService: NotificationService) {}
 
   ngOnInit(): void {
     this.socketService.on('notification', (data: any) => {
-      data = JSON.parse(data);
+      const notification: Notification = JSON.parse(data);
 
-      switch (data.type) {
+      // Show toast notification
+      switch (notification.type) {
         case 'success':
-          this.toastr.success(data.message);
+          this.toastr.success(notification.message);
           break;
         case 'error':
-          this.toastr.error(data.message);
+          this.toastr.error(notification.message);
           break;
         case 'warning':
-          this.toastr.warning(data.message);
+          this.toastr.warning(notification.message);
           break;
         case 'info':
         default:
-          this.toastr.info(data.message);
+          this.toastr.info(notification.message);
           break;
       }
+
+      this.notificationService.addNotification(notification).subscribe();
     });
   }
 

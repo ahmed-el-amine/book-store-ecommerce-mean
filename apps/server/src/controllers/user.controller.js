@@ -5,6 +5,7 @@ import httpStatus from 'http-status';
 import { sendActiveEmail, sendResetPasswordEmail } from '../services/email.service.js';
 import jwt from 'jsonwebtoken';
 import Token, { tokenTypes } from '../database/models/tokens.module.js';
+import Notification from '../database/models/notification.model.js';
 
 export const create = async (req, res) => {
   // check if there is a user with the same username and email
@@ -292,4 +293,29 @@ export const changePassword = async (req, res) => {
   await user.save();
 
   res.json({ message: 'Password updated successfully' });
+};
+
+export const getNotifications = async (req, res) => {
+  // get userid from req.user
+  const userId = req.user._id;
+
+  // then get last 20 notifications for this user
+  const notifications = await Notification.find({ userId }).limit(20).sort({ createdAt: -1 });
+
+  return res.json({
+    notifications,
+  });
+};
+
+export const markAsRead = async (req, res) => {
+  const userId = req.user._id;
+  const id = req.params.id;
+
+  if (!isValidObjectId(id)) throw new AppError(httpStatus.BAD_REQUEST, 'please provide a valid id');
+
+  await Notification.findOneAndUpdate({ _id: id, userId }, { isRead: true });
+
+  res.json({
+    message: 'Notification marked as read',
+  });
 };
