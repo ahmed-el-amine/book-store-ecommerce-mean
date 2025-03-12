@@ -3,14 +3,13 @@ import { CommonModule } from '@angular/common';
 import { ReviewService } from '../../service/reviews/review.service';
 import {  Review } from './review-interface';
 import { AuthService } from '../../services/auth/auth.service';
-import { AddReviewSectionComponent } from '../add-review-section/add-review-section.component';
 import { FormsModule } from '@angular/forms';
 
 
 
 @Component({
   selector: 'app-review-section',
-  imports: [CommonModule, FormsModule, AddReviewSectionComponent ],
+  imports: [CommonModule, FormsModule ],
   templateUrl: './review-section.component.html',
   styleUrl: './review-section.component.css',
 })
@@ -49,7 +48,7 @@ export class ReviewSectionComponent {
         next: (data: Review[]) => {
           this.reviews = data;
           console.log("review", this.reviews);
-          this.reviewService.loadReviews(data); 
+          this.reviewService.loadReviews(data);
 
         },
         error: (error) => {
@@ -64,11 +63,11 @@ export class ReviewSectionComponent {
       console.error('Book ID is undefined');
     }
     this.reviewService.reviews$.subscribe((reviews) => {
-      this.reviews = reviews; 
+      this.reviews = reviews;
     });
   }
 
-  
+
   getStars(rating: number): string {
     const fullStars = '★'.repeat(rating); // نجوم ممتلئة
     const emptyStars = '☆'.repeat(5 - rating); // نجوم فارغة
@@ -86,11 +85,11 @@ export class ReviewSectionComponent {
       const index = this.reviews.findIndex((review) => review.id === newComment.id);
     if (index !== -1) {
         console.log(newComment)
-        this.reviews[index] = newComment; 
+        this.reviews[index] = newComment;
       }
-    
+
     this.status = 'data';
-    this.reviewId = undefined; 
+    this.reviewId = undefined;
     this.reviewService.updateReview(newComment.id, newComment.comment, newComment.rating).subscribe({
       next: (updateReview: Review) => {
         console.log('Review updated successfully:', updateReview);

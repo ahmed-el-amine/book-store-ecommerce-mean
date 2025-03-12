@@ -174,8 +174,10 @@ export class CartService {
 
   updateCart(userId: string, items: CartItem[]): Observable<any> {
     this.pendingRequests++;
-    console.log('Updating cart:', { userId, items });
-
+    items = items.map((x: any) => {
+      if (x.bookId?._id) return {...x, bookId: x.bookId._id}
+      return x;
+    })
     return this.http.put<any>(this.apiUrl, { userId, items }).pipe(
       tap((response) => {
         console.log('Cart updated:', response);
@@ -275,3 +277,5 @@ export class CartService {
     });
   }
 }
+
+

@@ -22,6 +22,9 @@ export class BookCardComponent {
     private cdr: ChangeDetectorRef
   ) {}
 
+
+
+
   addToCart() {
     // Use take(1) to automatically complete the subscription after getting one value
     this.authService.currentUser$.pipe(take(1)).subscribe(user => {
@@ -50,4 +53,7 @@ export class BookCardComponent {
       }
     });
   }
+
+
+
 }
