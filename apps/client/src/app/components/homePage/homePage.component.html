@@ -1,1 +1,30 @@
 <app-hero></app-hero>
+
+<!-- Featured Books Section -->
+<section class="featured-books py-5">
+  <div class="container">
+    <div class="section-header text-center mb-5">
+      <h2 class="display-5 fw-bold">Featured Books</h2>
+      <p class="text-muted">Discover our most popular and trending titles</p>
+    </div>
+
+    <!-- Loading indicator -->
+    <div *ngIf="isLoading" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
+    <!-- Books Grid -->
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      <div class="col" *ngFor="let book of featuredBooks">
+        <app-book-card [bookData]="book"></app-book-card>
+      </div>
+    </div>
+
+    <!-- View All Books Button -->
+    <div class="text-center mt-5">
+      <a routerLink="/books-filters" class="btn btn-outline-primary btn-lg"> View All Books <i class="bi bi-arrow-right ms-2"></i> </a>
+    </div>
+  </div>
+</section>
