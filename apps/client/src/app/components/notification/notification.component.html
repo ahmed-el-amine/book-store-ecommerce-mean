@@ -1,0 +1,70 @@
+<div class="notification-container" dropdown [insideClick]="true">
+  <div class="notification-icon" dropdownToggle aria-label="Notifications">
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
+      <path
+        d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6"
+      />
+    </svg>
+    @if(unreadCount > 0) {
+    <span class="notification-badge" [attr.aria-label]="unreadCount + ' unread notifications'">{{ unreadCount }}</span>
+    }
+  </div>
+
+  <div *dropdownMenu class="dropdown-menu notification-dropdown" role="menu">
+    <div class="notification-header">
+      <h6 class="dropdown-header">Notifications</h6>
+    </div>
+
+    <div class="notification-list">
+      @if(notifications.length > 0) { @for(notification of notifications; track notification.id) {
+      <a
+        tabindex="0"
+        (click)="markAsRead(notification, notificationModal)"
+        (keyup.enter)="markAsRead(notification, notificationModal)"
+        class="dropdown-item notification-item"
+        [class.unread]="!notification.isRead"
+        [class]="getNotificationClass(notification.type)"
+        role="menuitem"
+      >
+        <div class="notification-icon-small">
+          <i [class]="getNotificationIcon(notification.type)" aria-hidden="true"></i>
+        </div>
+        <div class="notification-content">
+          <div class="notification-title">{{ notification.title }}</div>
+          <div class="notification-message">{{ notification.message }}</div>
+          <div class="notification-time">{{ notification.createdAt | date : 'short' }}</div>
+        </div>
+      </a>
+      } } @else {
+      <div class="no-notifications">
+        <p>No notifications</p>
+      </div>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- Notification Modal -->
+<ng-template #notificationModal>
+  <div
+    class="modal-header"
+    [ngClass]="{
+      'bg-success': selectedNotification?.type === 'success',
+      'bg-danger': selectedNotification?.type === 'error',
+      'bg-warning': selectedNotification?.type === 'warning',
+      'bg-info': selectedNotification?.type === 'info'
+    }"
+  >
+    <h4 class="modal-title text-white">{{ selectedNotification?.title }}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modalRef?.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>{{ selectedNotification?.message }}</p>
+    <small class="text-muted">{{ selectedNotification?.createdAt | date : 'medium' }}</small>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modalRef?.hide()">Close</button>
+  </div>
+</ng-template>

@@ -51,6 +51,7 @@
     "@angular/router": "~19.1.0",
     "bcrypt": "^5.1.1",
     "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
     "cloudinary": "^2.5.1",
     "compression": "^1.8.0",
     "cookie": "^1.0.2",

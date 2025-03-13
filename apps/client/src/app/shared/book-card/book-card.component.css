@@ -1,100 +1,140 @@
 
-.card-container {
- 
+.book-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: 12px;
   overflow: hidden;
-  border: 1px solid #ddd; 
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background-color: white;
 }
 
-.card-image img {
+.book-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Image Container */
+.book-image-container {
+  position: relative;
+  overflow: hidden;
+  padding-top: 140%; /* Aspect ratio for book covers */
+}
+
+.book-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   transition: transform 0.5s ease;
 }
 
-.card-container:hover .card-image img {
-  transform: scale(1.05);
+.image-link {
+  display: block;
+  height: 100%;
+  width: 100%;
 }
 
-.badges {
+.overlay {
   position: absolute;
-  top: 0.75rem;
-  left: 0.75rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  z-index: 2;
-}
-
-.quick-actions {
-  position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  z-index: 2;
-}
-
-.card-container:hover .quick-actions {
-  opacity: 1;
-}
-
-.action-bar {
-  position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
   right: 0;
-  height: 48px;
-  background-color: rgba(40, 40, 40, 0.8); 
-  backdrop-filter: blur(5px);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 1rem;
-  transform: translateY(100%);
-  transition: transform 0.3s ease;
-  z-index: 2;
-  -webkit-transition: transform 0.3s ease;
-  -moz-transition: transform 0.3s ease;
-  -ms-transition: transform 0.3s ease;
-  -o-transition: transform 0.3s ease;
-}
-
-.card-container:hover .action-bar {
-  transform: translateY(0);
-}
-
-.card {
-  width: 200px;
-}
-
-img {
-  border-radius: 12px;
-  -webkit-border-radius: 12px;
-  -moz-border-radius: 12px;
-  -ms-border-radius: 12px;
-  -o-border-radius: 12px;
-}
-
-
-.card-title {
-  font-size: 1.2rem; 
-  color: rgba(34, 34, 34, 1); 
-  margin-bottom: 0.5rem;
-}
-
-.card-text {
-  font-size: 0.9rem;
-  color: #555;
-}
-
-.action-bar.clickable {
-  cursor: pointer;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
-  font-weight: 500;
-  color: #fff;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
-.action-bar.clickable:hover {
-  background-color: rgba(40, 40, 40, 1);
+.view-details {
+  color: white;
+  font-weight: 600;
+  padding: 8px 16px;
+  border: 2px solid white;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.book-image-container:hover .overlay {
+  opacity: 1;
+}
+
+.book-image-container:hover .book-image {
+  transform: scale(1.05);
+}
+
+/* Price Tag */
+.price-tag {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: linear-gradient(135deg, #3a86ff, #8338ec);
+  color: white;
+  font-weight: 700;
+  padding: 8px 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+  font-size: 1.1rem;
+}
+
+/* Book Content */
+.book-content {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.book-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #333;
+  line-height: 1.4;
+}
+
+.book-author {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 0.75rem;
+}
+
+.rating-container {
+  margin-bottom: 0.75rem;
+}
+
+.book-description {
+  font-size: 0.85rem;
+  color: #555;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  flex-grow: 1;
+}
+
+/* Add to Cart Button */
+.add-to-cart-btn {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  background-color: #3a86ff;
+  border-color: #3a86ff;
+}
+
+.add-to-cart-btn:hover:not(:disabled) {
+  background-color: #2970d6;
+  border-color: #2970d6;
+  transform: translateY(-2px);
+}
+
+.add-to-cart-btn:active:not(:disabled) {
+  transform: translateY(0);
 }

@@ -1,99 +1,195 @@
+/* Header Styles */
+.site-header {
+  background-color: #ffffff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
 .navbar {
-  padding: 15px 0;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 0.75rem 0;
 }
 
+/* Brand/Logo */
 .navbar-brand {
-  font-family: 'Bungee', cursive;
-  color: #252939 !important;
+  font-weight: 700;
   font-size: 1.5rem;
-  padding: 0;
-  margin-right: 2rem;
+  color: #3a86ff;
 }
 
-.nav-item {
-  margin: 0 5px;
+.brand-text {
+  background: linear-gradient(45deg, #3a86ff, #8338ec);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 800;
 }
 
-.nav-link {
-  color: #555 !important;
+/* Navigation Links */
+.navbar-nav .nav-link {
+  color: #495057;
   font-weight: 500;
-  transition: color 0.3s ease;
+  padding: 0.5rem 1rem;
+  transition: all 0.2s ease;
+  position: relative;
 }
 
-.nav-link:hover,
-.nav-link.active {
-  color: #007bff !important;
+.navbar-nav .nav-link:hover {
+  color: #3a86ff;
 }
 
+.navbar-nav .nav-link.active {
+  color: #3a86ff;
+}
+
+.navbar-nav .nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 1rem;
+  right: 1rem;
+  height: 3px;
+  background-color: #3a86ff;
+  border-radius: 3px;
+}
+
+/* Header Actions Section */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Icon Buttons */
 .icon-button {
-  background-color: #f8f9fa;
-  border-radius: 50%;
   width: 40px;
   height: 40px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 8px;
+  background-color: #f8f9fa;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.2s ease;
 }
 
 .icon-button:hover {
   background-color: #e9ecef;
-  transform: scale(1.1);
+  transform: translateY(-2px);
 }
 
-.auth-button {
-  padding: 8px 20px;
-  border-radius: 20px;
-  margin-left: 10px;
-  font-weight: 500;
-  transition: all 0.3s;
+.icon-button i {
+  font-size: 1.2rem;
+  color: #495057;
 }
 
-.signin-btn {
-  background-color: #007bff;
-  color: white !important;
+/* User Dropdown */
+.user-dropdown {
+  position: relative;
 }
 
-.signin-btn:hover {
-  background-color: #0069d9;
-}
-
-.register-btn {
-  background-color: #28a745;
-  color: white !important;
-}
-
-.register-btn:hover {
-  background-color: #218838;
-}
-
-.icon-group {
+.user-toggle {
   display: flex;
   align-items: center;
-  margin-right: 15px;
-  margin-left: auto;
-}
-
-.logout-button {
-  transition: background-color 0.3s, color 0.3s;
+  color: #495057;
   text-decoration: none;
-  color: white;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
 }
 
-.logout-button:hover {
-  background-color: #4e0101;
-  color: #fff;
+.user-toggle:hover {
+  background-color: #f8f9fa;
 }
 
-.welcome-message {
-  font-size: 0.85rem;
-  color: #ffffff;
-  background-color: #3886d4;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
-  margin: 0;
-  display: inline-block;
+.user-toggle i {
+  font-size: 1.5rem;
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+  border: none;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0;
+  min-width: 200px;
+}
+
+.dropdown-item {
+  padding: 0.6rem 1rem;
+  color: #495057;
+  transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background-color: #f8f9fa;
+  color: #3a86ff;
+}
+
+.dropdown-item i {
+  color: #6c757d;
+}
+
+.dropdown-item:hover i {
+  color: #3a86ff;
+}
+
+.logout-item {
+  color: #dc3545;
+  cursor: pointer;
+}
+
+.logout-item:hover {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+}
+
+.logout-item i {
+  color: #dc3545;
+}
+
+/* Auth Buttons */
+.auth-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 991.98px) {
+  .navbar-collapse {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    margin-top: 0.5rem;
+  }
+  
+  .header-actions {
+    margin-top: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .auth-buttons {
+    margin-top: 0.5rem;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .auth-buttons .btn {
+    flex: 1;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .icon-button {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .icon-button i {
+    font-size: 1rem;
+  }
 }

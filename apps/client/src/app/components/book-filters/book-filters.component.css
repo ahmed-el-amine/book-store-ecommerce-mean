@@ -1,86 +1,138 @@
-/* General Styles */
+/* Main Container */
 .container {
-    width: 100%;
-    margin: 100px auto;
-        padding: 20px;
-    text-align: left;
+  margin-top: 2rem;
+  margin-bottom: 3rem;
 }
 
-.search-form {
-    background-color: #f9f9f9;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+/* Filter Card */
+.filter-card {
+  border: none;
+  border-radius: 0.75rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  position: sticky;
+  top: 1rem;
 }
 
-.form-group {
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
+.filter-card .card-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 1rem 1.25rem;
+  border-top-left-radius: 0.75rem;
+  border-top-right-radius: 0.75rem;
 }
 
-label {
-    font-weight: bold;
-    margin-bottom: 5px;
+.filter-card .card-body {
+  padding: 1.25rem;
 }
 
-input[type="number"],
-select ,input[type="text"] {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-    width: 100%;
+/* Form Controls */
+.form-control, .form-select {
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #dee2e6;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-input[type="radio"] {
-    margin-right: 10px;
+.form-control:focus, .form-select:focus {
+  border-color: #86b7fe;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.form-label {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: #495057;
+}
+
+/* Rating Buttons */
+.rating-buttons {
+  width: 100%;
+  display: flex;
+}
+
+.rating-buttons .btn {
+  flex: 1;
+  border-radius: 0;
+}
+
+.rating-buttons .btn:first-child {
+  border-top-left-radius: 0.375rem;
+  border-bottom-left-radius: 0.375rem;
+}
+
+.rating-buttons .btn:last-child {
+  border-top-right-radius: 0.375rem;
+  border-bottom-right-radius: 0.375rem;
+}
+
+.btn-outline-warning {
+  color: #fd7e14;
+  border-color: #fd7e14;
+}
+
+.btn-outline-warning:hover, 
+.btn-check:checked + .btn-outline-warning {
+  background-color: #fd7e14;
+  color: white;
+}
+
+/* Books Container */
+.books-container {
+  min-height: 300px;
+}
+
+/* Empty State */
+.empty-state {
+  padding: 3rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 991.98px) {
+  .filter-card {
+    position: static;
+    margin-bottom: 1.5rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .rating-buttons .btn {
+    padding: 0.375rem 0.5rem;
+    font-size: 0.875rem;
+  }
 }
 
 
-
-.rating-container {
-    display: flex;
-    flex-direction: column;
+/* Modern Price Tag Styling */
+.book-price-tag {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  z-index: 10;
 }
 
-.rating-title {
-    font-weight: bold;
-    margin-bottom: 5px;
+.price-badge {
+  background: linear-gradient(135deg, #3a86ff, #8338ec);
+  color: white;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+  display: inline-block;
+  letter-spacing: 0.5px;
 }
 
-.rating-label {
-    display: inline-block;
-    margin-right: 10px;
+.price-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
-.submit-btn {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    width: 100%;
-    transition: background-color 0.3s ease;
-}
-
-.submit-btn:disabled {
-    background-color: #ddd;
-    cursor: not-allowed;
-}
-
-.submit-btn:hover:not(:disabled) {
-    background-color: #45a049;
-}
-.book-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-}
-
-.book-card {
-    flex: 1 1 calc(33.33% - 20px);
-    box-sizing: border-box;
+/* Make sure the parent has position relative */
+.col {
+  position: relative;
 }

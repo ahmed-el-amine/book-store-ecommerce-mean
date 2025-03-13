@@ -3,12 +3,13 @@ import Notification, { notificationType } from '../database/models/notification.
 
 export const notificationProps = {
   userId: '',
+  title: '',
   message: '',
   type: notificationType.INFO,
 };
 
 export const create = async (props = notificationProps) => {
-  if (!props.message || !props.userId || !props.type) return null;
+  if (!props.title || !props.message || !props.userId || !props.type) return null;
   if (!mongoose.isValidObjectId(props.userId)) return null;
 
   try {

@@ -1,7 +1,7 @@
 <div class="container row">
     <!-- Image Column -->
     <div class="col-md-4 mb-4">
-        <img src="https://images.pexels.com/photos/1704488/pexels-photo-1704488.jpeg?cs=srgb&dl=pexels-sulimansallehi-1704488.jpg&fm=jpg"
+        <img [src]="book.coverImage"
             alt="Book Image" class="img-fluid rounded shadow-lg book-image">
     </div>
 
@@ -17,7 +17,7 @@
         </div>
         <!-- Rating with Stars -->
         <h4>Rating: <span [innerHTML]="getStars(book.rating)" style="color: gold;"></span></h4>
-        
+
         <div class="d-flex gap-2 mb-4">
             <a class="btn btn-outline-primary category-btn" data-bs-toggle="collapse" href="#categoryCollapse"
                 role="button" aria-expanded="false" aria-controls="categoryCollapse">
