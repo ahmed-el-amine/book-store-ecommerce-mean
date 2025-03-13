@@ -1,148 +1,78 @@
 import BookModel from '../database/models/book.model.js';
 import AppError from '../utils/customError.js';
-import { uploadBookCover, deleteBookCover } from '../utils/cloudinary.js';
+import { getCacheData,cacheData,deleteAllCache,deleteCacheData } from '../utils/redis.js';
 
-const getBooks = async (req, res, next) => {
-  try {
-    const { categories, price, rating, title, page = 1, limit = 10, sort } = req.query;
-    const filter = {};
 
-    if (categories) {
-      filter.categories = { $in: [categories] };
-    }
-    if (title) {
-      filter.title = { $regex: title, $options: 'i' };
-    }
-    if (price) {
-      filter.price = { $gte: price };
-    }
-    if (rating) {
-      filter.rating = { $gte: rating };
-    }
+const getBooks = async (req) => {
 
-    const options = {
-      page: parseInt(page),
-      limit: parseInt(limit),
-      populate: 'authors',
-      select: 'title isbn13 description price rating publish_date stock coverImage',
-    };
-
-    if (sort) {
-      options.sort = sort;
+  const cacheKey = `books:all:${JSON.stringify(req.query)}`;
+    const cachedBooks = await getCacheData(cacheKey,req);
+    if(cachedBooks){
+      return cachedBooks;
     }
+  const { categories, price, rating, title } = req.query;
+  const filter = {};
 
-    const result = await BookModel.paginate(filter, options);
-    res.json({
-      books: result.docs,
-      pagination: {
-        totalBooks: result.totalDocs,
-        totalPages: result.totalPages,
-        currentPage: result.page,
-        limit: result.limit,
-        hasNextPage: result.hasNextPage,
-        hasPrevPage: result.hasPrevPage,
-        nextPage: result.nextPage,
-        prevPage: result.prevPage,
-      },
-    });
-  } catch (err) {
-    next(new AppError(500, 'Failed to retrieve books'));
+  if (categories) {
+    filter.categories = { $in: [categories] };
   }
-};
-
-const getBook = async (req, res, next) => {
-  try {
-    const book = await BookModel.findById(req.params.id).populate('authors').exec();
-    if (!book) {
-      return next(new AppError(404, 'Book not found'));
-    }
-    res.json(book.toDetails());
-  } catch (err) {
-    next(new AppError(500, 'Failed to retrieve book'));
+  if (title) {
+    filter.title = { $regex: title, $options: 'i' };
   }
-};
-
-const addBook = async (req, res, next) => {
-  try {
-    if (!req.file) {
-      return next(new AppError(400, 'No file uploaded'));
-    }
-
-    const { coverPublicId, coverPublicUrl } = await uploadBookCover(req.file.buffer, req.file.mimetype);
-
-    const bookData = {
-      ...req.body,
-      coverImage: coverPublicUrl,
-      coverPublicId,
-    };
-
-    const book = await BookModel.create(bookData);
-    res.status(201).json(book);
-  } catch (err) {
-    if (bookData?.coverPublicId) {
-      await deleteBookCover(bookData.coverPublicId);
-    }
-    next(new AppError(500, 'Failed to add book'));
+  if (price) {
+    filter.price = { $gte: price };
   }
+
+  if (rating) {
+    filter.rating = { $gte: rating };
+  }
+  console.log('Filter:', filter);
+  const books = await BookModel.find(filter).populate('authors').select('title isbn13 description price rating publish_date stock coverImage').exec();
+  await cacheData(cacheKey,books,3600,req);
+  return books;
 };
-
-const updateBook = async (req, res, next) => {
-  try {
-    const bookId = req.params.id;
-    const existingBook = await BookModel.findById(bookId);
-
-    if (!existingBook) {
-      return next(new AppError(404, 'Book not found'));
-    }
-
-    const updateData = { ...req.body };
-    const oldPublicId = existingBook.coverPublicId;
-
-    if (req.file) {
-      const { coverPublicUrl, coverPublicId } = await uploadBookCover(req.file.buffer, req.file.mimetype);
-      updateData.coverImage = coverPublicUrl;
-      updateData.coverPublicId = coverPublicId;
-    }
-
-    const updatedBook = await BookModel.findByIdAndUpdate(bookId, updateData, { new: true, runValidators: true });
-
-    if (!updatedBook) {
-      if (updateData.coverPublicId) {
-        await deleteBookCover(updateData.coverPublicId);
+const getBook = async (id,req) => {
+      const cacheId = `book:${id}`;
+       const cacheBook = await getCacheData(cacheId,req);
+      if(cacheBook){
+        return cacheBook;
       }
-      return next(new AppError(404, 'Book update failed'));
-    }
+  const book = await BookModel.findById(id).populate('authors').exec();
+  await cacheData(cacheId,book,1800,req);
+  if (!book) throw new AppError(404, 'Book not found try again');
+  return book.toDetails();
+};
 
-    if (req.file && oldPublicId) {
-      await deleteBookCover(oldPublicId);
-    }
+const addBook = async (data) => {
+  try {
+    const book = await BookModel.create({
+     ...data
+    });
 
-    res.status(200).json(updatedBook);
-  } catch (err) {
-    if (updateData?.coverPublicId) {
-      await deleteBookCover(updateData.coverPublicId);
-    }
-    next(new AppError(500, 'Failed to update book'));
+    //Delete the cache when admin add book
+    await deleteAllCache('books:all*', req);
+
+    return book;
+  } catch (error) {
+    return { error };
   }
 };
 
-const deleteBook = async (req, res, next) => {
-  try {
-    const book = await BookModel.findById(req.params.id);
+const updateBook = async (data, id) => {
+  const book = await BookModel.findById(id).exec();
+  if (!book) throw new AppError(404, `Book with ID ${id} not found please try again!`);
+  const updatedBook = BookModel.findByIdAndUpdate(id, data, { runValidators: true });
+  await deleteCacheData(`book:${id}`,req);
+  await deleteAllCache('books:all*', req);
+  return updatedBook;
+};
 
-    if (!book) {
-      return next(new AppError(404, 'Book not found'));
-    }
-
-    if (book.coverPublicId) {
-      await deleteBookCover(book.coverPublicId);
-    }
-
-    await BookModel.findByIdAndDelete(req.params.id);
-    res.status(204).end();
-  } catch (err) {
-    next(new AppError(500, 'Failed to delete book'));
-  }
+const deleteBook = async (id,req) => {
+  const book = await BookModel.findById(id).exec();
+  if (!book) throw new AppError(404, `Book with ID ${id} not found please try again!`);
+  const deletedBook = BookModel.findByIdAndDelete(id).exec();
+  await deleteAllCache('books:all*', req);
+  return deletedBook;
 };
 
 export { getBooks, getBook, addBook, updateBook, deleteBook };
