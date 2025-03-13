@@ -25,10 +25,15 @@ export class HomePageComponent implements OnInit {
 
   loadFeaturedBooks(): void {
     this.isLoading = true;
-    this.bookService.getBooksEssential().subscribe({
-      next: (books) => {
-        // Get only the first 6 books or all if fewer than 6
-        this.featuredBooks = books.slice(0, 6);
+    this.bookService.getBooks({}, 1, 6).subscribe({
+      next: (response) => {
+        if (response && response.books) {
+          // Access the books array from the response object
+          this.featuredBooks = response.books;
+        } else {
+          this.featuredBooks = [];
+          console.error('Unexpected response format:', response);
+        }
         this.isLoading = false;
       },
       error: (err) => {

@@ -2,7 +2,7 @@ import BookModel from '../database/models/book.model.js';
 import AppError from '../utils/customError.js';
 
 const getBooks = async (req) => {
-  const { categories, price, rating, title } = req.query;
+  const { categories, price, rating, title, page = 1, limit = 10, sort } = req.query;
   const filter = {};
 
   if (categories) {
@@ -18,10 +18,34 @@ const getBooks = async (req) => {
   if (rating) {
     filter.rating = { $gte: rating };
   }
-  console.log('Filter:', filter);
-  const books = await BookModel.find(filter).populate('authors').select('title isbn13 description price rating publish_date stock coverImage').exec();
-  return books;
+
+  const options = {
+    page: parseInt(page),
+    limit: parseInt(limit),
+    populate: 'authors',
+    select: 'title isbn13 description price rating publish_date stock coverImage',
+  };
+
+  if (sort) {
+    options.sort = sort;
+  }
+
+  const result = await BookModel.paginate(filter, options);
+  return {
+    books: result.docs,
+    pagination: {
+      totalBooks: result.totalDocs,
+      totalPages: result.totalPages,
+      currentPage: result.page,
+      limit: result.limit,
+      hasNextPage: result.hasNextPage,
+      hasPrevPage: result.hasPrevPage,
+      nextPage: result.nextPage,
+      prevPage: result.prevPage,
+    },
+  };
 };
+
 const getBook = async (id) => {
   const book = await BookModel.findById(id).populate('authors').exec();
   if (!book) throw new AppError(404, 'Book not found try again');
@@ -31,7 +55,7 @@ const getBook = async (id) => {
 const addBook = async (data) => {
   try {
     const book = await BookModel.create({
-     ...data
+      ...data,
     });
 
     return book;

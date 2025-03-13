@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import authorModel from '../models/author.model.js';
 import AppError from '../../utils/customError.js';
-
+import mongoosePaginate from 'mongoose-paginate-v2';
 const BookModel = new mongoose.Schema(
   {
     title: {
@@ -46,11 +46,10 @@ const BookModel = new mongoose.Schema(
     coverPublicId: {
       type: String,
     },
-    coverImage:{
+    coverImage: {
       type: String,
-      required:true
-    }
-    ,
+      required: true,
+    },
     dimensions: {
       width: Number,
       height: Number,
@@ -80,6 +79,8 @@ const BookModel = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+BookModel.plugin(mongoosePaginate);
 
 //Add DTOS like spring to validate data and make the data consistence
 BookModel.methods.toEssentials = function () {
