@@ -29,16 +29,22 @@ const orderItemSchema = new mongoose.Schema({
 });
 
 const orderSchema = new mongoose.Schema({
-    orderNumber: {
-        type: String,
-        unique: true,
-    },
+    orderNumber: String,
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         index: true
     },
-    items: [orderItemSchema],
+    items: {
+        type: [orderItemSchema],
+        required: [true, 'At least one item is required'],
+        validate: {
+            validator: function (items) {
+                return items.length > 0;
+            },
+            message: 'At least one item is required'
+        }
+    },
     status: {
         type: String,
         enum: ['Processing', 'Shipped', 'Delivered', 'Cancelled', 'Refunded'],
@@ -62,6 +68,7 @@ const orderSchema = new mongoose.Schema({
     },
     estimatedDeliveryDate: {
         type: Date,
+        required: [true, 'Estimated delivery date is required'],
         validate: {
             validator: function (value) {
                 return value > new Date();
@@ -78,21 +85,24 @@ const orderSchema = new mongoose.Schema({
         type: Number,
         default: 0,
         min: 0
-    },
-
+    }
 }, {
     timestamps: true
 });
 
 orderSchema.index({ createdAt: -1 });
 orderSchema.index({ userId: 1, status: 1 });
+orderSchema.index({ paymentStatus: 1 });
+orderSchema.index({ orderNumber: 1 }, { unique: true });
 
 orderSchema.virtual('subtotal').get(function () {
-    return this.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const subtotal = this.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    return Math.max(0, subtotal);
 });
 
 orderSchema.virtual('totalPrice').get(function () {
-    return this.subtotal - this.discountApplied + this.taxAmount;
+    const total = this.subtotal - this.discountApplied + this.taxAmount;
+    return Math.max(0, total);
 });
 
 orderSchema.set('toJSON', {
@@ -105,15 +115,13 @@ orderSchema.set('toJSON', {
 });
 
 orderSchema.pre('save', async function (next) {
-
-    const timestamp = Date.now().toString().slice(-6);
-    const random = Math.floor(Math.random() * 9000 + 1000);
-    this.orderNumber = `ORD-${timestamp}-${random}`;
-
-
+    if (!this.orderNumber) {
+        const timestamp = Date.now().toString();
+        const random = Math.floor(Math.random() * 90000 + 10000);
+        this.orderNumber = `ORD-${timestamp}-${random}`;
+    }
     next();
 });
-
 
 orderSchema.pre('save', function (next) {
     if (this.isModified('status')) {
@@ -122,12 +130,13 @@ orderSchema.pre('save', function (next) {
         } else {
             if (['Shipped', 'Delivered'].includes(this.status)) {
                 this.paymentStatus = 'Paid';
+            } else if (this.status === 'Cancelled') {
+                this.paymentStatus = 'Refunded';
             }
         }
     }
     next();
 });
-
 
 const Order = mongoose.model('Order', orderSchema);
 export default Order;

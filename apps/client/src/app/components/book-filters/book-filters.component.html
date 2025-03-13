@@ -1,6 +1,5 @@
 <div class="container">
   <div class="row">
-    <!-- Filters Section -->
     <div class="col-12 col-lg-3 mb-4">
       <div class="card filter-card">
         <div class="card-header">
@@ -8,50 +7,48 @@
         </div>
         <div class="card-body">
           <form [formGroup]="searchForm" (ngSubmit)="onSubmit()" class="filter-form">
-            <!-- Title Search -->
             <div class="form-group mb-3">
               <label for="title" class="form-label">Book Title</label>
               <input type="text" id="title" formControlName="title" class="form-control" placeholder="Search by title" />
             </div>
 
-            <!-- Categories Dropdown -->
             <div class="form-group mb-3">
               <label for="categories" class="form-label">Category</label>
               <select id="categories" formControlName="categories" class="form-select">
                 <option value="">All Categories</option>
-                <option *ngFor="let category of categories" [value]="category.value">
+                @for (category of categories; track category.value) {
+                <option [value]="category.value">
                   {{ category.name }}
                 </option>
+                }
               </select>
             </div>
 
-            <!-- Price Range -->
             <div class="form-group mb-3">
               <label for="price" class="form-label">Max Price</label>
               <div class="input-group">
                 <span class="input-group-text">$</span>
                 <input type="number" id="price" formControlName="price" class="form-control" placeholder="Enter max price" min="0" />
               </div>
-              <div *ngIf="isControlInvalid('price')" class="text-danger mt-1 small">Please enter a valid price</div>
+              @if (isControlInvalid('price')) {
+              <div class="text-danger mt-1 small">Please enter a valid price</div>
+              }
             </div>
 
-            <!-- Rating Filter -->
             <div class="form-group mb-4">
               <label class="form-label d-block" for="rating-1">Minimum Rating</label>
               <div class="btn-group rating-buttons" role="group">
-                <ng-container *ngFor="let star of [1, 2, 3, 4, 5]">
-                  <input type="radio" class="btn-check" [id]="'rating-' + star" formControlName="rating" [value]="star" autocomplete="off" />
-                  <label class="btn btn-outline-warning" [for]="'rating-' + star"> {{ star }} <i class="bi bi-star-fill"></i> </label>
-                </ng-container>
+                @for (star of [1, 2, 3, 4, 5]; track star) {
+                <input type="radio" class="btn-check" [id]="'rating-' + star" formControlName="rating" [value]="star" autocomplete="off" />
+                <label class="btn btn-outline-warning" [for]="'rating-' + star"> {{ star }} <i class="bi bi-star-fill"></i> </label>
+                }
               </div>
             </div>
 
-            <!-- Submit Button -->
             <button type="submit" class="btn btn-primary w-100" [disabled]="searchForm.invalid">
               <i class="bi bi-search me-2"></i>Apply Filters
             </button>
 
-            <!-- Reset Button -->
             <button type="button" class="btn btn-outline-secondary w-100 mt-2" (click)="resetFilters()">
               <i class="bi bi-arrow-counterclockwise me-2"></i>Reset
             </button>
@@ -60,11 +57,9 @@
       </div>
     </div>
 
-    <!-- Book Results Section -->
     <div class="col-12 col-lg-9">
-      <!-- Results Header -->
       <div class="d-flex justify-content-between align-items-center mb-4">
-        <h4 class="mb-0">Books ({{ books?.length || 0 }})</h4>
+        <h4 class="mb-0">Showing {{ books.length || 0 }} of {{ totalBooks || 0 }} Books</h4>
         <div class="dropdown" dropdown>
           <button class="btn btn-outline-secondary dropdown-toggle" dropdownToggle><i class="bi bi-sort-down me-1"></i> Sort By</button>
           <ul *dropdownMenu class="dropdown-menu dropdown-menu-end" role="menu">
@@ -76,25 +71,72 @@
         </div>
       </div>
 
-      <!-- Books Grid -->
-      <!-- Inside the books grid section, update the book card display -->
-      <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 books-container">
-        <div class="col position-relative" *ngFor="let book of books">
-          <!-- Pass the book data to the book card component -->
-          <app-book-card [bookData]="book"></app-book-card>
-
-          <!-- Updated price tag with modern design -->
+      @if (isLoading) {
+      <div class="d-flex justify-content-center my-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
         </div>
-
-        <!-- Empty State -->
-        <div *ngIf="!books || books.length === 0" class="col-12 text-center py-5">
+      </div>
+      } @if (!isLoading) {
+      <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 books-container">
+        @for (book of books; track book._id) {
+        <div class="col position-relative">
+          <app-book-card [bookData]="book"></app-book-card>
+        </div>
+        } @if (!books || books.length === 0) {
+        <div class="col-12 text-center py-5">
           <div class="empty-state">
             <i class="bi bi-book display-1 text-muted"></i>
             <h5 class="mt-3">No books found</h5>
             <p class="text-muted">Try adjusting your filters or search criteria</p>
           </div>
         </div>
+        }
       </div>
+      } @if (!isLoading && totalPages > 1) {
+      <div class="pagination-container">
+        <div class="pagination-info text-center text-muted mb-2">Page {{ currentPage }} of {{ totalPages }}</div>
+        <nav aria-label="Book navigation">
+          <ul class="pagination pagination-md justify-content-center">
+            <li class="page-item" [class.disabled]="currentPage === 1">
+              <a class="page-link page-link-special" href="javascript:void(0)" (click)="goToPage(1)" aria-label="First page">
+                <i class="bi bi-chevron-double-left"></i>
+              </a>
+            </li>
+
+            <li class="page-item" [class.disabled]="!hasPrevPage">
+              <a class="page-link page-link-nav" href="javascript:void(0)" (click)="goToPage(currentPage - 1)" aria-label="Previous page">
+                <i class="bi bi-chevron-left"></i>
+              </a>
+            </li>
+
+            @for (page of getPageNumbers(); track page) { @if (page !== -1) {
+            <li class="page-item" [class.active]="page === currentPage">
+              <a class="page-link" href="javascript:void(0)" (click)="goToPage(page)">{{ page }}</a>
+            </li>
+            } @else {
+            <li class="page-item disabled">
+              <a class="page-link page-link-ellipsis" href="javascript:void(0)">
+                <i class="bi bi-three-dots"></i>
+              </a>
+            </li>
+            } }
+
+            <li class="page-item" [class.disabled]="!hasNextPage">
+              <a class="page-link page-link-nav" href="javascript:void(0)" (click)="goToPage(currentPage + 1)" aria-label="Next page">
+                <i class="bi bi-chevron-right"></i>
+              </a>
+            </li>
+
+            <li class="page-item" [class.disabled]="currentPage === totalPages">
+              <a class="page-link page-link-special" href="javascript:void(0)" (click)="goToPage(totalPages)" aria-label="Last page">
+                <i class="bi bi-chevron-double-right"></i>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      }
     </div>
   </div>
 </div>

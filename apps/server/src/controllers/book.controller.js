@@ -67,10 +67,11 @@ const updateBook = async (data, id) => {
   return updatedBook;
 };
 
-const deleteBook = async (id) => {
+const deleteBook = async (id,req) => {
   const book = await BookModel.findById(id).exec();
   if (!book) throw new AppError(404, `Book with ID ${id} not found please try again!`);
   const deletedBook = BookModel.findByIdAndDelete(id).exec();
+  await deleteAllCache('books:all*', req);
   return deletedBook;
 };
 

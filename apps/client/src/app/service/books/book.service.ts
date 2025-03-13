@@ -10,7 +10,7 @@ import { environment } from '../../environment';
   providedIn: 'root',
 })
 export class BookService {
-  apiUrl = `${environment.apiUrlV1}/books`;
+  private apiUrl = environment.apiUrlV1 + '/books';
 
   constructor(private http: HttpClient) {}
 
@@ -37,21 +37,18 @@ export class BookService {
   deleteBook(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`, { withCredentials: true }).pipe(catchError(this.handleError));
   }
-  getBooks(filters: { categories?: string; title?: string; price?: number; rating?: number }): Observable<BookEssential[]> {
-    let params = new HttpParams();
-    if (filters.categories) {
-      params = params.append('categories', filters.categories);
-    }
-    if (filters.title) {
-      params = params.append('title', filters.title);
-    }
-    if (filters.price) {
-      params = params.append('price', filters.price.toString());
-    }
-    if (filters.rating) {
-      params = params.append('rating', filters.rating.toString());
-    }
-    return this.http.get<BookEssential[]>(this.apiUrl, { params, withCredentials: true }).pipe(catchError(this.handleError));
+
+  getBooks(filters: any = {}, page = 1, limit = 6): Observable<any> {
+    let params = new HttpParams().set('page', page.toString()).set('limit', limit.toString());
+
+    // Add filters to params if they exist
+    if (filters.title) params = params.set('title', filters.title);
+    if (filters.categories) params = params.set('categories', filters.categories);
+    if (filters.price) params = params.set('price', filters.price);
+    if (filters.rating) params = params.set('rating', filters.rating);
+    if (filters.sort) params = params.set('sort', filters.sort);
+
+    return this.http.get<any>(this.apiUrl, { params });
   }
 
   private handleError(error: HttpErrorResponse) {

@@ -92,11 +92,13 @@ export const login = async (req, res) => {
   const CLIENT_WEBSITE_URL = process.env.NODE_ENV === 'production' ? process.env.CLIENT_WEBSITE_URL_P : process.env.CLIENT_WEBSITE_URL_D;
 
   // then send token to client in response and cookie
+  // In your login function
   res.cookie(process.env.JWT_Cookie_Name, token, {
     path: '/',
     secure: true,
     httpOnly: true,
     domain: handleCookieDomain(CLIENT_WEBSITE_URL, { allowSubDomain: true }),
+    sameSite: 'none',
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 

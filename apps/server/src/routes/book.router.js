@@ -1,12 +1,9 @@
 import express from 'express';
 import authorization from '../middleware/useAuth.middleware.js';
-import { bookController } from '../controllers/index.js';
 import useZod from '../middleware/useZod.js';
 import { bookSchema, patchBookSchema } from '../lib/zod/book.zod.js';
 import upload from '../utils/fileStorage.js';
-import { uploadBookCover, deleteBookCover } from '../utils/cloudinary.js';
-import AppError from '../utils/customError.js';
-
+import { bookController } from '../controllers/index.js';
 
 const router = express.Router();
 
@@ -114,7 +111,7 @@ router
       if (book.coverPublicId) {
         await deleteBookCover(book.coverPublicId);
       }
-      await bookController.deleteBook(req.params.id);
+      await bookController.deleteBook(req.params.id,req);
       res.status(204).end();
     } catch (err) {
       res.status(500).json({

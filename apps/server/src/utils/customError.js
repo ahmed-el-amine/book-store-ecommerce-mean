@@ -1,13 +1,10 @@
 class AppError extends Error {
-  constructor(statusCode, message, isOperational = true, stack = '') {
+  constructor(message, statusCode) {
     super(message);
-    this.statusCode = statusCode;
-    this.isOperational = isOperational;
-    if (stack) {
-      this.stack = stack;
-    } else {
-      Error.captureStackTrace(this, this.constructor);
-    }
+    this.statusCode = statusCode; // Ensure this is an integer
+    this.status = `${statusCode}`.startsWith('4') ? 'fail' : 'error';
+    this.isOperational = true;
+    Error.captureStackTrace(this, this.constructor);
   }
 }
 
