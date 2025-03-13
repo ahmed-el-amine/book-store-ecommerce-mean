@@ -14,7 +14,7 @@ router
     const books = await bookController.getBooks(req);
     res.json(books);
   })
-  .get('/:id', authorization(['user', 'admin']), async (req, res) => {
+  .get('/:id', async (req, res) => {
     try {
       const bookId = req.params.id;
       const book = await bookController.getBook(bookId, req);
