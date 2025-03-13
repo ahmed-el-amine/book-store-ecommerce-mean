@@ -83,28 +83,8 @@ app.use(errorHandler);
 
 const server = app.listen(port, host, () => {
   logger.info(`[ ready ] http://${host}:${port}`);
-   socketIOSetup(server);
+  socketIOSetup(server);
 });
-
-// test notification
-// import { sendNotificationToUser } from './services/socket.service.js';
-// import { notificationType } from './database/models/notification.model';
-// import { create } from './services/notifications.service.js';
-
-// setTimeout(async () => {
-//   // sendNotificationToAll({
-//   //   message: 'Hello from the server',
-//   //   type: 'info',
-//   //   duration: 5000,
-//   // });
-//   const notification = await create({
-//     title: 'Hello',
-//     message: 'Hello from the server',
-//     type: notificationType.ERROR,
-//     userId: '67c32a551422a435b175f20b',
-//   });
-//   sendNotificationToUser(notification);
-// }, 10000);
 
 connectToDB();
 

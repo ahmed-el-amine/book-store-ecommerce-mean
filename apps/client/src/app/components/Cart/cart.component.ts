@@ -213,9 +213,10 @@ export class CartComponent implements OnInit, OnDestroy {
             estimatedDeliveryDate: addDays(new Date(), 3),
           };
           // Place the order
-          this.http.post<any>(`${environment.apiUrlV1}/orders/`, orderData,{ withCredentials: true }).subscribe({
+          this.http.post<any>(`${environment.apiUrlV1}/orders`, orderData, { withCredentials: true }).subscribe({
             next: () => {
               this.toastr.success('Order placed successfully!', 'Success');
+              this.cart = null;
             },
             error: (err) => {
               this.toastr.error(err.error.message);

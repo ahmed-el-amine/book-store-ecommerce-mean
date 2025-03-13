@@ -3,6 +3,10 @@ import Books from '../database/models/book.model.js';
 import Order from '../database/models/order.model.js';
 import AppError from '../utils/customError.js';
 import httpStatus from 'http-status';
+import Cart from '../database/models/cart.model.js';
+import { notificationType } from '../database/models/notification.model.js';
+import { create } from '../services/notifications.service.js';
+import { sendNotificationToUser } from '../services/socket.service.js';
 
 export const placeOrder = async (req, res, next) => {
   try {
@@ -72,6 +76,17 @@ export const placeOrder = async (req, res, next) => {
         message: 'Order placed successfully',
         data: order,
       });
+
+      // delete user cart
+      await Cart.findOneAndDelete({ userId });
+      // send websocket notification
+      const notification = await create({
+        title: 'Order Placed Successfully',
+        message: 'Your order has been placed and is being processed.',
+        type: notificationType.SUCCESS,
+        userId,
+      });
+      sendNotificationToUser(notification);
     } catch (err) {
       await session.abortTransaction();
       session.endSession();
