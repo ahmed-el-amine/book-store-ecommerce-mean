@@ -4,7 +4,7 @@ import { Routes } from '@angular/router';
 import { AccountSettingsComponent } from './components/account/account-settings/account-settings.component';
 import { BookDetailsComponent } from './book-details/book-details.component';
 import { HomePageComponent } from './components/homePage/homePage.component';
-import { CartComponent } from './components/Cart/cart.component';
+import { CartComponent } from './components/cart/cart.component';
 import { SignupComponent } from './components/auth/signup/signup.component';
 import { LoginComponent } from './components/auth/login/login.component';
 import { authGuard, publicGuard } from './guards/auth.guard';

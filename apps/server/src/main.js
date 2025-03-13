@@ -29,12 +29,12 @@ process.on('uncaughtException', (err) => {
   process.exit(1);
 });
 
-const host = process.env.HOST ?? 'localhost';
+const host = process.env.HOST ?? '0.0.0.0';
 const port = process.env.PORT ? Number(process.env.PORT) : 3000;
 const app = express();
 
 app.use(helmet());
-app.use(cors({ origin: ['http://localhost:3001'], credentials: true }));
+app.use(cors({ origin: [`${CLIENT_WEBSITE_URL}`], credentials: true }));
 app.use(compression());
 app.use(cookieParser());
 app.use(express.json({ limit: '20mb' }));
