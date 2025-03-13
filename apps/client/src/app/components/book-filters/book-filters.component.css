@@ -26,14 +26,16 @@
 }
 
 /* Form Controls */
-.form-control, .form-select {
+.form-control,
+.form-select {
   border-radius: 0.5rem;
   padding: 0.5rem 0.75rem;
   border: 1px solid #dee2e6;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-.form-control:focus, .form-select:focus {
+.form-control:focus,
+.form-select:focus {
   border-color: #86b7fe;
   box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
@@ -70,7 +72,7 @@
   border-color: #fd7e14;
 }
 
-.btn-outline-warning:hover, 
+.btn-outline-warning:hover,
 .btn-check:checked + .btn-outline-warning {
   background-color: #fd7e14;
   color: white;
@@ -105,7 +107,6 @@
   }
 }
 
-
 /* Modern Price Tag Styling */
 .book-price-tag {
   position: absolute;
@@ -135,4 +136,100 @@
 /* Make sure the parent has position relative */
 .col {
   position: relative;
+}
+
+/* Enhanced Pagination Styles */
+.pagination-container {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #eee;
+}
+
+.pagination {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  border-radius: 30px;
+  padding: 5px;
+  background-color: #fff;
+  flex-wrap: wrap;
+}
+
+.page-item:first-child .page-link {
+  border-top-left-radius: 30px;
+  border-bottom-left-radius: 30px;
+}
+
+.page-item:last-child .page-link {
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
+}
+
+.page-link {
+  border: none;
+  margin: 0 3px;
+  min-width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  color: #555;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.page-link:hover:not(.disabled) {
+  background-color: #f8f9fa;
+  color: var(--bs-primary);
+  transform: translateY(-2px);
+}
+
+.page-item.active .page-link {
+  background-color: var(--bs-primary);
+  color: white;
+  box-shadow: 0 5px 15px rgba(var(--bs-primary-rgb), 0.2);
+}
+
+.page-item.disabled .page-link {
+  color: #ccc;
+}
+
+.page-link-special,
+.page-link-nav {
+  font-size: 0.9rem;
+}
+
+.page-link-ellipsis {
+  color: #888;
+}
+
+.page-link-ellipsis:hover {
+  background: none;
+  transform: none;
+  color: #888;
+}
+
+.pagination-info {
+  font-weight: 500;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* Make pagination more compact on mobile */
+@media (max-width: 768px) {
+  .pagination {
+    padding: 3px;
+    justify-content: center;
+  }
+
+  .page-link {
+    min-width: 35px;
+    height: 35px;
+    margin: 0 2px;
+    font-size: 0.9rem;
+  }
+
+  .page-link-special,
+  .page-link-nav {
+    font-size: 0.8rem;
+  }
 }

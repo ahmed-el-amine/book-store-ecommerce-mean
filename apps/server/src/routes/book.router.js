@@ -11,8 +11,17 @@ const router = express.Router();
 
 router
   .get('/', async (req, res) => {
-    const books = await bookController.getBooks(req);
-    res.json(books);
+    try {
+      const result = await bookController.getBooks(req);
+      res.json(result);
+    } catch (err) {
+      console.error('Error fetching books:', err);
+      res.status(500).json({
+        error: true,
+        message: 'Failed to retrieve books',
+        details: err.message,
+      });
+    }
   })
   .get('/:id', authorization(['user', 'admin']), async (req, res) => {
     try {
