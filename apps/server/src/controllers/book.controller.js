@@ -69,7 +69,7 @@ const getBook = async (id, req) => {
   return book.toDetails();
 };
 
-const addBook = async (data) => {
+const addBook = async (data,req) => {
   try {
     const book = await BookModel.create({
       ...data,
@@ -84,7 +84,7 @@ const addBook = async (data) => {
   }
 };
 
-const updateBook = async (data, id) => {
+const updateBook = async (data, id,req) => {
   const book = await BookModel.findById(id).exec();
   if (!book) throw new AppError(httpStatus.NOT_FOUND, `Book with ID ${id} not found please try again!`);
   const updatedBook = BookModel.findByIdAndUpdate(id, data, { runValidators: true });
