@@ -23,7 +23,6 @@ export class ReviewSectionComponent {
   isAuthenticated = false;
   status = "data"
   reviewId: string | undefined;
-  updatedReview = '';
 
   constructor(private reviewService: ReviewService, private authService: AuthService) {
 
@@ -34,7 +33,6 @@ export class ReviewSectionComponent {
       if (this.isAuthenticated) {
         this.authService.currentUser$.subscribe({
           next: (user) => {
-            console.log('User Data:', user);
             this.userData = user;
           },
           error: (err) => {
@@ -47,7 +45,6 @@ export class ReviewSectionComponent {
       this.reviewService.getAllBookReview(this.bookId).subscribe({
         next: (data: Review[]) => {
           this.reviews = data;
-          console.log("review", this.reviews);
           this.reviewService.loadReviews(data);
 
         },
@@ -69,9 +66,9 @@ export class ReviewSectionComponent {
 
 
   getStars(rating: number): string {
-    const fullStars = '★'.repeat(rating); // نجوم ممتلئة
-    const emptyStars = '☆'.repeat(5 - rating); // نجوم فارغة
-    return fullStars + emptyStars; // إرجاع النجوم الممتلئة والفارغة
+    const fullStars = '★'.repeat(rating); 
+    const emptyStars = '☆'.repeat(5 - rating);
+    return fullStars + emptyStars; 
   }
   editComment(id: string) {
     this.status = 'update'

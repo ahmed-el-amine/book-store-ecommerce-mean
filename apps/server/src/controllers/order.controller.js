@@ -50,11 +50,11 @@ export const placeOrder = async (req, res, next) => {
 
 
                 if (!updatedBook) {
-                    throw new AppError(`${book.title} is out of stock`, 500);
+                    res.status(404).json({
+                        success: false,
+                        message: `${book.title} is out of stock`,
+                    });
                 }
-
-                console.log("Updated book:", updatedBook);
-                console.log("Book Id:", item.bookId, "Item quantity:", item.quantity, "Updated stock:", updatedBook.quantity);
 
                 // Enrich order item with current price and book details
                 item.price = book.price;
@@ -102,11 +102,41 @@ export const placeOrder = async (req, res, next) => {
 };
 export const getOrders = async (req, res, next) => {
     try {
-        // For production, use req.userId (set by authentication middleware)
-        const userId = req.userId
-        const orders = await Order.find(userId);
-        res.json(orders);
+        const userId = req.userId;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 5;
+        const sortBy = req.query.sort || '-createdAt';
+        const status = req.query.status;
+
+        // Build query object
+        const query = { userId };
+        if (status && status !== 'all') {
+            query.status = status;
+        }
+
+        // Execute paginated query
+        const options = {
+            page,
+            limit,
+            sort: sortBy,
+            lean: true,
+        };
+
+        const result = await Order.paginate(query, options);
+
+        res.json({
+            orders: result.docs,
+            pagination: {
+                totalOrders: result.totalDocs,
+                totalPages: result.totalPages,
+                currentPage: result.page,
+                hasNextPage: result.hasNextPage,
+                hasPrevPage: result.hasPrevPage,
+                nextPage: result.nextPage,
+                prevPage: result.prevPage,
+            },
+        });
     } catch (err) {
-        next(new Error('Error while getting orders: ' + err.message));
+        next(new AppError('Error while getting orders: ' + err.message, 500));
     }
 };

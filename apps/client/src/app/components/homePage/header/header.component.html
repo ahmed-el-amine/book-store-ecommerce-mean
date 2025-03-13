@@ -64,26 +64,20 @@
                 <a class="dropdown-item" routerLink="/account"> <i class="bi bi-person-circle me-2"></i>My Profile </a>
               </li>
               <li>
-                <a class="dropdown-item" routerLink="/account/orders"> <i class="bi bi-box me-2"></i>My Orders </a>
+                <a class="dropdown-item" routerLink="/orders-history"><i class="bi bi-box me-2"></i>My Orders</a>
               </li>
 
               <!-- Admin Options -->
               <ng-container *ngIf="currentUser?.role === 'admin' || currentUser?.role === 'superAdmin'">
                 <li><hr class="dropdown-divider" /></li>
                 <li>
-                  <a class="dropdown-item" routerLink="/books/add">
-                    <i class="bi bi-plus-circle me-2"></i>Add Book
-                  </a>
+                  <a class="dropdown-item" routerLink="/books/add"> <i class="bi bi-plus-circle me-2"></i>Add Book </a>
                 </li>
                 <li>
-                  <a class="dropdown-item" routerLink="/books/update">
-                    <i class="bi bi-pencil-square me-2"></i>Update Book
-                  </a>
+                  <a class="dropdown-item" routerLink="/books/update"> <i class="bi bi-pencil-square me-2"></i>Update Book </a>
                 </li>
                 <li>
-                  <a class="dropdown-item" routerLink="/books/delete">
-                    <i class="bi bi-trash me-2"></i>Delete Book
-                  </a>
+                  <a class="dropdown-item" routerLink="/books/delete"> <i class="bi bi-trash me-2"></i>Delete Book </a>
                 </li>
               </ng-container>
               <li><hr class="dropdown-divider" /></li>
