@@ -9,7 +9,7 @@ export const placeOrder = async (req, res, next) => {
     const { items, totalPrice, shippingAddress, estimatedDeliveryDate, notes, discountApplied, taxAmount, paymentMethod, paymentStatus, status } =
       req.body;
 
-    const userId = req.userId;
+    const userId = req.user._id;
     const session = await mongoose.startSession();
     session.startTransaction();
 
@@ -98,17 +98,31 @@ export const getOrders = async (req, res, next) => {
       query.status = status;
     }
 
-    // Execute paginated query
+    // Execute paginated query with virtuals enabled
     const options = {
       page,
       limit,
       sort: sortBy,
-      lean: true,
+      customLabels: {
+        docs: 'orders',
+        totalDocs: 'totalOrders',
+      },
     };
 
     const result = await Order.paginate(query, options);
 
-    res.json(result);
+    res.json({
+      orders: result.orders,
+      pagination: {
+        totalOrders: result.totalOrders,
+        totalPages: result.totalPages,
+        currentPage: result.page,
+        hasNextPage: result.hasNextPage,
+        hasPrevPage: result.hasPrevPage,
+        nextPage: result.nextPage,
+        prevPage: result.prevPage,
+      },
+    });
   } catch (err) {
     next(new AppError('Error while getting orders: ' + err.message, 500));
   }
