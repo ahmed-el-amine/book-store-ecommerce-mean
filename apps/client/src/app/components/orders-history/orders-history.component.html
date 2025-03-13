@@ -1,20 +1,17 @@
- <div class="container-fluid py-4">
-  
+<div class="container-fluid py-4">
+
   <div class="row mb-4">
     <div class="col">
       <h1 class="h2 mb-0">Orders History</h1>
       <p class="text-muted mb-0">View and manage your past orders</p>
     </div>
-   
+
   </div>
 
- 
   <div class="row mb-3">
     <div class="col">
       <div class="d-flex gap-2 flex-wrap">
-        <button *ngFor="let filter of filters" 
-                class="btn btn-outline-primary btn-sm"
-                (click)="setFilter(filter.value)">
+        <button *ngFor="let filter of filters" class="btn btn-outline-primary btn-sm" (click)="setFilter(filter.value)">
           {{ filter.label }}
         </button>
       </div>
@@ -28,23 +25,21 @@
           <div class="d-flex justify-content-between align-items-center mb-3">
             <div>
               <h5 class="card-title mb-0">Order #{{ order.orderNumber }}</h5>
-              <small class="text-muted">{{ order.estimatedDeliveryDate }}</small>
+              <small class="text-muted">{{ order.estimatedDeliveryDate | date:'longDate' }}</small>
             </div>
             <div class="d-flex align-items-center gap-3">
               <span class="badge rounded-pill">
                 {{ order.status }}
               </span>
-            
+
             </div>
           </div>
 
           <div class="row g-3 mb-3">
             <div *ngFor="let item of order.items" class="col-auto">
               <div class="d-flex align-items-center gap-3">
-                <img [src]="item.coverImage" 
-                     alt="Product image" 
-                     class="rounded-2" 
-                     style="width: 60px; height: 60px; object-fit: cover;">
+                <img [src]="item.coverImage" alt="Product image" class="rounded-2"
+                  style="width: 60px; height: 60px; object-fit: cover;">
                 <div>
                   <div class="fw-medium">{{ item.title }}</div>
                   <small class="text-muted">Qty: {{ item.quantity }}</small>
@@ -85,4 +80,4 @@
       </nav>
     </div>
   </div>
-</div> 
+</div>
