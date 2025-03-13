@@ -12,7 +12,7 @@ export const addToCart = async (req, res, next) => {
   }
 
   if (book.stock < quantity) {
-    return next(new AppError(httpStatus.BAD_REQUEST, 'Not enough stock available'));
+    return next(new AppError(httpStatus.BAD_REQUEST, 'Selected book is out of stock'));
   }
 
   let cart = await Cart.findOne({ userId });

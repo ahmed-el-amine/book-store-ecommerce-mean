@@ -38,7 +38,7 @@ export class BookCardComponent {
               this.cdr.detectChanges();
             },
             error: (error) => {
-              this.toastr.error('Failed to add book to cart', 'Error');
+              this.toastr.error("Selected book is out of stock");
               this.isAddingToCart = false;
               this.cdr.detectChanges();
               console.error('Error adding to cart:', error);
