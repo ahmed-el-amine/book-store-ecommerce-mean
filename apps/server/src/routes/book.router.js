@@ -5,7 +5,7 @@ import { bookSchema, patchBookSchema } from '../lib/zod/book.zod.js';
 import upload from '../utils/fileStorage.js';
 import { bookController } from '../controllers/index.js';
 import { uploadBookCover, deleteBookCover } from '../utils/cloudinary.js';
-
+import httpStatus from 'http-status';
 
 const router = express.Router();
 
@@ -17,7 +17,7 @@ router
   .get('/:id', authorization(['user', 'admin']), async (req, res) => {
     try {
       const bookId = req.params.id;
-      const book = await bookController.getBook(bookId,req);
+      const book = await bookController.getBook(bookId, req);
       if (!book) {
         return res.status(404).json({ error: 'Book not found' });
       }
@@ -40,8 +40,7 @@ router
         coverPublicId,
       };
 
-
-      const book = await bookController.addBook(bookData,req);
+      const book = await bookController.addBook(bookData, req);
       if (book.error) {
         await deleteBookCover(coverPublicId);
         return res.status(404).json({ error: book.error });
@@ -57,7 +56,7 @@ router
     let newPublicId = null;
     try {
       const bookId = req.params.id;
-      const existingBook = await bookController.getBook(bookId,req);
+      const existingBook = await bookController.getBook(bookId, req);
 
       if (!existingBook) {
         return res.status(404).json({ error: 'Book not found' });
@@ -72,7 +71,7 @@ router
         updateData.coverPublicId = coverPublicId;
         newPublicId = coverPublicId;
       }
-      const updatedBook = await bookController.updateBook(updateData, bookId,req);
+      const updatedBook = await bookController.updateBook(updateData, bookId, req);
 
       if (!updatedBook) {
         if (newPublicId) await deleteBookCover(newPublicId);
@@ -83,7 +82,7 @@ router
         try {
           await deleteBookCover(oldPublicId);
         } catch {
-          throw new AppError('Failed to delete old cover');
+          throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to delete old cover');
         }
       }
 
@@ -93,7 +92,7 @@ router
         try {
           await deleteBookCover(newPublicId);
         } catch {
-          throw new AppError('Failed to delete new cover');
+          throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to delete new cover');
         }
       }
 
@@ -104,7 +103,7 @@ router
   })
   .delete('/:id', authorization(['admin']), async (req, res) => {
     try {
-      const book = await bookController.getBook(req.params.id,req);
+      const book = await bookController.getBook(req.params.id, req);
       if (!book) {
         return res.status(404).json({ error: 'Book not found' });
       }
@@ -112,7 +111,7 @@ router
       if (book.coverPublicId) {
         await deleteBookCover(book.coverPublicId);
       }
-      await bookController.deleteBook(req.params.id,req);
+      await bookController.deleteBook(req.params.id, req);
       res.status(204).end();
     } catch (err) {
       res.status(500).json({

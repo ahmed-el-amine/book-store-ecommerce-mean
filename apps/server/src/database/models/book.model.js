@@ -2,6 +2,8 @@ import mongoose from 'mongoose';
 import authorModel from '../models/author.model.js';
 import AppError from '../../utils/customError.js';
 import mongoosePaginate from 'mongoose-paginate-v2';
+import httpStatus from 'http-status';
+
 const BookModel = new mongoose.Schema(
   {
     title: {
@@ -125,7 +127,7 @@ BookModel.statics.findEssentials = function () {
 BookModel.pre('save', async function (next) {
   for (const authorId of this.authors) {
     const exists = await authorModel.findById(authorId).exec();
-    if (!exists) throw new AppError(404, `Author with ID ${authorId} not found,please insert author first`);
+    if (!exists) throw new AppError(httpStatus.NOT_FOUND, `Author with ID ${authorId} not found,please insert author first`);
   }
   next();
 });
