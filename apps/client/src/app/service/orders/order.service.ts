@@ -19,13 +19,13 @@ export class OrderService {
     if (filters.status) params = params.set('status', filters.status);
     if (filters.sort) params = params.set('sort', filters.sort);
 
-    return this.http.get<any>(`${this.ORDERS_API}/view-order-history`, {
+    return this.http.get<any>(`${this.ORDERS_API}`, {
       params,
       withCredentials: true,
     });
   }
 
   placeOrder(orderData: any): Observable<Order> {
-    return this.http.post<Order>(this.ORDERS_API, orderData,{ withCredentials: true });
+    return this.http.post<Order>(this.ORDERS_API, orderData, { withCredentials: true });
   }
 }

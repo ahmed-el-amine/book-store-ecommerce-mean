@@ -62,7 +62,6 @@ const orderSchema = new mongoose.Schema(
       type: String,
       enum: ['Pending', 'Paid', 'Failed', 'Refunded'],
       default: 'Pending',
-      index: true,
     },
     shippingAddress: {
       type: addressSchema,

@@ -66,7 +66,6 @@ export class OrdersHistoryComponent implements OnInit {
           }
         } else {
           this.filteredOrders = [];
-          this.toastr.error('Unexpected API response format');
         }
         this.isLoading = false;
       },
