@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { tap, catchError, finalize, switchMap } from 'rxjs/operators';
 import { AuthService } from '../../services/auth/auth.service';
 import { environment } from '../../environment';
+import { ToastrService } from 'ngx-toastr';
 
 // Book data that might come from API
 export interface BookData {
@@ -39,7 +40,7 @@ export class CartService {
   public cart$ = this.cartSubject.asObservable();
   private pendingRequests = 0;
 
-  constructor(private http: HttpClient, private authService: AuthService) {
+  constructor(private http: HttpClient, private authService: AuthService, private toastr: ToastrService) {
     this.loadUserCart();
   }
 
@@ -57,7 +58,6 @@ export class CartService {
   }
 
   private handleError(error: HttpErrorResponse) {
-    console.error('API Error:', error);
     let errorMessage = 'An unknown error occurred';
 
     if (error.error instanceof ErrorEvent) {
@@ -67,11 +67,10 @@ export class CartService {
       // Server-side error
       errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
       if (error.error && error.error.message) {
-        errorMessage += `\nServer message: ${error.error.message}`;
+        errorMessage = error.error.message;
       }
     }
 
-    console.error(errorMessage);
     return throwError(() => new Error(errorMessage));
   }
 
@@ -101,7 +100,6 @@ export class CartService {
         this.cartSubject.next(response.cart);
       }),
       catchError((error) => {
-        console.error('Error adding to cart:', error);
         // Return the error to be handled by component
         return this.handleError(error);
       }),

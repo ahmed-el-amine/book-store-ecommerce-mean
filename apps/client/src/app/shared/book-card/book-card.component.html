@@ -24,13 +24,16 @@
     </div>
 
     <!-- Add to Cart Button -->
-    <button class="btn btn-primary add-to-cart-btn" (click)="addToCart()" [disabled]="isAddingToCart">
+    <button class="btn btn-primary add-to-cart-btn" 
+            (click)="addToCart()" 
+            [disabled]="isAddingToCart || bookData.stock <= 0">
       <i class="bi bi-cart-plus me-2"></i>
-      <span *ngIf="!isAddingToCart">Add to Cart</span>
+      <span *ngIf="!isAddingToCart && bookData.stock > 0">Add to Cart</span>
       <span *ngIf="isAddingToCart">
         <i class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></i>
         Adding...
       </span>
+      <span *ngIf="!isAddingToCart && bookData.stock <= 0">Out of Stock</span>
     </button>
   </div>
 </div>
