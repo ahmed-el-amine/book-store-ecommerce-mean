@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { OrderService } from '../../service/orders/order.service';
 import { Order } from './order.interface';
 
@@ -9,26 +9,36 @@ import { Order } from './order.interface';
   templateUrl: './orders-history.component.html',
   styleUrls: ['./orders-history.component.scss'],
 })
-export class OrdersHistoryComponent {
-  filteredOrders!: Order[];
-  constructor(private orderService: OrderService) {}
+export class OrdersHistoryComponent implements OnInit {
+  allOrders: Order[] = [];
+  filteredOrders: Order[] = [];
 
+
+  constructor(private orderService: OrderService) { }
   filters = [
     { label: 'All Orders', value: 'all' },
-    { label: 'Completed', value: 'completed' },
+    { label: 'Completed', value: 'Completed' },
     { label: 'Processing', value: 'Processing' },
-    { label: 'Cancelled', value: 'cancelled' },
-    { label: 'Shipped', value: 'shipped' },
+    { label: 'Cancelled', value: 'Cancelled' },
+    { label: 'Shipped', value: 'Shipped' },
   ];
 
+  ngOnInit(): void {
+    this.loadOrders()
+  }
   setFilter(filter: string) {
-    this.orderService.getOrders(filter).subscribe({
+    this.filteredOrders = filter === 'all'
+      ? this.allOrders
+      : this.allOrders.filter(order => order.status === filter);
+  }
+
+  loadOrders() {
+    this.orderService.getOrders().subscribe({
       next: (response) => {
         console.log(response);
-
+        this.allOrders = response;
         this.filteredOrders = response;
 
-        console.log(filter);
       },
       error: (error) => {
         console.log(error);
@@ -36,12 +46,5 @@ export class OrdersHistoryComponent {
     });
   }
 
-  getStatusBadgeClass(status: string) {
-    return {
-      'status-completed': status === 'completed',
-      'status-processing': status === 'processing',
-      'status-cancelled': status === 'cancelled',
-      'status-shipped': status === 'shipped',
-    };
-  }
+
 }

@@ -1,7 +1,8 @@
-import mongoose from "mongoose";
-import Books from "../database/models/book.model.js";
-import Order from "../database/models/order.model.js";
-import AppError from "../utils/customError.js";
+import mongoose from 'mongoose';
+import Books from '../database/models/book.model.js';
+import Order from '../database/models/order.model.js';
+import AppError from '../utils/customError.js';
+import httpStatus from 'http-status';
 
 export const placeOrder = async (req, res, next) => {
     try {
@@ -18,18 +19,17 @@ export const placeOrder = async (req, res, next) => {
             status,
         } = req.body;
 
-        const userId = req.userId; // Ensure authentication middleware sets req.userId
+        const userId = req.userId;
         const session = await mongoose.startSession();
         session.startTransaction();
 
         try {
-            // Process each item in the order: update stock and enrich item details
-            for (const item of items) {
-                console.log("Processing item:", item);
 
-                // Step 1: Check if the book exists and has sufficient stock
+            for (const item of items) {
+
+
                 const book = await Books.findById(item.bookId).session(session).exec();
-                console.log("Book found:", book);
+
 
                 if (!book) {
                     throw new AppError(`Book with ID ${item.bookId} not found`, 404);
@@ -39,8 +39,8 @@ export const placeOrder = async (req, res, next) => {
                     throw new AppError(`Insufficient stock for book: ${book.title}`, 400);
                 }
 
-                // Step 2: Update the stock
-                console.log(`Updating book ${item.bookId}: Reducing quantity by ${item.quantity}. Current stock: ${book.quantity}`);
+
+
 
                 const updatedBook = await Books.findOneAndUpdate(
                     { _id: item.bookId, stock: { $gte: item.quantity } },
@@ -62,7 +62,7 @@ export const placeOrder = async (req, res, next) => {
                 item.coverImage = book.coverImage;
             }
 
-            // Step 3: Create the order document within the transaction session
+
             const order = await Order.create([{
                 userId,
                 items,
@@ -77,13 +77,13 @@ export const placeOrder = async (req, res, next) => {
                 status,
             }], { session });
 
-            console.log("Order created successfully:", order);
+
 
             // Commit the transaction
             await session.commitTransaction();
             session.endSession();
 
-            // Respond with success
+
             res.status(201).json({
                 success: true,
                 message: "Order placed successfully",
@@ -100,19 +100,13 @@ export const placeOrder = async (req, res, next) => {
         next(new AppError("Error while placing order: " + err.message, 500));
     }
 };
-export const viewOrderHistory = async (req, res, next) => {
+export const getOrders = async (req, res, next) => {
     try {
         // For production, use req.userId (set by authentication middleware)
-        const userId = req.userId || "67cb80d3af1c0ee188486622";
-        const filter = { userId };
-        const { status } = req.query;
-        if (status) {
-            filter.status = status;
-        }
-        const orders = await Order.find(filter);
-        console.log(orders)
+        const userId = req.userId
+        const orders = await Order.find(userId);
         res.json(orders);
     } catch (err) {
-        next(new Error("Error while getting orders: " + err.message));
+        next(new Error('Error while getting orders: ' + err.message));
     }
 };
