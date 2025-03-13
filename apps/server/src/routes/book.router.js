@@ -7,6 +7,7 @@ import upload from '../utils/fileStorage.js';
 import { uploadBookCover, deleteBookCover } from '../utils/cloudinary.js';
 import AppError from '../utils/customError.js';
 
+
 const router = express.Router();
 
 router
@@ -16,7 +17,8 @@ router
   })
   .get('/:id', authorization(['user', 'admin']), async (req, res) => {
     try {
-      const book = await bookController.getBook(req.params.id);
+      const bookId = req.params.id;
+      const book = await bookController.getBook(bookId,req);
       if (!book) {
         return res.status(404).json({ error: 'Book not found' });
       }
@@ -38,7 +40,7 @@ router
         coverImage: coverPublicUrl,
         coverPublicId,
       };
-      console.log(bookData);
+
 
       const book = await bookController.addBook(bookData);
       if (book.error) {

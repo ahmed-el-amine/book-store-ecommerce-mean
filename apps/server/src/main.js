@@ -14,6 +14,9 @@ import seedSuperAdmin from './database/seeders/seedSuperAdmin';
 import limiter from './middleware/rateLimiter.middleware.js';
 import { v2 as cloudinary } from 'cloudinary';
 import socketIOSetup from './socket/socketIOSetup.js';
+import {createClient} from 'redis';
+import { redisMiddleware } from './middleware/redis.js';
+
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -33,21 +36,34 @@ process.on('uncaughtException', (err) => {
 
 const host = process.env.HOST ?? '0.0.0.0';
 const port = process.env.PORT ? Number(process.env.PORT) : 3000;
+
+
+const redisClient = createClient({url:process.env.REDIS_URL||'redis://localhost:6380'});
+
+redisClient.on('error',(err)=>{
+  logger.error('Redis Client Error: ',err);
+})
+
 const app = express();
+
+redisClient.connect().then(()=>{
+  logger.info('Redis connected successfully');
+  app.set('redisClient',redisClient);
+}).catch((err)=>{
+  logger.error('Redis connection failed: ',err);
+});
 
 app.set('trust proxy', true);
 app.use(helmet());
-<<<<<<< HEAD
-app.use(cors({ origin: [`${process.env.CLIENT_WEBSITE_URL}`], credentials: true }));
-=======
 
 const allowOrigins = (process.env.CORS_DOMAINS || '').split(',');
 
 app.use(cors({ origin: allowOrigins, credentials: true }));
->>>>>>> 89477b7e5326036981c97851c396b7c6f0255d51
 app.use(compression());
 app.use(cookieParser());
 app.use(express.json({ limit: '20mb' }));
+
+app.use(redisMiddleware);
 
 app.use(limiter);
 app.use('/api/v1', routesHandler);

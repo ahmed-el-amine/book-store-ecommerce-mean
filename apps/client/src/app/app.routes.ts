@@ -1,12 +1,4 @@
 import { Routes } from '@angular/router';
-<<<<<<< HEAD
-import { AccountSettingsComponent } from './components/account/account-settings/account-settings.component';
-import { BookDetailsComponent } from './book-details/book-details.component';
-import { HomePageComponent } from './components/homePage/homePage.component';
-import { SignupComponent } from './components/auth/signup/signup.component';
-import { LoginComponent } from './components/auth/login/login.component';
-=======
->>>>>>> 89477b7e5326036981c97851c396b7c6f0255d51
 import { authGuard, publicGuard } from './guards/auth.guard';
 
 export const appRoutes: Routes = [
