@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { addDays } from 'date-fns';
 import { ToastrService } from 'ngx-toastr'; // Import ToastrService
+import { environment } from '../../environment';
 
 @Component({
   selector: 'app-cart',
@@ -160,7 +161,7 @@ export class CartComponent implements OnInit, OnDestroy {
           },
         });
       } else {
-        this.toastr.error('Item not found in cart.', 'Error'); 
+        this.toastr.error('Item not found in cart.', 'Error');
         this.operationLoading = false;
       }
     }
@@ -191,10 +192,10 @@ export class CartComponent implements OnInit, OnDestroy {
     }
 
     // Fetch user addresses
-    this.http.get<any>('http://localhost:3000/api/v1/users/me/address', { withCredentials: true }).subscribe({
+    this.http.get<any>(`${environment.apiUrlV1}/users/me/address`, { withCredentials: true }).subscribe({
       next: (response) => {
         if (response.address?.length > 0) {
-          const userAddress=response.address[0];
+          const userAddress = response.address[0];
           const shippingAddress = {
             street: userAddress.street,
             zipCode: userAddress.zipCode,
@@ -212,12 +213,12 @@ export class CartComponent implements OnInit, OnDestroy {
           };
 
           // Place the order
-          this.http.post<any>('http://localhost:3000/api/v1/orders/place-order', orderData).subscribe({
+          this.http.post<any>(`${environment.apiUrlV1}/orders/place-order`, orderData).subscribe({
             next: () => {
-              this.toastr.success('Order placed successfully!', 'Success'); 
+              this.toastr.success('Order placed successfully!', 'Success');
             },
             error: (err) => {
-              this.toastr.error(err.error.message); 
+              this.toastr.error(err.error.message);
             },
           });
         } else {
@@ -225,7 +226,7 @@ export class CartComponent implements OnInit, OnDestroy {
         }
       },
       error: (err) => {
-        this.toastr.error('Failed to retrieve address. Please try again.', 'Error'); 
+        this.toastr.error('Failed to retrieve address. Please try again.', 'Error');
       },
     });
   }
