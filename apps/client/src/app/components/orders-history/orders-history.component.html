@@ -1,45 +1,70 @@
 <div class="container-fluid py-4">
-
   <div class="row mb-4">
     <div class="col">
       <h1 class="h2 mb-0">Orders History</h1>
       <p class="text-muted mb-0">View and manage your past orders</p>
     </div>
-
   </div>
 
   <div class="row mb-3">
     <div class="col">
       <div class="d-flex gap-2 flex-wrap">
-        <button *ngFor="let filter of filters" class="btn btn-outline-primary btn-sm" (click)="setFilter(filter.value)">
+        <button
+          *ngFor="let filter of filters"
+          class="btn"
+          [ngClass]="filter.value === currentFilter ? 'btn-primary' : 'btn-outline-primary'"
+          (click)="setFilter(filter.value)"
+        >
           {{ filter.label }}
         </button>
       </div>
     </div>
   </div>
 
-  <div class="row g-4">
+  <!-- Loading spinner -->
+  <div *ngIf="isLoading" class="text-center my-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <!-- Orders list -->
+  <div *ngIf="!isLoading" class="row g-4">
+    <div *ngIf="filteredOrders.length === 0" class="col-12 text-center py-5">
+      <div class="empty-state">
+        <i class="bi bi-box-seam display-1 text-muted"></i>
+        <h5 class="mt-3">No orders found</h5>
+        <p class="text-muted">No orders match your current filter criteria</p>
+      </div>
+    </div>
+
     <div *ngFor="let order of filteredOrders" class="col-12">
       <div class="card shadow-sm hover-shadow">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center mb-3">
             <div>
               <h5 class="card-title mb-0">Order #{{ order.orderNumber }}</h5>
-              <small class="text-muted">{{ order.estimatedDeliveryDate | date:'longDate' }}</small>
+              <small class="text-muted">{{ order.createdAt | date : 'longDate' }}</small>
             </div>
             <div class="d-flex align-items-center gap-3">
-              <span class="badge rounded-pill">
+              <span
+                class="badge rounded-pill"
+                [ngClass]="{
+                  'bg-warning': order.status === 'Processing',
+                  'bg-success': order.status === 'Delivered',
+                  'bg-danger': order.status === 'Cancelled',
+                  'bg-primary': order.status === 'Shipped'
+                }"
+              >
                 {{ order.status }}
               </span>
-
             </div>
           </div>
 
           <div class="row g-3 mb-3">
             <div *ngFor="let item of order.items" class="col-auto">
               <div class="d-flex align-items-center gap-3">
-                <img [src]="item.coverImage" alt="Product image" class="rounded-2"
-                  style="width: 60px; height: 60px; object-fit: cover;">
+                <img [src]="item.coverImage" alt="Product image" class="rounded-2" style="width: 60px; height: 60px; object-fit: cover" />
                 <div>
                   <div class="fw-medium">{{ item.title }}</div>
                   <small class="text-muted">Qty: {{ item.quantity }}</small>
@@ -49,13 +74,9 @@
           </div>
 
           <div class="d-flex justify-content-between align-items-center">
-            <div class="text-muted">
-              {{ order.items.length }} items · Total: {{ order.totalPrice }}
-            </div>
+            <div class="text-muted">{{ order.items.length }} items · Total: ${{ order.totalPrice }}</div>
             <div class="d-flex gap-2">
-              <button class="btn btn-primary btn-sm">
-                Buy Again
-              </button>
+              <button class="btn btn-primary btn-sm">Buy Again</button>
             </div>
           </div>
         </div>
@@ -63,21 +84,46 @@
     </div>
   </div>
 
-  <div class="row mt-4">
-    <div class="col">
-      <nav aria-label="Orders pagination">
-        <ul class="pagination justify-content-center">
-          <li class="page-item disabled">
-            <a class="page-link" href="#">Previous</a>
+  <!-- Pagination - Updated with book-filters styling -->
+  <div *ngIf="!isLoading && totalPages > 1" class="pagination-container">
+    <div class="pagination-info text-center text-muted mb-2">Page {{ currentPage }} of {{ totalPages }}</div>
+    <nav aria-label="Orders pagination">
+      <ul class="pagination pagination-md justify-content-center">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <a class="page-link page-link-special" href="javascript:void(0)" (click)="goToPage(1)" aria-label="First page">
+            <i class="bi bi-chevron-double-left"></i>
+          </a>
+        </li>
+
+        <li class="page-item" [class.disabled]="!hasPrevPage">
+          <a class="page-link page-link-nav" href="javascript:void(0)" (click)="goToPage(currentPage - 1)" aria-label="Previous page">
+            <i class="bi bi-chevron-left"></i>
+          </a>
+        </li>
+
+        <ng-container *ngFor="let page of getPageNumbers()">
+          <li *ngIf="page !== -1" class="page-item" [class.active]="page === currentPage">
+            <a class="page-link" href="javascript:void(0)" (click)="goToPage(page)">{{ page }}</a>
           </li>
-          <li class="page-item active"><a class="page-link" href="#">1</a></li>
-          <li class="page-item"><a class="page-link" href="#">2</a></li>
-          <li class="page-item"><a class="page-link" href="#">3</a></li>
-          <li class="page-item">
-            <a class="page-link" href="#">Next</a>
+          <li *ngIf="page === -1" class="page-item disabled">
+            <a class="page-link page-link-ellipsis" href="javascript:void(0)">
+              <i class="bi bi-three-dots"></i>
+            </a>
           </li>
-        </ul>
-      </nav>
-    </div>
+        </ng-container>
+
+        <li class="page-item" [class.disabled]="!hasNextPage">
+          <a class="page-link page-link-nav" href="javascript:void(0)" (click)="goToPage(currentPage + 1)" aria-label="Next page">
+            <i class="bi bi-chevron-right"></i>
+          </a>
+        </li>
+
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <a class="page-link page-link-special" href="javascript:void(0)" (click)="goToPage(totalPages)" aria-label="Last page">
+            <i class="bi bi-chevron-double-right"></i>
+          </a>
+        </li>
+      </ul>
+    </nav>
   </div>
 </div>

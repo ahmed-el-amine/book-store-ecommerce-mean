@@ -108,5 +108,4 @@ export const appRoutes: Routes = [
     loadComponent: () => import('./book-details/review-section/review-section.component').then((m) => m.ReviewSectionComponent),
     title: 'Book Reviews',
   },
-
 ];
