@@ -6,6 +6,7 @@ import { sendActiveEmail, sendResetPasswordEmail } from '../services/email.servi
 import jwt from 'jsonwebtoken';
 import Token, { tokenTypes } from '../database/models/tokens.module.js';
 import Notification from '../database/models/notification.model.js';
+import handleCookieDomain from '../utils/handleCookieDomain.js';
 
 export const create = async (req, res) => {
   // check if there is a user with the same username and email
@@ -88,11 +89,16 @@ export const login = async (req, res) => {
   // if password is correct then return user and create token
   const token = user.createAuthToken();
 
+  const CLIENT_WEBSITE_URL = process.env.NODE_ENV === 'production' ? process.env.CLIENT_WEBSITE_URL_P : process.env.CLIENT_WEBSITE_URL_D;
+
   // then send token to client in response and cookie
+  // In your login function
   res.cookie(process.env.JWT_Cookie_Name, token, {
     path: '/',
     secure: true,
     httpOnly: true,
+    domain: handleCookieDomain(CLIENT_WEBSITE_URL, { allowSubDomain: true }),
+    sameSite: 'none',
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 

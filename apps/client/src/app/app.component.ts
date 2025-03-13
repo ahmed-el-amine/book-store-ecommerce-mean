@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, isDevMode, OnDestroy, OnInit } from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/homePage/header/header.component';
 import { FooterComponent } from './components/homePage/footer/footer.component';
@@ -6,7 +6,7 @@ import { NgxStarsModule } from 'ngx-stars';
 import { SocketService } from './services/socketIO/socket.service';
 import { ToastrService } from 'ngx-toastr';
 import { NotificationService } from './services/notification/notification.service';
-import { Notification, NotificationType } from './interfaces/notification.interface';
+import { Notification } from './interfaces/notification.interface';
 
 @Component({
   imports: [RouterModule, HeaderComponent, RouterOutlet, NgxStarsModule, FooterComponent],

@@ -1,58 +1,99 @@
 import BookModel from '../database/models/book.model.js';
+import AppError from '../utils/customError.js';
 import { uploadBookCover, deleteBookCover } from '../utils/cloudinary.js';
 
-export const getBooks = async (req, res) => {
+const getBooks = async (req, res, next) => {
   try {
-    const { categories, price, rating, title } = req.query;
+    const { categories, price, rating, title, page = 1, limit = 10, sort } = req.query;
     const filter = {};
 
-    if (categories) filter.categories = { $in: [categories] };
-    if (title) filter.title = { $regex: title, $options: 'i' };
-    if (price) filter.price = { $gte: price };
-    if (rating) filter.rating = { $gte: rating };
+    if (categories) {
+      filter.categories = { $in: [categories] };
+    }
+    if (title) {
+      filter.title = { $regex: title, $options: 'i' };
+    }
+    if (price) {
+      filter.price = { $gte: price };
+    }
+    if (rating) {
+      filter.rating = { $gte: rating };
+    }
 
-    const books = await BookModel.find(filter)
-      .populate('authors')
-      .select('title isbn13 description price rating publish_date stock coverImage')
-      .exec();
+    const options = {
+      page: parseInt(page),
+      limit: parseInt(limit),
+      populate: 'authors',
+      select: 'title isbn13 description price rating publish_date stock coverImage',
+    };
 
-    res.json(books);
-  } catch (error) {
-    res.status(500).json({ error: error.message || 'Failed to fetch books' });
+    if (sort) {
+      options.sort = sort;
+    }
+
+    const result = await BookModel.paginate(filter, options);
+    res.json({
+      books: result.docs,
+      pagination: {
+        totalBooks: result.totalDocs,
+        totalPages: result.totalPages,
+        currentPage: result.page,
+        limit: result.limit,
+        hasNextPage: result.hasNextPage,
+        hasPrevPage: result.hasPrevPage,
+        nextPage: result.nextPage,
+        prevPage: result.prevPage,
+      },
+    });
+  } catch (err) {
+    next(new AppError(500, 'Failed to retrieve books'));
   }
 };
 
-export const getBook = async (req, res) => {
+const getBook = async (req, res, next) => {
   try {
     const book = await BookModel.findById(req.params.id).populate('authors').exec();
-    if (!book) return res.status(404).json({ error: 'Book not found' });
-    res.json(book);
-  } catch (error) {
-    res.status(500).json({ error: error.message || 'Failed to retrieve book' });
+    if (!book) {
+      return next(new AppError(404, 'Book not found'));
+    }
+    res.json(book.toDetails());
+  } catch (err) {
+    next(new AppError(500, 'Failed to retrieve book'));
   }
 };
 
-export const addBook = async (req, res) => {
+const addBook = async (req, res, next) => {
   try {
-    if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+    if (!req.file) {
+      return next(new AppError(400, 'No file uploaded'));
+    }
 
     const { coverPublicId, coverPublicUrl } = await uploadBookCover(req.file.buffer, req.file.mimetype);
 
-    const bookData = { ...req.body, coverImage: coverPublicUrl, coverPublicId };
-    const book = await BookModel.create(bookData);
+    const bookData = {
+      ...req.body,
+      coverImage: coverPublicUrl,
+      coverPublicId,
+    };
 
+    const book = await BookModel.create(bookData);
     res.status(201).json(book);
-  } catch (error) {
-    res.status(500).json({ error: error.message || 'Failed to add book' });
+  } catch (err) {
+    if (bookData?.coverPublicId) {
+      await deleteBookCover(bookData.coverPublicId);
+    }
+    next(new AppError(500, 'Failed to add book'));
   }
 };
 
-export const updateBook = async (req, res) => {
-  let newPublicId = null;
+const updateBook = async (req, res, next) => {
   try {
     const bookId = req.params.id;
-    const existingBook = await BookModel.findById(bookId).exec();
-    if (!existingBook) return res.status(404).json({ error: 'Book not found' });
+    const existingBook = await BookModel.findById(bookId);
+
+    if (!existingBook) {
+      return next(new AppError(404, 'Book not found'));
+    }
 
     const updateData = { ...req.body };
     const oldPublicId = existingBook.coverPublicId;
@@ -61,34 +102,47 @@ export const updateBook = async (req, res) => {
       const { coverPublicUrl, coverPublicId } = await uploadBookCover(req.file.buffer, req.file.mimetype);
       updateData.coverImage = coverPublicUrl;
       updateData.coverPublicId = coverPublicId;
-      newPublicId = coverPublicId;
     }
 
     const updatedBook = await BookModel.findByIdAndUpdate(bookId, updateData, { new: true, runValidators: true });
+
     if (!updatedBook) {
-      if (newPublicId) await deleteBookCover(newPublicId);
-      return res.status(404).json({ error: 'Book update failed' });
+      if (updateData.coverPublicId) {
+        await deleteBookCover(updateData.coverPublicId);
+      }
+      return next(new AppError(404, 'Book update failed'));
     }
 
-    if (req.file && oldPublicId) await deleteBookCover(oldPublicId);
+    if (req.file && oldPublicId) {
+      await deleteBookCover(oldPublicId);
+    }
 
     res.status(200).json(updatedBook);
-  } catch (error) {
-    if (newPublicId) await deleteBookCover(newPublicId);
-    res.status(500).json({ error: error.message || 'Failed to update book' });
+  } catch (err) {
+    if (updateData?.coverPublicId) {
+      await deleteBookCover(updateData.coverPublicId);
+    }
+    next(new AppError(500, 'Failed to update book'));
   }
 };
 
-export const deleteBook = async (req, res) => {
+const deleteBook = async (req, res, next) => {
   try {
-    const book = await BookModel.findById(req.params.id).exec();
-    if (!book) return res.status(404).json({ error: 'Book not found' });
+    const book = await BookModel.findById(req.params.id);
 
-    if (book.coverPublicId) await deleteBookCover(book.coverPublicId);
-    await BookModel.findByIdAndDelete(req.params.id).exec();
+    if (!book) {
+      return next(new AppError(404, 'Book not found'));
+    }
 
+    if (book.coverPublicId) {
+      await deleteBookCover(book.coverPublicId);
+    }
+
+    await BookModel.findByIdAndDelete(req.params.id);
     res.status(204).end();
-  } catch (error) {
-    res.status(500).json({ error: error.message || 'Failed to delete book' });
+  } catch (err) {
+    next(new AppError(500, 'Failed to delete book'));
   }
 };
+
+export { getBooks, getBook, addBook, updateBook, deleteBook };
