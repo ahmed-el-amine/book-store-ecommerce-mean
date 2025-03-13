@@ -35,6 +35,7 @@ const host = process.env.HOST ?? '0.0.0.0';
 const port = process.env.PORT ? Number(process.env.PORT) : 3000;
 const app = express();
 
+app.set('trust proxy', true);
 app.use(helmet());
 app.use(cors({ origin: [`${process.env.CLIENT_WEBSITE_URL}`], credentials: true }));
 app.use(compression());
