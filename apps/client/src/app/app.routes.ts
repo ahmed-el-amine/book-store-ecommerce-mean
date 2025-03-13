@@ -4,7 +4,6 @@ import { Routes } from '@angular/router';
 import { AccountSettingsComponent } from './components/account/account-settings/account-settings.component';
 import { BookDetailsComponent } from './book-details/book-details.component';
 import { HomePageComponent } from './components/homePage/homePage.component';
-import { CartComponent } from './components/cart/cart.component';
 import { SignupComponent } from './components/auth/signup/signup.component';
 import { LoginComponent } from './components/auth/login/login.component';
 import { authGuard, publicGuard } from './guards/auth.guard';
@@ -92,7 +91,7 @@ export const appRoutes: Routes = [
   // Cart and checkout
   {
     path: 'cart-details',
-    loadComponent: () => import('./components/Cart/cart.component').then((m) => m.CartComponent),
+    loadComponent: () => import('./components/cart/cart.component').then((m) => m.CartComponent),
     title: 'Cart Items',
   },
 

@@ -8,7 +8,7 @@ const socketIOSetup = (expressApp) => {
     pingTimeout: 10000, // 10s
     pingInterval: 15000, // 15s
     cors: {
-      origin: `${CLIENT_WEBSITE_URL}`,
+      origin: 'localhost:3001',
       credentials: true,
     },
     allowEIO3: true,
