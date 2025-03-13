@@ -227,13 +227,13 @@ export class CartService {
         return item.bookId.coverImage;
       }
       // Otherwise, ensure it has the correct base URL
-      return `http://localhost:3000/${item.bookId.coverImage}`;
+      return item.bookId.coverImage;
     } else if (item.coverImage) {
       // Check if the item itself has a coverImage property
       if (item.coverImage.startsWith('http')) {
         return item.coverImage;
       }
-      return `http://localhost:3000/${item.coverImage}`;
+      return item.coverImage;
     }
     // Return placeholder if no valid image
     return '/assets/placeholder-book.png';

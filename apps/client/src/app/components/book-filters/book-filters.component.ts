@@ -41,7 +41,7 @@ export class BookFiltersComponent implements OnInit {
   isAuthenticated = false;
 
   sortValue: string | null = null;
-  sortDirection: boolean = false;
+  sortDirection = false;
 
   constructor(private fb: FormBuilder, private bookService: BookService, private authService: AuthService, private toastr: ToastrService) {
     this.searchForm = this.fb.group({
