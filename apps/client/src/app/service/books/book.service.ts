@@ -38,7 +38,7 @@ export class BookService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`, { withCredentials: true }).pipe(catchError(this.handleError));
   }
 
-  getBooks(filters: any = {}, page: number = 1, limit: number = 6): Observable<any> {
+  getBooks(filters: any = {}, page = 1, limit = 6): Observable<any> {
     let params = new HttpParams().set('page', page.toString()).set('limit', limit.toString());
 
     // Add filters to params if they exist
