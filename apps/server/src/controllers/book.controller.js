@@ -4,12 +4,22 @@ import { getCacheData, cacheData, deleteAllCache, deleteCacheData } from '../uti
 import httpStatus from 'http-status';
 
 const getBooks = async (req) => {
-  // const cacheKey = `books:all:${JSON.stringify(req.query)}`;
-  //   const cachedBooks = await getCacheData(cacheKey,req);
-  //   if(cachedBooks){
-  //     return cachedBooks;
-  //   }
   const { categories, price, rating, title, page = 1, limit = 10, sort } = req.query;
+
+   const cacheKey = `books:pagination:${JSON.stringify({
+    categories,
+    price,
+    rating,
+    title,
+    page,
+    limit,
+    sort
+   })}`;
+     const cachedBooks = await getCacheData(cacheKey,req);
+     if(cachedBooks){
+       return cachedBooks;
+     }
+
   const filter = {};
 
   if (categories) {
@@ -38,7 +48,9 @@ const getBooks = async (req) => {
   }
 
   const result = await BookModel.paginate(filter, options);
-  return {
+
+
+  const paginatedResult = {
     books: result.docs,
     pagination: {
       totalBooks: result.totalDocs,
@@ -52,10 +64,9 @@ const getBooks = async (req) => {
     },
   };
 
-  // console.log('Filter:', filter);
-  // const books = await BookModel.find(filter).populate('authors').select('title isbn13 description price rating publish_date stock coverImage').exec();
-  // // await cacheData(cacheKey, books, 3600, req);
-  // return books;
+    await cacheData(cacheKey, paginatedResult, 3600, req);
+
+    return paginatedResult;
 };
 const getBook = async (id, req) => {
   const cacheId = `book:${id}`;
