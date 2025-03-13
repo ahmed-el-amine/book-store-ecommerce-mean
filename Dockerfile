@@ -2,31 +2,29 @@ FROM node:22-slim AS build
 
 WORKDIR /app
 COPY package*.json nx.json ./
-RUN npm install --verbose
-COPY . .
+RUN npm install
 
-# Build both apps
+COPY . .
+# Build only the backend app
 RUN npx nx build node-api --configuration=production
-RUN npx nx build angular --configuration=production
-# Final image for Heroku
-FROM nginx:alpine
+
+# Final image - lightweight Node.js runtime
+FROM node:18-alpine
 WORKDIR /app
 
-# Copy backend app
+# Copy only the backend build and package files
 COPY --from=build /app/dist/apps/server ./dist
 COPY --from=build /app/package*.json ./
-RUN apk add --update nodejs npm && npm install --production
 
-# Copy frontend app
-COPY --from=build /app/dist/apps/client/browser /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Install production dependencies only
+RUN npm install --production
 
-# Script to start both Node.js and Nginx
-COPY start.sh .
-RUN chmod +x start.sh
+# Add a health check endpoint
+RUN echo 'app.get("/health", (req, res) => res.status(200).send("OK"));' >> ./dist/main.js
 
-# Use port provided by Heroku
+# Expose the port that the backend listens on
+ENV PORT=3000
 EXPOSE $PORT
 
-# Start both services
-CMD ["./start.sh"]
+# Start the backend
+CMD node dist/main.js
