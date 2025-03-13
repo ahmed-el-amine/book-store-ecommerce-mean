@@ -93,17 +93,11 @@ export const placeOrder = async (req, res, next) => {
     next(new AppError(httpStatus.INTERNAL_SERVER_ERROR, 'Error while placing order: ' + err.message));
   }
 };
-export const viewOrderHistory = async (req, res, next) => {
+export const getOrders = async (req, res, next) => {
   try {
     // For production, use req.userId (set by authentication middleware)
-    const userId = req.userId || '67cb80d3af1c0ee188486622';
-    const filter = { userId };
-    const { status } = req.query;
-    if (status) {
-      filter.status = status;
-    }
-    const orders = await Order.find(filter);
-    console.log(orders);
+    const userId = req.userId 
+      const orders = await Order.find(userId);
     res.json(orders);
   } catch (err) {
     next(new Error('Error while getting orders: ' + err.message));
