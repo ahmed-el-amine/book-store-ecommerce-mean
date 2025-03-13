@@ -4,6 +4,7 @@ import useZod from '../middleware/useZod.js';
 import { bookSchema, patchBookSchema } from '../lib/zod/book.zod.js';
 import upload from '../utils/fileStorage.js';
 import { bookController } from '../controllers/index.js';
+import httpStatus from 'http-status';
 
 const router = express.Router();
 
@@ -15,7 +16,7 @@ router
   .get('/:id', authorization(['user', 'admin']), async (req, res) => {
     try {
       const bookId = req.params.id;
-      const book = await bookController.getBook(bookId,req);
+      const book = await bookController.getBook(bookId, req);
       if (!book) {
         return res.status(404).json({ error: 'Book not found' });
       }
@@ -37,7 +38,6 @@ router
         coverImage: coverPublicUrl,
         coverPublicId,
       };
-
 
       const book = await bookController.addBook(bookData);
       if (book.error) {
@@ -82,7 +82,7 @@ router
         try {
           await deleteBookCover(oldPublicId);
         } catch {
-          throw new AppError('Failed to delete old cover');
+          throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to delete old cover');
         }
       }
 
@@ -92,7 +92,7 @@ router
         try {
           await deleteBookCover(newPublicId);
         } catch {
-          throw new AppError('Failed to delete new cover');
+          throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to delete new cover');
         }
       }
 
@@ -111,7 +111,7 @@ router
       if (book.coverPublicId) {
         await deleteBookCover(book.coverPublicId);
       }
-      await bookController.deleteBook(req.params.id,req);
+      await bookController.deleteBook(req.params.id, req);
       res.status(204).end();
     } catch (err) {
       res.status(500).json({
