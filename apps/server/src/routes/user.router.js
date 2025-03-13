@@ -8,6 +8,7 @@ import {
   getAllAddresses,
   getAllUsers,
   getNotifications,
+  markAllAsRead,
   markAsRead,
   update,
   updateAddress,
@@ -44,6 +45,8 @@ router.delete('/me/address/:id', useAuth([userRoles.admin, userRoles.user]), del
 
 router.get('/me/notifications', useAuth([userRoles.admin, userRoles.user]), getNotifications);
 
-router.patch('/me/notifications/:id/read', useAuth([userRoles.admin, userRoles.user]), markAsRead);
+router.post('/me/notifications/:id/read', useAuth([userRoles.admin, userRoles.user]), markAsRead);
+
+router.post('/me/notifications/readAll', useAuth([userRoles.admin, userRoles.user]), markAllAsRead);
 
 export default router;

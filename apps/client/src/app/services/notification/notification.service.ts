@@ -40,7 +40,7 @@ export class NotificationService {
       this.notificationsSubject.next([...notifications]);
     }
 
-    return this.http.patch(
+    return this.http.post(
       `${this.apiUrl}/${id}/read`,
       {},
       {
@@ -49,6 +49,25 @@ export class NotificationService {
     );
 
     // return of({ success: true });
+  }
+
+  markAllAsRead(): Observable<any> {
+    // Update local state
+    const notifications = this.notificationsSubject.value;
+    const updatedNotifications = notifications.map((n) => ({
+      ...n,
+      isRead: true,
+    }));
+    this.notificationsSubject.next(updatedNotifications);
+
+    // Send request to server
+    return this.http.post(
+      `${environment.apiUrlV1}/users/me/notifications/readAll`,
+      {},
+      {
+        withCredentials: true,
+      }
+    );
   }
 
   addNotification(notification: Notification): Observable<Notification> {

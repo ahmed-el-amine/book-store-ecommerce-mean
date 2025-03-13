@@ -98,4 +98,22 @@ export class NotificationComponent implements OnInit {
         return 'notification-info';
     }
   }
+
+  markAllAsRead(event: Event): void {
+    // Prevent dropdown from closing when clicking the button
+    event.stopPropagation();
+    
+    this.notificationService.markAllAsRead().subscribe({
+      next: () => {
+        // Update all notifications to read
+        this.notifications.forEach(notification => {
+          notification.isRead = true;
+        });
+        this.updateUnreadCount();
+      },
+      error: (error) => {
+        console.error('Error marking all notifications as read', error);
+      }
+    });
+  }
 }

@@ -11,8 +11,14 @@
   </div>
 
   <div *dropdownMenu class="dropdown-menu notification-dropdown" role="menu">
-    <div class="notification-header">
-      <h6 class="dropdown-header">Notifications</h6>
+    <div class="notification-header d-flex justify-content-between align-items-center">
+      <h6 class="mb-0">Notifications</h6>
+      <button 
+        *ngIf="notifications && notifications.length > 0 && unreadCount > 0"
+        class="btn btn-sm btn-link p-0 text-muted" 
+        (click)="markAllAsRead($event)">
+        Mark all as read
+      </button>
     </div>
 
     <div class="notification-list">

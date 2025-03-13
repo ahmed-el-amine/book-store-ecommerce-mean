@@ -325,3 +325,12 @@ export const markAsRead = async (req, res) => {
     message: 'Notification marked as read',
   });
 };
+export const markAllAsRead = async (req, res) => {
+  const userId = req.user._id;
+
+  await Notification.updateMany({ userId, isRead: false }, { isRead: true });
+
+  res.json({
+    message: 'All Notification marked as read',
+  });
+};
