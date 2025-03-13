@@ -10,15 +10,9 @@ import { environment } from '../../environment';
 export class OrderService {
   private ORDERS_API = `${environment.apiUrlV1}/orders`;
 
-  constructor(private http: HttpClient) {}
-  getOrders(data: string): Observable<Order[]> {
-    let params = new HttpParams();
-    if (data) {
-      console.log(data);
-      params = params.append('status', data);
-      return this.http.get<Order[]>(`${this.ORDERS_API}/view-order-history`, { params, withCredentials: true });
-    }
-    return this.http.get<Order[]>(`${this.ORDERS_API}/view-order-history`, { params, withCredentials: true });
+  constructor(private http: HttpClient) { }
+  getOrders(): Observable<Order[]> {
+    return this.http.get<Order[]>(`${this.ORDERS_API}/view-order-history`, { withCredentials: true });
   }
   placeOrder(orderData: any): Observable<Order> {
     return this.http.post<Order>(`${this.ORDERS_API}/place-order`, orderData);
