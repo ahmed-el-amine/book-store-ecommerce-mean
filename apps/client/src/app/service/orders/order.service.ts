@@ -26,6 +26,6 @@ export class OrderService {
   }
 
   placeOrder(orderData: any): Observable<Order> {
-    return this.http.post<Order>(`${this.ORDERS_API}/place-order`, orderData);
+    return this.http.post<Order>(this.ORDERS_API, orderData,{ withCredentials: true });
   }
 }
