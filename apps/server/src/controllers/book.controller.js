@@ -1,6 +1,6 @@
 import BookModel from '../database/models/book.model.js';
 import AppError from '../utils/customError.js';
-import { getCacheData,cacheData,deleteAllCache,deleteCacheData } from '../utils/redis.js';
+import { getCacheData, cacheData, deleteAllCache, deleteCacheData } from '../utils/redis.js';
 
 const getBooks = async (req) => {
   // const cacheKey = `books:all:${JSON.stringify(req.query)}`;
