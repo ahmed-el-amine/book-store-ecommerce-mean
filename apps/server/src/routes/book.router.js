@@ -4,6 +4,8 @@ import useZod from '../middleware/useZod.js';
 import { bookSchema, patchBookSchema } from '../lib/zod/book.zod.js';
 import upload from '../utils/fileStorage.js';
 import { bookController } from '../controllers/index.js';
+import { uploadBookCover, deleteBookCover } from '../utils/cloudinary.js';
+
 
 const router = express.Router();
 
@@ -39,7 +41,7 @@ router
       };
 
 
-      const book = await bookController.addBook(bookData);
+      const book = await bookController.addBook(bookData,req);
       if (book.error) {
         await deleteBookCover(coverPublicId);
         return res.status(404).json({ error: book.error });
@@ -55,7 +57,7 @@ router
     let newPublicId = null;
     try {
       const bookId = req.params.id;
-      const existingBook = await bookController.getBook(bookId);
+      const existingBook = await bookController.getBook(bookId,req);
 
       if (!existingBook) {
         return res.status(404).json({ error: 'Book not found' });
@@ -70,8 +72,7 @@ router
         updateData.coverPublicId = coverPublicId;
         newPublicId = coverPublicId;
       }
-
-      const updatedBook = await bookController.updateBook(updateData, bookId);
+      const updatedBook = await bookController.updateBook(updateData, bookId,req);
 
       if (!updatedBook) {
         if (newPublicId) await deleteBookCover(newPublicId);
@@ -103,7 +104,7 @@ router
   })
   .delete('/:id', authorization(['admin']), async (req, res) => {
     try {
-      const book = await bookController.getBook(req.params.id);
+      const book = await bookController.getBook(req.params.id,req);
       if (!book) {
         return res.status(404).json({ error: 'Book not found' });
       }

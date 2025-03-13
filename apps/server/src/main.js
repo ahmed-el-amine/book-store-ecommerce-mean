@@ -82,7 +82,7 @@ app.use(errorHandler);
 
 const server = app.listen(port, host, () => {
   logger.info(`[ ready ] http://${host}:${port}`);
-  socketIOSetup(server);
+   socketIOSetup(server);
 });
 
 // test notification

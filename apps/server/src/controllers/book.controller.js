@@ -2,7 +2,6 @@ import BookModel from '../database/models/book.model.js';
 import AppError from '../utils/customError.js';
 import { getCacheData,cacheData,deleteAllCache,deleteCacheData } from '../utils/redis.js';
 
-
 const getBooks = async (req) => {
 
   const cacheKey = `books:all:${JSON.stringify(req.query)}`;
@@ -43,7 +42,7 @@ const getBook = async (id,req) => {
   return book.toDetails();
 };
 
-const addBook = async (data) => {
+const addBook = async (data,req) => {
   try {
     const book = await BookModel.create({
      ...data
@@ -58,7 +57,7 @@ const addBook = async (data) => {
   }
 };
 
-const updateBook = async (data, id) => {
+const updateBook = async (data, id,req) => {
   const book = await BookModel.findById(id).exec();
   if (!book) throw new AppError(404, `Book with ID ${id} not found please try again!`);
   const updatedBook = BookModel.findByIdAndUpdate(id, data, { runValidators: true });
