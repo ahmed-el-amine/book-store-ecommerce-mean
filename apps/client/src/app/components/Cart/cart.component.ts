@@ -1,3 +1,4 @@
+import { PaymentStatus } from './../orders-history/order.interface';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -208,10 +209,10 @@ export class CartComponent implements OnInit, OnDestroy {
             userId: this.userId,
             items: this.cart?.items,
             shippingAddress,
-            paymentMethod: 'Stripe', // Modify as needed
-            estimatedDeliveryDate: addDays(new Date(), 3), // + days
+            paymentMethod: 'Cash on Delivery', 
+            paymentStatus: 'Paid' ,
+            estimatedDeliveryDate: addDays(new Date(), 3), 
           };
-
           // Place the order
           this.http.post<any>(`${environment.apiUrlV1}/orders/place-order`, orderData).subscribe({
             next: () => {

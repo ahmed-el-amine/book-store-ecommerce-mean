@@ -14,6 +14,7 @@ export const placeOrder = async (req, res, next) => {
             discountApplied,
             taxAmount,
             paymentMethod,
+            paymentStatus,
             status,
         } = req.body;
 
@@ -72,6 +73,7 @@ export const placeOrder = async (req, res, next) => {
                 discountApplied,
                 taxAmount,
                 paymentMethod,
+                paymentStatus,
                 status,
             }], { session });
 

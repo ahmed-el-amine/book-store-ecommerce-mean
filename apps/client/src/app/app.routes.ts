@@ -78,7 +78,7 @@ export const appRoutes: Routes = [
   // Cart and checkout
   {
     path: 'cart-details',
-    loadComponent: () => import('./components/cart/cart.component').then((m) => m.CartComponent),
+    loadComponent: () => import('./components/Cart/cart.component').then((m) => m.CartComponent),
     title: 'Cart Items',
   },
 

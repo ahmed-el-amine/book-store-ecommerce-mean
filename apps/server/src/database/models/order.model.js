@@ -54,7 +54,7 @@ const orderSchema = new mongoose.Schema({
     paymentMethod: {
         type: String,
         enum: ['Stripe', 'Cash on Delivery'],
-        default: 'Stripe'
+        default: 'Cash on Delivery'
     },
     paymentStatus: {
         type: String,
