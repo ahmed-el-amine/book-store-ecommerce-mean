@@ -37,7 +37,10 @@ const app = express();
 
 app.set('trust proxy', true);
 app.use(helmet());
-app.use(cors({ origin: [`${process.env.CLIENT_WEBSITE_URL}`], credentials: true }));
+
+const allowOrigins = (process.env.CORS_DOMAINS || '').split(',');
+
+app.use(cors({ origin: allowOrigins, credentials: true }));
 app.use(compression());
 app.use(cookieParser());
 app.use(express.json({ limit: '20mb' }));

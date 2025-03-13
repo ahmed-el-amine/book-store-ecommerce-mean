@@ -4,11 +4,13 @@ import jwt from 'jsonwebtoken';
 import { getSocketUsers } from './socketIOHandler';
 
 const socketIOSetup = (expressApp) => {
+  const allowOrigins = (process.env.CORS_DOMAINS || '').split(',');
+
   const socketIO = new Server(expressApp, {
     pingTimeout: 10000, // 10s
     pingInterval: 15000, // 15s
     cors: {
-      origin: `${process.env.CLIENT_WEBSITE_URL}`,
+      origin: allowOrigins,
       credentials: true,
     },
     allowEIO3: true,

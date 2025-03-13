@@ -24,13 +24,15 @@ export const sendActiveEmail = async (user) => {
       expires: addMinutes(new Date(), 10),
     });
 
+    const CLIENT_WEBSITE_URL = process.env.NODE_ENV === 'production' ? process.env.CLIENT_WEBSITE_URL_P : process.env.CLIENT_WEBSITE_URL_D;
+
     const isEmailSent = await sendMail({
       to: user.emailData.emailAddress,
       subject: `${process.env.WEBSITE_NAME} account activation`,
       text: `${process.env.WEBSITE_NAME} account activation`,
       html: activeEmailTemplate({
         firstName: user.firstName,
-        activeURL: `${process.env.CLIENT_WEBSITE_URL}/auth/verify-email/${activeEmailToken.token}`,
+        activeURL: `${CLIENT_WEBSITE_URL}/auth/verify-email/${activeEmailToken.token}`,
       }),
     });
 
@@ -59,13 +61,15 @@ export const sendResetPasswordEmail = async (user) => {
       expires: addMinutes(new Date(), 10),
     });
 
+    const CLIENT_WEBSITE_URL = process.env.NODE_ENV === 'production' ? process.env.CLIENT_WEBSITE_URL_P : process.env.CLIENT_WEBSITE_URL_D;
+
     const isEmailSent = await sendMail({
       to: user.emailData.emailAddress,
       subject: `${process.env.WEBSITE_NAME} account activation`,
       text: `${process.env.WEBSITE_NAME} account activation`,
       html: resetPasswordTemplate({
         firstName: user.firstName,
-        resetPasswordUrl: `${process.env.CLIENT_WEBSITE_URL}/auth/reset-password/${restPasswordToken.token}`,
+        resetPasswordUrl: `${CLIENT_WEBSITE_URL}/auth/reset-password/${restPasswordToken.token}`,
       }),
     });
 

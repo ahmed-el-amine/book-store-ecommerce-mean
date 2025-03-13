@@ -10,7 +10,7 @@ import AppError from '../utils/customError.js';
 const router = express.Router();
 
 router
-  .get('/', authorization(['user', 'admin']), async (req, res) => {
+  .get('/', async (req, res) => {
     const books = await bookController.getBooks(req);
     res.json(books);
   })

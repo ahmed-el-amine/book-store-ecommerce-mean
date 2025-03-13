@@ -8,16 +8,12 @@
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:application",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/client",
         "index": "apps/client/src/index.html",
         "browser": "apps/client/src/main.ts",
-        "polyfills": [
-          "zone.js"
-        ],
+        "polyfills": ["zone.js"],
         "tsConfig": "apps/client/tsconfig.app.json",
         "assets": [
           {
@@ -25,11 +21,7 @@
             "input": "apps/client/public"
           }
         ],
-        "styles": [
-          "node_modules/bootstrap/dist/css/bootstrap.min.css",
-          "node_modules/ngx-toastr/toastr.css",
-          "apps/client/src/styles.css"
-        ]
+        "styles": ["node_modules/bootstrap/dist/css/bootstrap.min.css", "node_modules/ngx-toastr/toastr.css", "apps/client/src/styles.css"]
       },
       "configurations": {
         "production": {
@@ -58,7 +50,7 @@
     "serve": {
       "executor": "@angular-devkit/build-angular:dev-server",
       "options": {
-        "port": 3001
+        "port": 3051
       },
       "configurations": {
         "production": {
@@ -83,7 +75,7 @@
       "executor": "@nx/web:file-server",
       "options": {
         "buildTarget": "angular:build",
-        "port": 3001,
+        "port": 3051,
         "staticFilePath": "dist/apps/client/browser",
         "spa": true
       }
