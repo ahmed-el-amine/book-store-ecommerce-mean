@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { tap, catchError, finalize, switchMap } from 'rxjs/operators';
 import { AuthService } from '../../services/auth/auth.service';
+import { environment } from '../../environment';
 
 // Book data that might come from API
 export interface BookData {
@@ -33,7 +34,7 @@ export interface Cart {
   providedIn: 'root',
 })
 export class CartService {
-  private apiUrl = 'http://localhost:3000/api/v1/cart';
+  private apiUrl = `${environment.apiUrlV1}/cart`;
   private cartSubject = new BehaviorSubject<Cart | null>(null);
   public cart$ = this.cartSubject.asObservable();
   private pendingRequests = 0;
@@ -91,7 +92,7 @@ export class CartService {
     );
   }
 
-  addToCart(userId: string, bookId: string, quantity: number = 1): Observable<any> {
+  addToCart(userId: string, bookId: string, quantity = 1): Observable<any> {
     this.pendingRequests++;
     console.log('Adding to cart:', { userId, bookId, quantity });
     return this.http.post<any>(this.apiUrl, { userId, bookId, quantity }).pipe(
@@ -175,9 +176,9 @@ export class CartService {
   updateCart(userId: string, items: CartItem[]): Observable<any> {
     this.pendingRequests++;
     items = items.map((x: any) => {
-      if (x.bookId?._id) return {...x, bookId: x.bookId._id}
+      if (x.bookId?._id) return { ...x, bookId: x.bookId._id };
       return x;
-    })
+    });
     return this.http.put<any>(this.apiUrl, { userId, items }).pipe(
       tap((response) => {
         console.log('Cart updated:', response);
@@ -277,5 +278,3 @@ export class CartService {
     });
   }
 }
-
-
