@@ -20,7 +20,7 @@ export class OrderService {
     return this.http.get<Order[]>(`${this.ORDERS_API}/view-order-history`, { params, withCredentials: true })
 
   }
-  placeOrder(orderData: any): Observable<Order> {
+  placeOrder(orderData: Order): Observable<Order> {
     return this.http.post<Order>(`${this.ORDERS_API}/place-order`, orderData)
   }
 }

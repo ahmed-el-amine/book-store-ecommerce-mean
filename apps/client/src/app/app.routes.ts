@@ -106,8 +106,7 @@ export const appRoutes: Routes = [
   {
     path: 'orders-history',
     loadComponent: () => import('./components/orders-history/orders-history.component').then((m) => m.OrdersHistoryComponent),
-    canActivate: [authGuard],
-    title: 'Order History',
+    title: 'Orders History',
   },
 
   // Home page
@@ -123,4 +122,5 @@ export const appRoutes: Routes = [
     loadComponent: () => import('./book-details/review-section/review-section.component').then((m) => m.ReviewSectionComponent),
     title: 'Book Reviews',
   },
+
 ];

@@ -6,6 +6,9 @@ import { CartService, Cart, CartItem } from '../../service/cart/cart.service';
 import { AuthService } from '../../services/auth/auth.service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { addDays } from 'date-fns';
+import { ToastrService } from 'ngx-toastr'; // Import ToastrService
 
 @Component({
   selector: 'app-cart',
@@ -22,7 +25,13 @@ export class CartComponent implements OnInit, OnDestroy {
   userId = '';
   private subscriptions: Subscription[] = [];
 
-  constructor(private cartService: CartService, private authService: AuthService, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private cartService: CartService,
+    private authService: AuthService,
+    private router: Router,
+    private toastr: ToastrService // Inject ToastrService
+  ) {}
 
   ngOnInit(): void {
     // Set initial loading state
@@ -37,11 +46,12 @@ export class CartComponent implements OnInit, OnDestroy {
         if (this.userId) {
           this.loadCart();
         } else {
-          console.error('User object does not contain id or _id:', user);
+          this.toastr.error('User ID not found. Please log in again.', 'Error'); // Toastr for error
           this.initialLoading = false;
           this.router.navigate(['/auth/login']);
         }
       } else {
+        this.toastr.error('Please log in to view your cart.', 'Error'); // Toastr for error
         this.initialLoading = false;
         this.router.navigate(['/auth/login']);
       }
@@ -69,12 +79,11 @@ export class CartComponent implements OnInit, OnDestroy {
     this.initialLoading = true;
     this.cartService.getCart(this.userId).subscribe({
       next: (cart) => {
-        console.log('Cart loaded successfully:', cart);
+        this.toastr.success('Cart loaded successfully.', 'Success'); // Toastr for success
         this.initialLoading = false;
       },
       error: (err) => {
-        console.error('Error loading cart:', err);
-        this.error = 'Failed to load your cart. Please try again.';
+        this.toastr.error('Failed to load your cart. Please try again.', 'Error'); // Toastr for error
         this.initialLoading = false;
       },
     });
@@ -102,19 +111,18 @@ export class CartComponent implements OnInit, OnDestroy {
         };
 
         this.cartService.updateCart(this.userId, updatedItems).subscribe({
-          next: (response) => {
-            console.log('Cart updated with increased quantity:', response);
+          next: () => {
+            this.toastr.success('Quantity increased successfully.', 'Success'); // Toastr for success
             this.operationLoading = false;
           },
-          error: (err) => {
-            console.error('Error increasing quantity:', err);
-            this.error = 'Failed to update quantity. Please try again.';
+          error: () => {
+            this.toastr.error('Failed to update quantity. Please try again.', 'Error'); // Toastr for error
             this.operationLoading = false;
             this.loadCart(); // Reload cart to ensure consistent state
           },
         });
       } else {
-        console.error('Item not found in cart for quantity increase');
+        this.toastr.error('Item not found in cart.', 'Error'); // Toastr for error
         this.operationLoading = false;
       }
     }
@@ -135,26 +143,24 @@ export class CartComponent implements OnInit, OnDestroy {
       const itemIndex = updatedItems.findIndex((i) => this.getBookId(i) === bookId);
 
       if (itemIndex !== -1) {
-        // Create a new object to avoid direct mutation
         updatedItems[itemIndex] = {
           ...updatedItems[itemIndex],
           quantity: item.quantity - 1,
         };
 
         this.cartService.updateCart(this.userId, updatedItems).subscribe({
-          next: (response) => {
-            console.log('Cart updated with decreased quantity:', response);
+          next: () => {
+            this.toastr.success('Quantity decreased successfully.', 'Success'); // Toastr for success
             this.operationLoading = false;
           },
-          error: (err) => {
-            console.error('Error decreasing quantity:', err);
-            this.error = 'Failed to update quantity. Please try again.';
+          error: () => {
+            this.toastr.error('Failed to update quantity. Please try again.', 'Error'); // Toastr for error
             this.operationLoading = false;
             this.loadCart(); // Reload cart to ensure consistent state
           },
         });
       } else {
-        console.error('Item not found in cart for quantity decrease');
+        this.toastr.error('Item not found in cart.', 'Error'); 
         this.operationLoading = false;
       }
     }
@@ -165,16 +171,13 @@ export class CartComponent implements OnInit, OnDestroy {
 
     const bookId = this.getBookId(item);
 
-    console.log('Removing item with book ID:', bookId);
-
     this.cartService.removeFromCart(this.userId, bookId).subscribe({
       next: (response) => {
-        console.log('Item removed successfully:', response);
+        this.toastr.success('Item removed successfully.', 'Success'); // Toastr for success
         this.operationLoading = false;
       },
       error: (err) => {
-        console.error('Error removing item:', err);
-        this.error = 'Failed to remove item. Please try again.';
+        this.toastr.error('Failed to remove item. Please try again.', 'Error'); // Toastr for error
         this.operationLoading = false;
         this.loadCart(); // Reload cart to ensure consistent state
       },
@@ -182,7 +185,49 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   proceedToCheckout(): void {
-    this.router.navigate(['/checkout']);
+    if (!this.userId) {
+      this.toastr.error('User ID not found. Please log in again.', 'Error'); // Toastr for error
+      return;
+    }
+
+    // Fetch user addresses
+    this.http.get<any>('http://localhost:3000/api/v1/users/me/address', { withCredentials: true }).subscribe({
+      next: (response) => {
+        if (response.address?.length > 0) {
+          const userAddress=response.address[0];
+          const shippingAddress = {
+            street: userAddress.street,
+            zipCode: userAddress.zipCode,
+            country: userAddress.country,
+            city: userAddress.city,
+            state: userAddress.state,
+          };
+
+          const orderData = {
+            userId: this.userId,
+            items: this.cart?.items,
+            shippingAddress,
+            paymentMethod: 'Stripe', // Modify as needed
+            estimatedDeliveryDate: addDays(new Date(), 3), // + days
+          };
+
+          // Place the order
+          this.http.post<any>('http://localhost:3000/api/v1/orders/place-order', orderData).subscribe({
+            next: () => {
+              this.toastr.success('Order placed successfully!', 'Success'); 
+            },
+            error: (err) => {
+              this.toastr.error(err.error.message); 
+            },
+          });
+        } else {
+          this.toastr.warning('Please add a shipping address before placing an order.', 'Warning');
+        }
+      },
+      error: (err) => {
+        this.toastr.error('Failed to retrieve address. Please try again.', 'Error'); 
+      },
+    });
   }
 
   getSubtotal(): number {
