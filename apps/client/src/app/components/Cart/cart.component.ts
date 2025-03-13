@@ -81,7 +81,6 @@ export class CartComponent implements OnInit, OnDestroy {
     this.initialLoading = true;
     this.cartService.getCart(this.userId).subscribe({
       next: (cart) => {
-        this.toastr.success('Cart loaded successfully.', 'Success'); // Toastr for success
         this.initialLoading = false;
       },
       error: (err) => {
@@ -209,9 +208,9 @@ export class CartComponent implements OnInit, OnDestroy {
             userId: this.userId,
             items: this.cart?.items,
             shippingAddress,
-            paymentMethod: 'Cash on Delivery', 
-            paymentStatus: 'Paid' ,
-            estimatedDeliveryDate: addDays(new Date(), 3), 
+            paymentMethod: 'Cash on Delivery',
+            paymentStatus: 'Paid',
+            estimatedDeliveryDate: addDays(new Date(), 3),
           };
           // Place the order
           this.http.post<any>(`${environment.apiUrlV1}/orders/place-order`, orderData).subscribe({

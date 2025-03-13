@@ -76,10 +76,8 @@ export class CartService {
 
   getCart(userId: string): Observable<Cart> {
     this.pendingRequests++;
-    console.log('Getting cart for user:', userId);
     return this.http.get<Cart>(`${this.apiUrl}/${userId}`).pipe(
       tap((cart) => {
-        console.log('Cart fetched successfully:', cart);
         this.cartSubject.next(cart);
       }),
       catchError((error) => {

@@ -1,8 +1,9 @@
 <header class="site-header">
-  <nav class="navbar navbar-expand-lg">
-    <div class="container">
+  <div class="container">
+    <nav class="navbar navbar-expand-lg">
       <!-- Logo -->
       <a class="navbar-brand" routerLink="/">
+        <i class="bi bi-book-half brand-icon"></i>
         <span class="brand-text">Book Oasis</span>
       </a>
 
@@ -14,7 +15,7 @@
         [attr.aria-expanded]="!isCollapsed"
         aria-controls="navbarContent"
       >
-        <span class="navbar-toggler-icon"></span>
+        <i class="bi bi-list"></i>
       </button>
 
       <!-- Collapsible Content -->
@@ -22,83 +23,83 @@
         <!-- Navigation Links -->
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
+            <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+              <i class="bi bi-house-door nav-icon"></i>
+              <span>Home</span>
+            </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" routerLink="/books-filters" routerLinkActive="active">Books</a>
+            <a class="nav-link" routerLink="/books-filters" routerLinkActive="active">
+              <i class="bi bi-book nav-icon"></i>
+              <span>Books</span>
+            </a>
           </li>
-          <!-- <li class="nav-item">
-            <a class="nav-link" routerLink="/about" routerLinkActive="active">About</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" routerLink="/contact" routerLinkActive="active">Contact</a>
-          </li> -->
         </ul>
 
-        <!-- Right Side Icons & Actions -->
-        <div class="header-actions">
-          <!-- Search Icon -->
-          <!-- <div class="icon-button" tooltip="Search">
-            <i class="bi bi-search"></i>
-          </div> -->
-
-          <!-- Notifications (Only for authenticated users) -->
-          @if(isAuthenticated) {
+        <!-- Search Bar -->
+        <!-- Notifications (Only for authenticated users) -->
+        <div class="action-button-wrapper notification-wrapper" *ngIf="isAuthenticated">
           <app-notification></app-notification>
-          }
+        </div>
 
-          <!-- Cart Icon -->
-          <div class="icon-button" routerLink="/cart-details" tooltip="Cart">
-            <i class="bi bi-cart"></i>
-          </div>
+        <!-- Update the cart button to include badge -->
+        <a class="action-button" routerLink="/cart-details" style="margin-left: 15px" tooltip="Cart" placement="bottom">
+          <i class="bi bi-cart3"></i>
+          <span class="cart-badge" *ngIf="cartItemCount > 0">{{ cartItemCount }}</span>
+        </a>
 
-          <!-- User Account Section -->
-          @if(isAuthenticated) {
+        <!-- User Account Section -->
+        <ng-container *ngIf="isAuthenticated; else authButtons">
           <!-- User Dropdown -->
-          <div class="user-dropdown" dropdown>
-            <a class="dropdown-toggle user-toggle" dropdownToggle>
-              <i class="bi bi-person-circle"></i>
-              <span class="d-none d-md-inline ms-1">{{ currentUser?.name || 'Account' }}</span>
+          <div class="user-dropdown" style="margin-left: 15px" dropdown>
+            <a class="user-toggle" dropdownToggle>
+              <div class="user-avatar">
+                <i class="bi bi-person"></i>
+              </div>
+              <span class="d-none d-md-inline ms-2">{{ currentUser?.name || 'Account' }}</span>
+              <i class="bi bi-chevron-down ms-1"></i>
             </a>
-            <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu dropdown-menu-end" role="menu" aria-labelledby="button-basic">
+            <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu dropdown-menu-end" role="menu">
               <li>
-                <a class="dropdown-item" routerLink="/account"><i class="bi bi-person me-2"></i>My Profile</a>
+                <a class="dropdown-item" routerLink="/account"> <i class="bi bi-person-circle me-2"></i>My Profile </a>
               </li>
               <li>
-                <a class="dropdown-item" routerLink="/account/orders"><i class="bi bi-box me-2"></i>My Orders</a>
+                <a class="dropdown-item" routerLink="/account/orders"> <i class="bi bi-box me-2"></i>My Orders </a>
               </li>
 
               <!-- Admin Options -->
-              @if(currentUser?.role === 'admin' || currentUser?.role === 'superAdmin') {
-              <li role="separator" class="dropdown-divider"></li>
-              <li>
-                <a class="dropdown-item" routerLink="/books/add"><i class="bi bi-plus-circle me-2"></i>Add Book</a>
-              </li>
-              <li>
-                <a class="dropdown-item" routerLink="/books/update"><i class="bi bi-pencil-square me-2"></i>Update Book</a>
-              </li>
-              <li>
-                <a class="dropdown-item" routerLink="/books/delete"><i class="bi bi-trash me-2"></i>Delete Book</a>
-              </li>
-              }
+              <ng-container *ngIf="currentUser?.role === 'admin' || currentUser?.role === 'superAdmin'">
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a class="dropdown-item" routerLink="/admin"> <i class="bi bi-speedometer2 me-2"></i>Admin Dashboard </a>
+                </li>
+              </ng-container>
 
-              <li role="separator" class="dropdown-divider"></li>
+              <li><hr class="dropdown-divider" /></li>
               <li>
-                <a class="dropdown-item logout-item" (click)="logUserOut()" (keydown.enter)="logUserOut()" tabindex="0" role="button"
-                  ><i class="bi bi-box-arrow-right me-2"></i>Logout</a
+                <a
+                  class="dropdown-item logout-item"
+                  (click)="logUserOut()"
+                  (keydown.enter)="logUserOut()"
+                  tabindex="0"
+                  role="button"
+                  aria-label="Logout"
                 >
+                  <i class="bi bi-box-arrow-right me-2"></i>Logout
+                </a>
               </li>
             </ul>
           </div>
-          } @else {
-          <!-- Auth Buttons -->
+        </ng-container>
+
+        <!-- Auth Buttons for non-authenticated users -->
+        <ng-template #authButtons>
           <div class="auth-buttons">
-            <a routerLink="/auth/login" class="btn btn-outline-primary btn-sm">Sign In</a>
-            <a routerLink="/auth/signup" class="btn btn-primary btn-sm">Register</a>
+            <a routerLink="/auth/login" class="btn btn-outline-primary">Login</a>
+            <a routerLink="/auth/signup" class="btn btn-primary">Sign Up</a>
           </div>
-          }
-        </div>
+        </ng-template>
       </div>
-    </div>
-  </nav>
+    </nav>
+  </div>
 </header>

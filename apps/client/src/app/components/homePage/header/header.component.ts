@@ -8,19 +8,13 @@ import { NotificationComponent } from '../../notification/notification.component
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { CartService } from '../../../service/cart/cart.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [
-    CommonModule, 
-    RouterLink, 
-    RouterLinkActive,
-    NotificationComponent, 
-    CollapseModule,
-    BsDropdownModule,
-    TooltipModule
-  ],
+  imports: [CommonModule, RouterLink, RouterLinkActive, NotificationComponent, CollapseModule, BsDropdownModule, TooltipModule, FormsModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
@@ -29,14 +23,26 @@ export class HeaderComponent implements OnInit {
   currentUser: any = null;
   books: Book[] = [];
   isCollapsed = true;
+  cartItemCount = 0;
+  searchQuery = '';
+  isDarkMode = false;
 
-  constructor(private authService: AuthService, private bookService: BookService) {
+  constructor(private authService: AuthService, private bookService: BookService, private cartService: CartService) {
     this.authService.isAuthenticated$.subscribe((isAuth) => {
       this.isAuthenticated = isAuth;
     });
 
     this.authService.currentUser$.subscribe((user) => {
       this.currentUser = user;
+    });
+
+    // Subscribe to cart changes to update badge
+    this.cartService.cart$.subscribe((cart) => {
+      if (cart && cart.items) {
+        this.cartItemCount = cart.items.length;
+      } else {
+        this.cartItemCount = 0;
+      }
     });
   }
 
@@ -53,7 +59,8 @@ export class HeaderComponent implements OnInit {
 
   // Set collapse state based on screen size
   checkScreenSize() {
-    if (window.innerWidth >= 992) { // Bootstrap lg breakpoint
+    if (window.innerWidth >= 992) {
+      // Bootstrap lg breakpoint
       this.isCollapsed = true; // Reset to collapsed state on desktop
     }
   }
@@ -67,5 +74,11 @@ export class HeaderComponent implements OnInit {
         console.error('Error during logout', err);
       },
     });
+  }
+
+  // Toggle dark mode (optional feature)
+  toggleDarkMode() {
+    this.isDarkMode = !this.isDarkMode;
+    document.body.classList.toggle('dark-theme', this.isDarkMode);
   }
 }
