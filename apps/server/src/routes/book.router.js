@@ -7,13 +7,134 @@ import { bookController } from '../controllers/index.js';
 import { uploadBookCover, deleteBookCover } from '../utils/cloudinary.js';
 import httpStatus from 'http-status';
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Book:
+ *       type: object
+ *       required:
+ *         - title
+ *         - price
+ *         - description
+ *         - author
+ *         - categories
+ *         - stock
+ *       properties:
+ *         title:
+ *           type: string
+ *         price:
+ *           type: number
+ *           format: float
+ *         description:
+ *           type: string
+ *         author:
+ *           type: string
+ *         categories:
+ *           type: array
+ *           items:
+ *             type: string
+ *         stock:
+ *           type: integer
+ *         coverImage:
+ *           type: string
+ *           format: uri
+ *         coverPublicId:
+ *           type: string
+ */
+
 const router = express.Router();
 
 router
+  /**
+   * @swagger
+   * /books:
+   *   get:
+   *     summary: Get all books
+   *     description: Retrieve a list of books with optional filtering
+   *     parameters:
+   *       - in: query
+   *         name: categories
+   *         schema:
+   *           type: string
+   *         description: Filter by category (comma-separated for multiple)
+   *       - in: query
+   *         name: minPrice
+   *         schema:
+   *           type: number
+   *         description: Minimum price
+   *       - in: query
+   *         name: maxPrice
+   *         schema:
+   *           type: number
+   *         description: Maximum price
+   *       - in: query
+   *         name: page
+   *         schema:
+   *           type: integer
+   *           default: 1
+   *         description: Page number for pagination
+   *       - in: query
+   *         name: limit
+   *         schema:
+   *           type: integer
+   *           default: 10
+   *         description: Number of books per page
+   *       - in: query
+   *         name: search
+   *         schema:
+   *           type: string
+   *         description: Search in title and description
+   *     responses:
+   *       200:
+   *         description: A list of books
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 books:
+   *                   type: array
+   *                   items:
+   *                     $ref: '#/components/schemas/Book'
+   *                 pagination:
+   *                   type: object
+   *                   properties:
+   *                     totalItems:
+   *                       type: integer
+   *                     totalPages:
+   *                       type: integer
+   *                     currentPage:
+   *                       type: integer
+   */
   .get('/', async (req, res) => {
     const books = await bookController.getBooks(req);
     res.json(books);
   })
+
+  /**
+   * @swagger
+   * /books/{id}:
+   *   get:
+   *     summary: Get a book by ID
+   *     description: Retrieves detailed information about a specific book
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: string
+   *         description: Book ID
+   *     responses:
+   *       200:
+   *         description: Book details
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/Book'
+   *       404:
+   *         description: Book not found
+   */
   .get('/:id', async (req, res) => {
     try {
       const bookId = req.params.id;
@@ -26,6 +147,57 @@ router
       res.status(500).json({ error: 'Failed to retrieve book' });
     }
   })
+
+  /**
+   * @swagger
+   * /books/add:
+   *   post:
+   *     summary: Add a new book
+   *     description: Creates a new book (admin only)
+   *     security:
+   *       - cookieAuth: []
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         multipart/form-data:
+   *           schema:
+   *             type: object
+   *             required:
+   *               - title
+   *               - price
+   *               - description
+   *               - author
+   *               - categories
+   *               - stock
+   *               - coverImage
+   *             properties:
+   *               title:
+   *                 type: string
+   *               price:
+   *                 type: number
+   *               description:
+   *                 type: string
+   *               author:
+   *                 type: string
+   *               categories:
+   *                 type: array
+   *                 items:
+   *                   type: string
+   *               stock:
+   *                 type: integer
+   *               coverImage:
+   *                 type: string
+   *                 format: binary
+   *     responses:
+   *       201:
+   *         description: Book created successfully
+   *       400:
+   *         description: Invalid input or missing file
+   *       401:
+   *         description: Unauthorized
+   *       403:
+   *         description: Forbidden - requires admin role
+   */
   .post('/add', authorization(['admin']), upload.single('coverImage'), useZod(bookSchema), async (req, res) => {
     try {
       if (!req.file) {
