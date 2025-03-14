@@ -92,6 +92,7 @@ export const appRoutes: Routes = [
   {
     path: 'orders-history',
     loadComponent: () => import('./components/orders-history/orders-history.component').then((m) => m.OrdersHistoryComponent),
+    canActivate: [authGuard],
     title: 'Orders History',
   },
 

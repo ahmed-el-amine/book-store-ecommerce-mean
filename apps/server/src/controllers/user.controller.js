@@ -98,7 +98,7 @@ export const login = async (req, res) => {
     secure: true,
     httpOnly: true,
     domain: handleCookieDomain(CLIENT_WEBSITE_URL, { allowSubDomain: true }),
-    sameSite: 'none',
+    sameSite: 'lax',
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 
