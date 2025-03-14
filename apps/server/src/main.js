@@ -16,7 +16,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import socketIOSetup from './socket/socketIOSetup.js';
 import { createClient } from 'redis';
 import { redisMiddleware } from './middleware/redis.js';
-
+import { setupSwagger } from './utils/swagger.js';
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -84,6 +84,7 @@ app.use(errorHandler);
 const server = app.listen(port, host, () => {
   logger.info(`[ ready ] http://${host}:${port}`);
   socketIOSetup(server);
+  setupSwagger(app);
 });
 
 connectToDB();

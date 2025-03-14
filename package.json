@@ -80,6 +80,8 @@
     "sanitize-filename": "^1.6.3",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
     "winston": "^3.17.0",
     "zod": "^3.24.2",
     "zone.js": "~0.15.0"
