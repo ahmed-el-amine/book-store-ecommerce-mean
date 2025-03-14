@@ -178,6 +178,68 @@ export const getAllUsers = async (req, res) => {
   res.status(httpStatus.OK).json({ users });
 };
 
+export const changeRole = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { role } = req.body;
+
+    // Validate ObjectId
+    if (!isValidObjectId(id)) {
+      return res.status(httpStatus.BAD_REQUEST).json({
+        error: true,
+        message: 'Invalid user ID format'
+      });
+    }
+
+    // Validate role
+    if (!role || !['user', 'admin'].includes(role)) {
+      return res.status(httpStatus.BAD_REQUEST).json({
+        error: true,
+        message: 'Role must be either "user" or "admin"'
+      });
+    }
+
+    // Find the user by ID and update their role
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(httpStatus.NOT_FOUND).json({
+        error: true,
+        message: 'User not found'
+      });
+    }
+
+    // Prevent changing role of superAdmin accounts for security
+    if (user.role === 'superAdmin') {
+      return res.status(httpStatus.FORBIDDEN).json({
+        error: true,
+        message: 'Cannot change role of superAdmin accounts'
+      });
+    }
+
+    // Update the user's role
+    user.role = role;
+    await user.save();
+
+    return res.status(httpStatus.OK).json({
+      message: `User role updated successfully to ${role}`,
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.emailData.emailAddress,
+        role: user.role
+      }
+    });
+
+  } catch (error) {
+    console.error('Error updating user role:', error);
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      error: true,
+      message: 'An error occurred while updating user role'
+    });
+  }
+};
+
 export const update = async (req, res) => {
   const updatedData = req.body;
 

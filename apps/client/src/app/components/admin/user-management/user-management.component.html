@@ -1,0 +1,84 @@
+<div class="container mt-5">
+  <div class="card shadow">
+    <div class="card-header bg-primary text-white">
+      <h2 class="mb-0">User Role Management</h2>
+    </div>
+    <div class="card-body">
+      <div class="alert alert-info">
+        <i class="bi bi-info-circle me-2"></i>
+        As a SuperAdmin, you can change any user's role to either Admin or regular User.
+      </div>
+
+      @if(isLoading) {
+      <div class="d-flex justify-content-center my-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+      } @else {
+      <div class="row">
+        <div class="col-md-6 mb-4">
+          <label for="userSelect" class="form-label">Select User</label>
+          <select #userSelect id="userSelect" class="form-select" (change)="onUserSelect($event)">
+            <option value="">-- Select a user --</option>
+            @for(user of users; track user.id) {
+            <!-- Skip superAdmin users from the dropdown -->
+            @if(user.role !== 'superAdmin') {
+            <option [value]="user.id">{{ user.name }} ({{ user.email }}) - {{ user.role }}</option>
+            }
+            }
+          </select>
+        </div>
+      </div>
+
+      @if(selectedUser) {
+      <div class="card mb-4">
+        <div class="card-header">
+          <h4 class="mb-0">Selected User: {{ selectedUser.name }}</h4>
+        </div>
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-md-3 text-muted">Email:</div>
+            <div class="col-md-9">{{ selectedUser.email }}</div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-3 text-muted">Current Role:</div>
+            <div class="col-md-9">
+              <span class="badge" [ngClass]="{
+                'bg-primary': selectedUser.role === 'user',
+                'bg-success': selectedUser.role === 'admin'
+              }">{{ selectedUser.role }}</span>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-3 text-muted">Change Role To:</div>
+            <div class="col-md-9">
+              <div class="btn-group" role="group" aria-label="Role selection">
+                <button type="button" class="btn" [ngClass]="newRole === 'user' ? 'btn-primary' : 'btn-outline-primary'"
+                  (click)="setRole('user')" [disabled]="selectedUser.role === 'user'">
+                  User
+                </button>
+                <button type="button" class="btn"
+                  [ngClass]="newRole === 'admin' ? 'btn-success' : 'btn-outline-success'" (click)="setRole('admin')"
+                  [disabled]="selectedUser.role === 'admin'">
+                  Admin
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" [disabled]="selectedUser.role === newRole" (click)="updateUserRole()">
+            Update Role
+          </button>
+        </div>
+      </div>
+      } @else if (userSelect.value) {
+      <div class="alert alert-warning">
+        Attempting to load user details... (User ID: {{userSelect.value}})
+      </div>
+      }
+      }
+    </div>
+  </div>
+</div>

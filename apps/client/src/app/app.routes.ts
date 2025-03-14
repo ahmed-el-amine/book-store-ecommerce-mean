@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard, publicGuard } from './guards/auth.guard';
+import { UserManagementComponent } from './components/admin/user-management/user-management.component';
 
 export const appRoutes: Routes = [
   // Auth routes - lazy loaded
@@ -78,7 +79,7 @@ export const appRoutes: Routes = [
   // Cart and checkout
   {
     path: 'cart-details',
-    loadComponent: () => import('./components/Cart/cart.component').then((m) => m.CartComponent),
+    loadComponent: () => import('./components/cart/cart.component').then((m) => m.CartComponent),
     title: 'Cart Items',
   },
 
@@ -109,4 +110,10 @@ export const appRoutes: Routes = [
     title: 'Book Reviews',
   },
 
+  // User management route
+  {
+    path: 'admin/user-management',
+    loadComponent:()=>import('./components/admin/user-management/user-management.component').then((m)=>m.UserManagementComponent),
+    data: { roles: ['superAdmin'] }
+  },
 ];

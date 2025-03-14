@@ -1,0 +1,40 @@
+.card {
+  border-radius: 8px;
+  margin-bottom: 30px;
+}
+
+.card-header {
+  border-radius: 8px 8px 0 0;
+  padding: 16px 20px;
+}
+
+.badge {
+  font-size: 0.9rem;
+  padding: 6px 12px;
+  border-radius: 20px;
+}
+
+.form-select,
+.form-control {
+  padding: 10px 15px;
+  height: auto;
+  border-radius: 6px;
+}
+
+button {
+  padding: 10px 24px;
+  border-radius: 6px;
+}
+
+.alert-info,
+.alert-warning {
+  border-left: 4px solid;
+}
+
+.alert-info {
+  border-left-color: #0dcaf0;
+}
+
+.alert-warning {
+  border-left-color: #ffc107;
+}

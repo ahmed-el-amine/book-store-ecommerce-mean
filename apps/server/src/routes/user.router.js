@@ -11,13 +11,17 @@ import {
   markAsRead,
   update,
   updateAddress,
+  changeRole
 } from '../controllers/user.controller.js';
 import useZod from '../middleware/useZod.js';
 import { addUserAddressSchema, updateUserSchema, updateUserAddressSchema, changeUserPasswordSchema } from '../lib/zod/user.zod.js';
 const router = express.Router();
 
 // Get all users for admin only
-router.get('/', useAuth([userRoles.user]), getAllUsers);
+router.get('/', useAuth([userRoles.superAdmin]), getAllUsers);
+
+
+router.patch('/role/:id', useAuth([userRoles.superAdmin]), changeRole);
 
 // get my profile
 router.get('/me', useAuth([userRoles.admin, userRoles.user]), async (req, res) => {
