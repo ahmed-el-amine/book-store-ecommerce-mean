@@ -1,96 +1,192 @@
-# BookStoreEcommerceMean
+# Book Store E-commerce MEAN Stack Project
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+![MEAN Stack](https://img.shields.io/badge/MEAN-Stack-green.svg)
+![License](https://img.shields.io/badge/License-MIT-blue.svg)
+![Last Commit](https://img.shields.io/badge/Last%20Updated-March%202025-brightgreen)
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
+## 📖 Overview
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/intro#learn-nx?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+A comprehensive Book Store E-commerce platform built using the MEAN Stack (MongoDB, Express.js, Angular, and Node.js) for ITI (Information Technology Institute). This application provides a seamless shopping experience for book enthusiasts with features for user authentication, product management, shopping cart functionality, and secure payment processing.
 
-## Run tasks
+## ⚡ Features
 
-To run tasks with Nx use:
+- **User Authentication System**
+- **Book Catalog Management**
+- **Shopping Cart & Checkout Flow**
+- **Order Processing & Tracking**
+- **Admin Dashboard**
+- **Responsive Design**
+- **Payment Integration**
+- **Search & Filter Functionality**
 
-```sh
-npx nx <target> <project-name>
+## 📂 Project Structure
+
+```
+book-store-ecommerce-mean/
+├── apps/
+│   ├── client/                 # Angular Frontend
+│   │   ├── src/
+│   │   │   ├── app/
+│   │   │   │   ├── components/
+│   │   │   │   ├── models/
+│   │   │   │   ├── services/
+│   │   │   │   ├── guards/
+│   │   │   │   ├── interceptors/
+│   │   │   │   └── app.module.ts
+│   │   │   ├── assets/
+│   │   │   ├── environments/
+│   │   │   └── styles/
+│   │   ├── angular.json
+│   │   ├── package.json
+│   │   └── tsconfig.json
+│   │
+│   └── server/                 # Express Backend
+│       ├── config/             # Configuration files
+│       ├── controllers/        # Route controllers
+│       ├── helpers/            # Helper functions
+│       ├── middlewares/        # Custom middlewares
+│       ├── models/             # MongoDB schema models
+│       ├── routes/             # API routes
+│       ├── services/           # Business logic
+│       ├── validations/        # Request validation
+│       ├── app.js              # Express app setup
+│       ├── package.json
+│       └── server.js           # Entry point
+├── .gitignore
+├── package.json
+└── README.md
 ```
 
-For example:
+## 🚀 Technology Stack
 
-```sh
-npx nx build myproject
-```
+### Frontend
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+- **Angular**: v13+ with TypeScript
+- **Angular Material**: UI component library
+- **NgRx**: State management
+- **RxJS**: Reactive programming
+- **HTML5 & CSS3/SCSS**: Markup and styling
+- **Bootstrap**: Responsive design framework
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+### Backend
 
-## Add new projects
+- **Node.js**: JavaScript runtime
+- **Express.js**: Web application framework
+- **MongoDB**: NoSQL database
+- **Mongoose**: MongoDB object modeling
+- **JWT**: JSON Web Tokens for authentication
+- **Bcrypt**: Password hashing
 
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
+### DevOps & Tools
 
-To install a new plugin you can use the `nx add` command. Here's an example of adding the React plugin:
-```sh
-npx nx add @nx/react
-```
+- **Git & GitHub**: Version control
+- **npm**: Package management
+- **ESLint & Prettier**: Code quality
+- **Jest & Jasmine**: Testing frameworks
 
-Use the plugin's generator to create new projects. For example, to create a new React app or library:
+## ⚙️ Getting Started
 
-```sh
-# Generate an app
-npx nx g @nx/react:app demo
+### Prerequisites
 
-# Generate a library
-npx nx g @nx/react:lib some-lib
-```
+- Node.js (v14+)
+- npm or yarn
+- MongoDB (local or Atlas)
+- Angular CLI (v13+)
 
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
+### Installation and Setup
 
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+1. **Clone the repository**
 
-## Set up CI!
+   ```bash
+   git clone https://github.com/ahmed-el-amine/book-store-ecommerce-mean.git
+   cd book-store-ecommerce-mean
+   ```
 
-### Step 1
+2. **Setup Backend**
 
-To connect to Nx Cloud, run the following command:
+   ```bash
+   cd apps/server
+   npm install
+   ```
 
-```sh
-npx nx connect
-```
+# Create a .env file with the following variables
 
-Connecting to Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
+    # PORT=
+    # WEBSITE_NAME=
+    # API_WEBSITE_URL_P=
+    # API_WEBSITE_URL_D=
+    # CLIENT_WEBSITE_URL_P=
+    # CLIENT_WEBSITE_URL_D=
+    # CORS_DOMAINS=
+    # MONGODB_URI=
+    # JWT_SEC_KEY=
+    # JWT_EXPIRATION=
+    # JWT_Cookie_Name=
+    # EMAIL_SMTP_EMAIL=
+    # EMAIL_SMTP_SERVER=
+    # EMAIL_SMTP_PORT=
+    # EMAIL_SMTP_USER=
+    # EMAIL_SMTP_PASS=
+    # CLOUDINARY_CLOUD_NAME=
+    # CLOUDINARY_API_KEY=
+    # CLOUDINARY_API_SECRET=
 
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+npm run dev
 
-### Step 2
+````
 
-Use the following command to configure a CI workflow for your workspace:
+3. **Setup Frontend**
 
-```sh
-npx nx g ci-workflow
-```
+```bash
+cd ../client
+npm install
+ng serve
+````
 
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+4. **Access the Application**
+   - Frontend: http://localhost:4200
+   - Backend API: http://localhost:5000/api
 
-## Install Nx Console
+## 🖥️ Application Features
 
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
+### Customer Features
 
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+- User registration and authentication
+- Browse and search books by category, author, title
+- View book details including reviews and ratings
+- Add books to shopping cart
+- Process secure checkout
+- Track order status
+- View order history
+- Manage user profile
 
-## Useful links
+### Admin Features
 
-Learn more:
+- Comprehensive dashboard with analytics
+- Manage book inventory (add, edit, remove)
+- Manage categories and authors
+- Process and track customer orders
+- View and manage user accounts
+- Generate sales reports
 
-- [Learn more about this workspace setup](https://nx.dev/getting-started/intro#learn-nx?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+## 🧑‍💻 Contributors
 
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+- [Ahmed El Amine](https://github.com/ahmed-el-amine)
+- [Ahmed Essam](https://github.com/AESharak)
+- [Nada Emam](https://github.com/NadaEmamm)
+- [Mustafa Ashraf](https://github.com/Mustafa-Ashraf751)
+- [Fares Edres](https://github.com/FaresEdres)
+
+## 📜 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🙏 Acknowledgements
+
+- Information Technology Institute (ITI) for project requirements and guidance
+- MEAN Stack community for excellent documentation and resources
+- All contributors who have helped shape this project
+
+---
+
+Made with ❤️ by the Book Store Development Team
