@@ -58,8 +58,8 @@ export class BookManageComponent implements OnInit {
     });
 
     this.bookService.getBooksEssential().subscribe({
-      next: (data: BookEssential[]) => {
-        this.books = data;
+      next: (data: any) => {
+        this.books = data.books;
       },
       error: (error) => {
         console.error('Error fetching data', error);
@@ -103,7 +103,6 @@ export class BookManageComponent implements OnInit {
     this.selectedBook = this.books.find((book) => book._id === selectedId) || null;
 
     if (this.mode === 'update' && this.selectedBook) {
-
       this.bookService.getBookById(this.selectedBook._id as string).subscribe({
         next: (book) => {
           // Extract author IDs if authors are objects
@@ -114,7 +113,6 @@ export class BookManageComponent implements OnInit {
           const categories = Array.isArray(book.categories) ? book.categories : book.categories ? [book.categories] : [];
 
           this.currentCategoriesText = categories.join(', ');
-
 
           this.myform.patchValue({
             title: book.title,
@@ -202,8 +200,7 @@ export class BookManageComponent implements OnInit {
 
   onSubmit() {
     // Remove the selectedFile check for update mode
-    if ((this.mode === 'add' && this.myform.valid && this.selectedFile) ||
-        (this.mode === 'update' && this.myform.valid)) {
+    if ((this.mode === 'add' && this.myform.valid && this.selectedFile) || (this.mode === 'update' && this.myform.valid)) {
       const formData = new FormData();
       const bookData = this.myform.value;
 
@@ -241,7 +238,6 @@ export class BookManageComponent implements OnInit {
           formData.append('existingCoverImage', bookData.coverImage);
         }
       }
-
 
       if (this.mode === 'add') {
         // For add mode, selectedFile is required (already checked in the if condition)
