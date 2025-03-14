@@ -273,4 +273,8 @@ export class CartService {
       error: (err) => console.error('Error removing item:', err),
     });
   }
+
+  resetCart(): void {
+    this.cartSubject.next(null);
+  }
 }
