@@ -216,7 +216,10 @@ export class CartComponent implements OnInit, OnDestroy {
           this.http.post<any>(`${environment.apiUrlV1}/orders`, orderData, { withCredentials: true }).subscribe({
             next: () => {
               this.toastr.success('Order placed successfully!', 'Success');
-              this.cart = null;
+              this.cartService.resetCart();
+
+              // Navigate to orders page after successful checkout
+              this.router.navigate(['/orders-history']);
             },
             error: (err) => {
               this.toastr.error(err.error.message);

@@ -109,4 +109,9 @@ export const appRoutes: Routes = [
     loadComponent: () => import('./book-details/review-section/review-section.component').then((m) => m.ReviewSectionComponent),
     title: 'Book Reviews',
   },
+  {
+    path: '**',
+    loadComponent: () => import('./not-found/not-found.component').then((m) => m.NotFoundComponent),
+    title: '404 - Page Not Found',
+  },
 ];
