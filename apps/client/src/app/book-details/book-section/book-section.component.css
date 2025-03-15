@@ -1,29 +1,9 @@
-
 .book-title {
-  font-size: 2rem;
-  font-weight: bold;
   color: #1a73e8;
-  text-transform: capitalize;
-  text-align: center;
-  margin-bottom: 10px;
 }
 
 .book-description {
-  font-size: 1rem;
-  font-style: italic;
-  color: #7e7e7e;
   text-align: justify;
-  margin-bottom: 20px;
-}
-
-.price,
-.stock {
-  font-size: 1.2rem;
-  font-weight: bold;
-}
-
-.star-rating i {
-  font-size: 1.2rem;
 }
 
 .book-image {
@@ -37,32 +17,19 @@
 
 .category-btn,
 .author-btn {
-  font-size: 1rem;
-  padding: 10px 20px;
-  border-radius: 50px;
   transition: all 0.3s ease;
+}
+
+.category-btn,
+.author-btn {
+  background-color: #f0f8ff;
 }
 
 .category-btn:hover,
 .author-btn:hover {
-  background-color: #007bff;
   color: white;
-}
-
-.category-btn {
-  background-color: #f0f8ff;
-}
-
-.author-btn {
-  background-color: #f7f7f7;
-}
-
-.category-item,
-.author-item {
-  font-size: 1rem;
-  padding: 10px;
-  color: #333;
-  border-bottom: 1px solid #ddd;
+  background-color: #0d6efd;
+  border-color: #0d6efd;
 }
 
 .category-item:hover,

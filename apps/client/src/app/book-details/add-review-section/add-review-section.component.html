@@ -1,78 +1,64 @@
-
-
 @if(userData){
-<div style="text-align:center; margin-top: 50px;">
-  <h2>Add Comment</h2>
+<div class="text-center mt-5">
+  <h2 class="text-dark fs-4 mb-4">Add Comment</h2>
 
   <!-- form -->
-  <form [formGroup]="commentForm" (ngSubmit)="onSubmit()" class="comment-form">
+  <form [formGroup]="commentForm" (ngSubmit)="onSubmit()" class="comment-form w-100 mx-auto p-4 bg-light rounded-3 shadow">
     <!-- comment input -->
-    <div class="form-group">
-      <label for="comment" class="main">Comment</label>
-      <textarea 
-        id="comment" 
-        formControlName="comment" 
-        rows="5" 
-        class="form-control"></textarea>
+    <div class="form-group mb-4 text-start">
+      <label for="comment" class="main fw-bold fs-6 text-dark">Comment</label>
+      <textarea id="comment" formControlName="comment" rows="5" class="form-control"></textarea>
       <!-- error message -->
-      @if (formControl['comment'].invalid && formControl['comment'].touched) {
-        @if (formControl['comment'].hasError('required')) {
-          <div class="form-text text-danger">Required</div>
-        }
-        @if (formControl['comment'].hasError('minLength')) {
-          <div class="form-text text-danger">Number of characters can't be less than 30</div>
-        }
-        @if (formControl['comment'].hasError('maxLength')) {
-          <div class="form-text text-danger">Number of characters can't be more than 500</div>
-        }
-      }
+      @if (formControl['comment'].invalid && formControl['comment'].touched) { @if (formControl['comment'].hasError('required')) {
+      <div class="form-text text-danger small mt-1">Required</div>
+      } @if (formControl['comment'].hasError('minLength')) {
+      <div class="form-text text-danger small mt-1">Number of characters can't be less than 30</div>
+      } @if (formControl['comment'].hasError('maxLength')) {
+      <div class="form-text text-danger small mt-1">Number of characters can't be more than 500</div>
+      } }
     </div>
 
     <!-- rating input -->
-    <div class="rating-container">
-      <div class="rating-title">Rating</div>
-      <label for="one" class="rating-label">
-        <input type="radio" id="one" formControlName="rating" value="1">
+    <div class="d-flex justify-content-center mt-4">
+      <div class="fs-5 text-dark me-4">Rating</div>
+      <label for="one" class="fs-6 me-3">
+        <input type="radio" id="one" formControlName="rating" value="1" class="me-1" />
         1
       </label>
-      <label for="two" class="rating-label">
-        <input type="radio" id="two" formControlName="rating" value="2">
+      <label for="two" class="fs-6 me-3">
+        <input type="radio" id="two" formControlName="rating" value="2" class="me-1" />
         2
       </label>
-      <label for="three" class="rating-label">
-        <input type="radio" id="three" formControlName="rating" value="3">
+      <label for="three" class="fs-6 me-3">
+        <input type="radio" id="three" formControlName="rating" value="3" class="me-1" />
         3
       </label>
-      <label for="four" class="rating-label">
-        <input type="radio" id="four" formControlName="rating" value="4">
+      <label for="four" class="fs-6 me-3">
+        <input type="radio" id="four" formControlName="rating" value="4" class="me-1" />
         4
       </label>
-      <label for="five" class="rating-label">
-        <input type="radio" id="five" formControlName="rating" value="5">
+      <label for="five" class="fs-6 me-3">
+        <input type="radio" id="five" formControlName="rating" value="5" class="me-1" />
         5
       </label>
     </div>
 
     <!-- error message for rating -->
-    @if (formControl['rating'].invalid && formControl['rating'].touched) {
-      @if (formControl['rating'].hasError('required')) {
-        <div class="form-text text-danger">Required</div>
-      }
-      @if (formControl['rating'].hasError('min') || formControl['rating'].hasError('max')) {
-        <div class="form-text text-danger">Rating must be between 1 and 5</div>
-      }
-    }
+    @if (formControl['rating'].invalid && formControl['rating'].touched) { @if (formControl['rating'].hasError('required')) {
+    <div class="form-text text-danger small mt-1">Required</div>
+    } @if (formControl['rating'].hasError('min') || formControl['rating'].hasError('max')) {
+    <div class="form-text text-danger small mt-1">Rating must be between 1 and 5</div>
+    } }
 
     <!-- submit button -->
-    <button type="submit" [disabled]="commentForm.invalid" class="submit-button" >Submit</button>
+    <button type="submit" [disabled]="commentForm.invalid" class="btn btn-primary w-100 py-3 fs-6">Submit</button>
 
     <!-- success/error messages -->
     @if (submittedSuccessfully) {
-      <div class="success-message">Comment added successfully!</div>
-    }
-    @if (errorOccurred) {
-      <div class="error-message">Something went wrong, please try again.</div>
+    <div class="text-success fs-6 mt-4">Comment added successfully!</div>
+    } @if (errorOccurred) {
+    <div class="text-danger fs-6 mt-4">Something went wrong, please try again.</div>
     }
   </form>
-  </div>
+</div>
 }

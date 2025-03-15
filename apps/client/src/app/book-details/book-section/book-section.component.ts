@@ -12,6 +12,9 @@ export class BookSectionComponent implements OnInit {
   @Input() bookId: string | undefined;
   book: any = null;
 
+  showCategoryCollapse = false;
+  showAuthorCollapse = false;
+
   constructor(private bookService: BookService) {}
 
   ngOnInit(): void {
@@ -33,6 +36,17 @@ export class BookSectionComponent implements OnInit {
       console.error('Book ID is undefined');
     }
   }
+
+  toggleCategoryCollapse() {
+    this.showCategoryCollapse = !this.showCategoryCollapse;
+    // Remove the code that closes the other section
+  }
+
+  toggleAuthorCollapse() {
+    this.showAuthorCollapse = !this.showAuthorCollapse;
+    // Remove the code that closes the other section
+  }
+
   getStars(rating: number): string {
     const fullStars = Math.floor(rating);
     const halfStar = rating % 1 >= 0.5 ? 1 : 0;
