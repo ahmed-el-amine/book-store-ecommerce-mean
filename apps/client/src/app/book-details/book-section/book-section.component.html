@@ -1,52 +1,56 @@
 <div class="container row">
-  <!-- Image Column -->
-  <div class="col-md-4 mb-4">
-    <img [src]="book.coverImage" alt="Book Image" class="img-fluid rounded shadow-lg book-image" />
-  </div>
-
-  <!-- Book Details Column -->
-  <div class="col-md-8">
-    <h2 class="fs-1 fw-bold text-capitalize text-center mb-2 book-title">{{ book.title }}</h2>
-    <p class="fs-6 fst-italic text-muted mb-4 book-description">{{ book.description }}</p>
-
-    <!-- Book Price and Stock -->
-    <div class="d-flex justify-content-between mb-3">
-      <h4 class="fs-5 fw-bold text-success price">Price: ${{ book.price }}</h4>
-      <h5 class="fs-5 fw-bold text-warning stock">Stock: {{ book.stock }}</h5>
-    </div>
-    <!-- Rating with Stars -->
-    <h4>Rating: <span [innerHTML]="getStars(book.rating)" style="color: gold"></span></h4>
-
-    <div class="d-flex gap-2 mb-4">
-      <!-- Use Angular-controlled buttons -->
-      <button class="btn btn-outline-primary fs-6 px-3 py-2 rounded-pill category-btn" type="button" (click)="toggleCategoryCollapse()">
-        Categories
-      </button>
-      <button class="btn btn-outline-primary fs-6 px-3 py-2 rounded-pill author-btn" type="button" (click)="toggleAuthorCollapse()">Authors</button>
+    <!-- Image Column -->
+    <div class="col-md-4 mb-4">
+        <img [src]="book.coverImage"
+            alt="Book Image" class="img-fluid rounded shadow-lg book-image">
     </div>
 
-    <div class="row">
-      <!-- Categories -->
-      <div class="col">
-        <div [ngClass]="{ collapse: true, show: showCategoryCollapse }" id="categoryCollapse">
-          <ul class="list-group">
-            @for(category of book.categories; track $index){
-            <li class="list-group-item fs-6 p-3 text-dark border-bottom category-item cursor-pointer">{{ category }}</li>
-            }
-          </ul>
+    <!-- Book Details Column -->
+    <div class="col-md-8">
+        <h2 class="text-primary mb-3 book-title">{{book.title}}</h2>
+        <p class="text-muted mb-4 book-description">{{book.description}}</p>
+
+        <!-- Book Price and Stock -->
+        <div class="d-flex justify-content-between mb-3">
+            <h4 class="text-success price">Price: ${{book.price}}</h4>
+            <h5 class="text-warning stock">Stock: {{book.stock}}</h5>
         </div>
-      </div>
+        <!-- Rating with Stars -->
+        <h4>Rating: <span [innerHTML]="getStars(book.rating)" style="color: gold;"></span></h4>
 
-      <!-- Authors -->
-      <div class="col">
-        <div [ngClass]="{ collapse: true, show: showAuthorCollapse }" id="authorCollapse">
-          <ul class="list-group">
-            @for(author of book.authors; track $index){
-            <li class="list-group-item fs-6 p-3 text-dark border-bottom author-item cursor-pointer">{{ author.firstName }} {{ author.lastName }}</li>
-            }
-          </ul>
+        <div class="d-flex gap-2 mb-4">
+            <a class="btn btn-outline-primary category-btn" data-bs-toggle="collapse" href="#categoryCollapse"
+                role="button" aria-expanded="false" aria-controls="categoryCollapse">
+                Categories
+            </a>
+            <a class="btn btn-outline-primary author-btn" data-bs-toggle="collapse" href="#authorCollapse" role="button"
+                aria-expanded="false" aria-controls="authorCollapse">
+                Authors
+            </a>
         </div>
-      </div>
+
+        <div class="row">
+            <!-- Categories -->
+            <div class="col">
+                <div class="collapse" id="categoryCollapse">
+                    <ul class="list-group">
+                        @for(category of book.categories; track book.id){
+                        <li class="list-group-item category-item">{{category}}</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Authors -->
+            <div class="col">
+                <div class="collapse" id="authorCollapse">
+                    <ul class="list-group">
+                        @for(author of book.authors; track book.id){
+                        <li class="list-group-item author-item">{{author.firstName}}{{author.lastName}}</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
+ </div>

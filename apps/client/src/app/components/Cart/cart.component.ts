@@ -1,3 +1,4 @@
+import { PaymentStatus } from './../orders-history/order.interface';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -10,7 +11,6 @@ import { HttpClient } from '@angular/common/http';
 import { addDays } from 'date-fns';
 import { ToastrService } from 'ngx-toastr'; // Import ToastrService
 import { environment } from '../../environment';
-import '@fortawesome/fontawesome-free/css/all.min.css';
 
 @Component({
   selector: 'app-cart',
