@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BookService } from '../../service/books/book.service';
+import { BookService } from '../../service/books/book.service'
 
 @Component({
   selector: 'app-book-section',
@@ -12,44 +12,26 @@ export class BookSectionComponent implements OnInit {
   @Input() bookId: string | undefined;
   book: any = null;
 
-  showCategoryCollapse = false;
-  showAuthorCollapse = false;
-
-  constructor(private bookService: BookService) {}
+  constructor(private bookService: BookService) { }
 
   ngOnInit(): void {
+
     if (this.bookId) {
       this.bookService.getBookById(this.bookId).subscribe({
         next: (data) => {
-          this.book = data;
-          console.log('data', data);
-          console.log('book', this.book);
+          this.book = data; console.log("data", data)
+          console.log("book", this.book)
         },
-        error: (error) => {
-          console.error('Error fetching book:', error);
-        },
-        complete: () => {
-          console.log('Complete!');
-        },
+        error: (error) => { console.error('Error fetching book:', error); },
+        complete: () => { console.log('Complete!'); }
       });
     } else {
       console.error('Book ID is undefined');
     }
   }
-
-  toggleCategoryCollapse() {
-    this.showCategoryCollapse = !this.showCategoryCollapse;
-    // Remove the code that closes the other section
-  }
-
-  toggleAuthorCollapse() {
-    this.showAuthorCollapse = !this.showAuthorCollapse;
-    // Remove the code that closes the other section
-  }
-
   getStars(rating: number): string {
-    const fullStars = Math.floor(rating);
-    const halfStar = rating % 1 >= 0.5 ? 1 : 0;
+    const fullStars = Math.floor(rating)
+    const halfStar = (rating % 1) >= 0.5 ? 1 : 0;
     const emptyStars = 5 - fullStars - halfStar;
 
     let stars = '';
@@ -61,4 +43,6 @@ export class BookSectionComponent implements OnInit {
 
     return stars;
   }
+
+
 }

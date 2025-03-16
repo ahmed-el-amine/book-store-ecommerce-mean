@@ -1,20 +1,20 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../services/auth/auth.service';
 import { BookService } from '../../../service/books/book.service';
 import { Book } from '../../../interfaces/BookDetails';
+import { NotificationComponent } from '../../notification/notification.component';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { CartService } from '../../../service/cart/cart.service';
 import { FormsModule } from '@angular/forms';
-import { NotificationComponent } from '../../notification/notification.component';
-import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, CollapseModule, BsDropdownModule, NotificationComponent, RouterLinkActive, RouterLink, TooltipModule, FormsModule],
+  imports: [CommonModule, RouterLink, RouterLinkActive, NotificationComponent, CollapseModule, BsDropdownModule, TooltipModule, FormsModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
