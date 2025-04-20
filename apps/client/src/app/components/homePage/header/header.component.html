@@ -1,109 +1,187 @@
-<header class="site-header">
+<header class="sticky-top bg-white border-bottom shadow-sm">
   <div class="container">
-    <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand-lg py-2">
       <!-- Logo -->
-      <a class="navbar-brand" routerLink="/">
-        <i class="bi bi-book-half brand-icon"></i>
-        <span class="brand-text">Book Oasis</span>
+      <a class="navbar-brand d-flex align-items-center" routerLink="/">
+        <i class="bi bi-book-half fs-3 me-2 brand-icon"></i>
+        <span class="fs-4 fw-bold brand-text">Book Oasis</span>
       </a>
+
+      <!-- Desktop Actions -->
+      <div class="d-none d-lg-flex align-items-center ms-auto me-3 order-lg-last">
+        <!-- Notifications (Only for authenticated users) -->
+        @if (isAuthenticated) {
+        <div class="notification-wrapper me-2">
+          <app-notification></app-notification>
+        </div>
+        }
+
+        <!-- Cart Button for Desktop -->
+        <a class="position-relative p-2 mx-2 rounded-circle action-button" routerLink="/cart-details" tooltip="Cart" placement="bottom">
+          <i class="bi bi-cart3 fs-5"></i>
+          @if (cartItemCount > 0) {
+          <span class="position-absolute translate-middle badge rounded-pill bg-danger counter">
+            {{ cartItemCount }}
+          </span>
+          }
+        </a>
+
+        <!-- User Account Section for Desktop -->
+        @if (isAuthenticated) {
+        <div class="dropdown" dropdown>
+          <a class="d-flex align-items-center text-decoration-none dropdown-toggle rounded p-2" dropdownToggle>
+            <div class="rounded-circle d-flex align-items-center justify-content-center user-avatar">
+              <i class="bi bi-person"></i>
+            </div>
+            <span class="d-inline ms-2 nav-pointer">{{ currentUser?.name || 'Account' }}</span>
+          </a>
+          <ul id="dropdown-desktop" *dropdownMenu class="dropdown-menu dropdown-menu-end shadow border-0" role="menu">
+            <li>
+              <a class="dropdown-item d-flex align-items-center" routerLink="/account"> <i class="bi bi-person-circle me-2"></i>My Profile </a>
+            </li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center" routerLink="/orders-history"> <i class="bi bi-box me-2"></i>My Orders </a>
+            </li>
+
+            <!-- Admin Options -->
+            @if (currentUser?.role === 'admin' || currentUser?.role === 'superAdmin') {
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center" routerLink="/books/add"> <i class="bi bi-plus-circle me-2"></i>Add Book </a>
+            </li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center" routerLink="/books/update"> <i class="bi bi-pencil-square me-2"></i>Update Book </a>
+            </li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center" routerLink="/books/delete"> <i class="bi bi-trash me-2"></i>Delete Book </a>
+            </li>
+            }
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <a
+                class="dropdown-item d-flex align-items-center text-danger logout-item"
+                (click)="logUserOut()"
+                (keydown.enter)="logUserOut()"
+                tabindex="0"
+                role="button"
+                aria-label="Logout"
+              >
+                <i class="bi bi-box-arrow-right me-2"></i>Logout
+              </a>
+            </li>
+          </ul>
+        </div>
+        } @else {
+        <div class="d-flex gap-2">
+          <a routerLink="/auth/login" class="btn btn-outline-primary">Login</a>
+          <a routerLink="/auth/signup" class="btn btn-primary">Sign Up</a>
+        </div>
+        }
+      </div>
+
+      <!-- Mobile Layout - New Structure -->
+      <!-- Mobile Cart (Centered) -->
+      <div class="d-flex align-items-center justify-content-center flex-grow-1 d-lg-none">
+        <a class="position-relative p-2 mx-1 rounded-circle action-button" routerLink="/cart-details" tooltip="Cart" placement="bottom">
+          <i class="bi bi-cart3 fs-5"></i>
+          @if (cartItemCount > 0) {
+          <span class="position-absolute counter translate-middle badge rounded-pill bg-danger">
+            {{ cartItemCount }}
+          </span>
+          }
+        </a>
+      </div>
 
       <!-- Mobile Toggle Button -->
       <button
-        class="navbar-toggler"
+        class="navbar-toggler border-0 ms-auto d-lg-none"
         type="button"
         (click)="isCollapsed = !isCollapsed"
         [attr.aria-expanded]="!isCollapsed"
         aria-controls="navbarContent"
       >
-        <i class="bi bi-list"></i>
+        <i class="bi bi-list fs-4"></i>
       </button>
 
       <!-- Collapsible Content -->
-      <div class="collapse navbar-collapse" id="navbarContent" [collapse]="isCollapsed" [isAnimated]="true">
+      <div class="collapse navbar-collapse mt-2 mt-lg-0" id="navbarContent" [collapse]="isCollapsed" [isAnimated]="true">
         <!-- Navigation Links -->
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-              <i class="bi bi-house-door nav-icon"></i>
-              <span>Home</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" routerLink="/books-filters" routerLinkActive="active">
-              <i class="bi bi-book nav-icon"></i>
+          <li class="nav-item d-flex align-items-center">
+            <a class="nav-link d-flex align-items-center rounded" routerLink="/books-filters" routerLinkActive="active" (click)="isCollapsed = true">
+              <i class="bi bi-book me-2"></i>
               <span>Books</span>
             </a>
+
+            <!-- Notification on same line (Only for authenticated users) -->
+            @if (isAuthenticated) {
+            <div class="notification-mobile-wrapper ms-3 d-block d-lg-none">
+              <app-notification></app-notification>
+            </div>
+            }
           </li>
         </ul>
 
-        <!-- Search Bar -->
-        <!-- Notifications (Only for authenticated users) -->
-        <div class="action-button-wrapper notification-wrapper" *ngIf="isAuthenticated">
-          <app-notification></app-notification>
-        </div>
-
-        <!-- Update the cart button to include badge -->
-        <a class="action-button" routerLink="/cart-details" style="margin-left: 15px" tooltip="Cart" placement="bottom">
-          <i class="bi bi-cart3"></i>
-          <span class="cart-badge" *ngIf="cartItemCount > 0">{{ cartItemCount }}</span>
-        </a>
-
-        <!-- User Account Section -->
-        <ng-container *ngIf="isAuthenticated; else authButtons">
-          <!-- User Dropdown -->
-          <div class="user-dropdown" style="margin-left: 15px" dropdown>
-            <a class="user-toggle" dropdownToggle>
-              <div class="user-avatar">
-                <i class="bi bi-person"></i>
-              </div>
-              <span class="d-none d-md-inline ms-2">{{ currentUser?.name || 'Account' }}</span>
-              <i class="bi bi-chevron-down ms-1"></i>
-            </a>
-            <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu dropdown-menu-end" role="menu">
-              <li>
-                <a class="dropdown-item" routerLink="/account"> <i class="bi bi-person-circle me-2"></i>My Profile </a>
-              </li>
-              <li>
-                <a class="dropdown-item" routerLink="/orders-history"><i class="bi bi-box me-2"></i>My Orders</a>
-              </li>
-
-              <!-- Admin Options -->
-              <ng-container *ngIf="currentUser?.role === 'admin' || currentUser?.role === 'superAdmin'">
-                <li><hr class="dropdown-divider" /></li>
-                <li>
-                  <a class="dropdown-item" routerLink="/books/add"> <i class="bi bi-plus-circle me-2"></i>Add Book </a>
-                </li>
-                <li>
-                  <a class="dropdown-item" routerLink="/books/update"> <i class="bi bi-pencil-square me-2"></i>Update Book </a>
-                </li>
-                <li>
-                  <a class="dropdown-item" routerLink="/books/delete"> <i class="bi bi-trash me-2"></i>Delete Book </a>
-                </li>
-              </ng-container>
-              <li><hr class="dropdown-divider" /></li>
-              <li>
-                <a
-                  class="dropdown-item logout-item"
-                  (click)="logUserOut()"
-                  (keydown.enter)="logUserOut()"
-                  tabindex="0"
-                  role="button"
-                  aria-label="Logout"
-                >
-                  <i class="bi bi-box-arrow-right me-2"></i>Logout
+        <!-- Mobile-only User Account Section with improved structure -->
+        <div class="d-block d-lg-none mobile-menu-content">
+          @if (isAuthenticated) {
+          <!-- Mobile Account Links -->
+          <div class="mobile-account-links border-top pt-3 mt-2">
+            <div class="mobile-section mb-3">
+              <h6 class="menu-section-header"><i class="bi bi-person-circle me-2"></i>Account</h6>
+              <div class="ps-3 pt-1">
+                <a class="nav-link d-flex align-items-center rounded mb-2" routerLink="/account" (click)="isCollapsed = true">
+                  <i class="bi bi-person me-2"></i>
+                  <span>My Profile</span>
                 </a>
-              </li>
-            </ul>
-          </div>
-        </ng-container>
+                <a class="nav-link d-flex align-items-center rounded mb-2" routerLink="/orders-history" (click)="isCollapsed = true">
+                  <i class="bi bi-box me-2"></i>
+                  <span>My Orders</span>
+                </a>
+              </div>
+            </div>
 
-        <!-- Auth Buttons for non-authenticated users -->
-        <ng-template #authButtons>
-          <div class="auth-buttons">
-            <a routerLink="/auth/login" class="btn btn-outline-primary">Login</a>
-            <a routerLink="/auth/signup" class="btn btn-primary">Sign Up</a>
+            <!-- Admin Options -->
+            @if (currentUser?.role === 'admin' || currentUser?.role === 'superAdmin') {
+            <div class="mobile-section mb-3">
+              <h6 class="menu-section-header"><i class="bi bi-shield-lock me-2"></i>Admin Actions</h6>
+              <div class="ps-3 pt-1">
+                <a class="nav-link d-flex align-items-center rounded mb-2" routerLink="/books/add" (click)="isCollapsed = true">
+                  <i class="bi bi-plus-circle me-2"></i>
+                  <span>Add Book</span>
+                </a>
+                <a class="nav-link d-flex align-items-center rounded mb-2" routerLink="/books/update" (click)="isCollapsed = true">
+                  <i class="bi bi-pencil-square me-2"></i>
+                  <span>Update Book</span>
+                </a>
+                <a class="nav-link d-flex align-items-center rounded mb-2" routerLink="/books/delete" (click)="isCollapsed = true">
+                  <i class="bi bi-trash me-2"></i>
+                  <span>Delete Book</span>
+                </a>
+              </div>
+            </div>
+            }
+
+            <hr />
+            <a
+              class="nav-link d-flex align-items-center rounded text-danger"
+              (click)="logUserOut(); isCollapsed = true"
+              (keydown.enter)="logUserOut(); isCollapsed = true"
+              tabindex="0"
+              role="button"
+              aria-label="Logout"
+            >
+              <i class="bi bi-box-arrow-right me-2"></i>
+              <span>Logout</span>
+            </a>
           </div>
-        </ng-template>
+          } @else {
+          <div class="d-flex gap-2 mt-3 border-top pt-3">
+            <a routerLink="/auth/login" class="btn btn-outline-primary flex-grow-1" (click)="isCollapsed = true">Login</a>
+            <a routerLink="/auth/signup" class="btn btn-primary flex-grow-1" (click)="isCollapsed = true">Sign Up</a>
+          </div>
+          }
+        </div>
       </div>
     </nav>
   </div>
