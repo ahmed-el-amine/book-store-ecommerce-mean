@@ -168,21 +168,30 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   removeItem(item: CartItem): void {
-    this.operationLoading = true;
+    if (confirm('Are you sure you want to remove this item from your cart?')) {
+      this.operationLoading = true;
 
-    const bookId = this.getBookId(item);
+      const bookId = this.getBookId(item);
 
-    this.cartService.removeFromCart(this.userId, bookId).subscribe({
-      next: (response) => {
-        this.toastr.success('Item removed successfully.', 'Success'); // Toastr for success
+      if (!this.cart) {
         this.operationLoading = false;
-      },
-      error: (err) => {
-        this.toastr.error('Failed to remove item. Please try again.', 'Error'); // Toastr for error
-        this.operationLoading = false;
-        this.loadCart(); // Reload cart to ensure consistent state
-      },
-    });
+        return;
+      }
+
+      const updatedItems = this.cart.items.filter((i) => this.getBookId(i) !== bookId);
+
+      this.cartService.updateCart(this.userId, updatedItems).subscribe({
+        next: () => {
+          this.toastr.success('Item removed successfully.', 'Success'); // Toastr for success
+          this.operationLoading = false;
+        },
+        error: () => {
+          this.toastr.error('Failed to remove item. Please try again.', 'Error'); // Toastr for error
+          this.operationLoading = false;
+          this.loadCart(); // Reload cart to ensure consistent state
+        },
+      });
+    }
   }
 
   proceedToCheckout(): void {

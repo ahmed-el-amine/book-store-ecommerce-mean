@@ -277,4 +277,9 @@ export class CartService {
   resetCart(): void {
     this.cartSubject.next(null);
   }
+
+  clearCart() {
+    const emptyCart: Cart = { userId: this.cartSubject.value?.userId || '', items: [], totalPrice: 0 };
+    this.cartSubject.next(emptyCart);
+  }
 }

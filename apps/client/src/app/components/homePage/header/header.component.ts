@@ -68,7 +68,7 @@ export class HeaderComponent implements OnInit {
   logUserOut() {
     this.authService.logout().subscribe({
       next: () => {
-        console.log('Logged out user successfully');
+        this.cartService.clearCart(); // Clear cart on logout
       },
       error: (err) => {
         console.error('Error during logout', err);
