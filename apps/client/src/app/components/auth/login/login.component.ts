@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
     // Redirect if already logged in
     this.authService.isAuthenticated$.subscribe((isAuth) => {
       if (isAuth) {
-        this.router.navigate(['/account']);
+        this.router.navigate(['/']);
       }
     });
   }
@@ -43,7 +43,7 @@ export class LoginComponent implements OnInit {
       this.authService.login(validatedData).subscribe({
         next: () => {
           this.toastr.success('Login successful!', 'Success');
-          this.router.navigate(['/account']);
+          this.router.navigate(['/']);
         },
         error: (error) => {
           this.toastr.error(error.error.message || 'Login failed', 'Error');
